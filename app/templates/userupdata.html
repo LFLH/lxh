@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>用户管理</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <link href="../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="../static/css/dashboard.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        .dropdown-menu li{
+            text-align: left;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+    <div class="container-fluid" style="">
+        <div class="navbar-header" style="width: 100%">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <div class="dropdown" style="float: right">
+                <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="col-md-2 sidebar">
+                <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
+                    <li><a class="nav-link"
+                            href="{{url_for('main.useractivity')}}">已提交活动</a></li>
+                    <li class="active"><a class="nav-link" href="#">添加新活动</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10 col-md-offset-2 main ml-auto">
+            <h2 class="sub-header">添加新活动</h2>
+            <form id="update" enctype='multipart/form-data'>
+            <!--<form method="POST" id="update" enctype='multipart/form-data'>-->
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">活动名称:</label>
+                    <div class="col-sm-5" style="padding-left: 20px;">
+                        <input class="form-control" id="name" placeholder="请输入名称" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="col-sm-2 control-label">活动类型:</label>
+                    <div class="col-sm-5" style="padding-left: 20px;">
+                        <input class="form-control" id="type" placeholder="请输入类型" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="starttime" class="col-sm-2 control-label">活动起始时间:</label>
+                    <div class="col-md-3" style="padding-left: 20px;">
+                        <input type="date" class="form-control" id="starttime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="endtime" class="col-sm-2 control-label">活动结束时间:</label>
+                    <div class="col-md-3" style="padding-left: 20px;">
+                        <input type="date" class="form-control" id="endtime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="content" class="col-sm-2 control-label">活动具体内容:</label>
+                    <div class="col-md-7" style="padding: 3px 0 0 20px;">
+                        <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="content" required></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileVedio" class="control-label">上传视频:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="video" id="exampleInputFileVedio" accept="video/*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileAudio" class="control-label">上传音频:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="music" id="exampleInputFileAudio" accept="audio/*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileImage" class="control-label">上传图片:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="image" id="exampleInputFileImage" accept="image/*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileImage" class="control-label">上传PDF文件:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="pdf" id="exampleInputFilePDF" accept="application/pdf"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileImage" class="control-label">上传word文件:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="word" id="exampleInputFileWord" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
+"/>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <button class="btn btn-outline-danger">取消</button>
+                            <button type="submit" class="btn btn-outline-info">提交</button>
+                        </div>
+                    </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        console.log("weclome");
+        /*var href=window.location.href
+        var s=href.split("?")
+        if(s.length==2){
+            var status=s[1].split("=")[1]
+            if(status=="False")
+                alert("文件上传失败！");
+            else alert("文件上传成功！");
+            window.location.href=s[0]
+        }
+        $("#update").submit(function(){
+            let name = $('#name').val();
+            let begintime = $('#starttime').val();
+            let endtime = $('#endtime').val();
+            let main = $('#content').val();
+            let type = $('#type').val();
+            s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
+            $("#update").attr("action", s);
+        });*/
+        $("#update").submit(function(){
+            let name = $('#name').val();
+            let begintime = $('#starttime').val();
+            let endtime = $('#endtime').val();
+            let main = $('#content').val();
+            let type = $('#type').val();
+            s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
+            var formData = new FormData($("#update")[0]);
+            console.log(formData);
+            $.ajax({
+                type: "POST",
+                data: formData,
+                url: s,
+                contentType: false,
+                 processData: false,
+                 success:function(re){
+                    Flush();
+                    Toast(re.status);
+                 }
+            });
+            return false;
+        });
+        function Flush(){
+            $('#name').val('');
+            $('#starttime').val('');
+            $('#endtime').val('');
+            $('#content').val('');
+            $('#type').val('');
+            $('#exampleInputFileVedio').val('');
+            $('#exampleInputFileAudio').val('');
+            $('#exampleInputFileImage').val('');
+            $('#exampleInputFilePDF').val('');
+            $('#exampleInputFileWord').val('');
+        };
+        function Toast(status){
+            if(status==true){
+                msg="自主活动创建成功！";
+            }else{
+                msg="自主活动创建失败！";
+            }
+            var m = document.createElement('div');
+            m.innerHTML = msg;
+            m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";
+            document.body.appendChild(m);
+            setTimeout(function() {
+                var d = 0.5;
+                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                m.style.opacity = '0';
+                setTimeout(function() { document.body.removeChild(m) }, d * 1000);
+            });
+        };
+    });
+</script>
+</body>
+</html>

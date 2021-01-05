@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>用户活动管理</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.css" rel="stylesheet">
+    <link href="../static/css/dashboard.css" rel="stylesheet">
+    <style type="text/css">
+        .table>tbody>tr>td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table>thead>tr>th {
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="fixed-top navbar navbar-expand navbar-dark bg-dark" style="width: 100%;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">林学会**系统</a>
+        <div class="dropdown navbar-right pull-right">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a href="#">欢迎：***</a></li> &nbsp;&nbsp;&nbsp;
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">用户中心 <span class="caret"></span></a>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-font-size">
+                        <li style="text-align: center"><a href="#"><span class="fa fa-th-large"></span>
+                            用户类型：普通用户</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li style="text-align: center"><a href="#"><span class="fa fa-user"></span>
+                            用户账号：***</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li style="text-align: center"><a href="#"><span class="fa fa-sign-out-alt"></span>
+                            退出</a></li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar">
+            <div class="col-md-2 sidebar">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link" href="./submitted-event(user).html">已提交活动</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="./add-event(user).html">添加新活动</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10 col-md-offset-2 main ml-auto">
+            <h2 class="sub-header">添加新活动</h2>
+            <form>
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">活动名称</span>
+                    </div>
+                    <input type="text" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">活动起始时间</span>
+                    </div>
+                    <input type="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">活动结束时间</span>
+                    </div>
+                    <input type="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">活动具体内容</span>
+                    </div>
+                    <textarea cols="15" rows="10" aria-label="textarea" class="form-control" required></textarea>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">&nbsp;&nbsp;视&nbsp;频&nbsp;上&nbsp;传&nbsp;&nbsp;</span>
+                        <div class="custom-file">
+                            <input type="file" id="input-file-1" class="custom-file-input form-control" required>
+                            <label for="input-file-1" class="custom-file-label">选择视频文件</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">&nbsp;&nbsp;音&nbsp;频&nbsp;上&nbsp;传&nbsp;&nbsp;</span>
+                        <div class="custom-file">
+                            <input type="file" id="input-file-1" class="custom-file-input form-control" required>
+                            <label for="input-file-1" class="custom-file-label">选音频择文件</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">&nbsp;&nbsp;图&nbsp;片&nbsp;上&nbsp;传&nbsp;&nbsp;</span>
+                        <div class="custom-file">
+                            <input type="file" id="input-file-1" class="custom-file-input form-control" required>
+                            <label for="input-file-1" class="custom-file-label">选择图片文件</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-success btn-block">取消</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-success btn-block">提交</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="../static/js/jquery-3.5.1.min.js"></script>
+<script src="../static/js/bootstrap.bundle.js"></script>
+</body>
+
+</html>

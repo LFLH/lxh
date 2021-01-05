@@ -1,0 +1,201 @@
+{#{% extends "base.html" %}#}
+{##}
+{#{% block title %}活动管理{% endblock %}#}
+{##}
+{#{% block head %}#}
+{#{{super()}}#}
+{#<link rel="stylesheet" href="{{url_for('static',filename='css/dashboard.css')}}">#}
+{#<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.css">#}
+{#    <style type="text/css">#}
+{#        .table>tbody>tr>td {#}
+{#            vertical-align: middle;#}
+{#            text-align: center;#}
+{#        }#}
+{#        .table>thead>tr>th {#}
+{#            vertical-align: middle;#}
+{#            text-align: center;#}
+{#        }#}
+{#        .dropdown-menu li{#}
+{#            text-align: left;#}
+{#            padding-left: 10px;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>活动管理</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script src="../static/js/bootstrap.bundle.js"></script>
+    <link href="../static/css/dashboard.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{#    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.css" rel="stylesheet">#}
+    <style type="text/css">
+        .table>tbody>tr>td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table>thead>tr>th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .dropdown-menu li{
+            text-align: left;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+    <div class="container-fluid" style="">
+        <div class="navbar-header" style="width: 100%">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <div class="dropdown" style="float: right">
+                <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }}</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：管理员</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+    let username = '{{username}}';
+</script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
+                <li class="active"><a class="nav-link active" href="#">已提交活动</a></li>
+                <li><a class="nav-link"
+                        href="{{url_for('main.userupdata',username=username)}}">添加新活动</a></li>
+            </ul>
+        </div>
+        <div class="col-md-10 col-md-offset-2 main ml-auto">
+            <h2 class="sub-header">活动列表</h2>
+            <form action="/showactivity" method="POST" onsubmit="return Submit();">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="mytable">
+                        <input type="submit" value="显示活动信息">
+                        <thead>
+                            <tr class="table-info">
+                                <th>序号</th>
+                                <th>活动地点</th>
+                                <th>活动时间</th>
+                                <th>活动内容</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableText">
+                        </tbody>
+
+                    </table>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end">
+                            <li class="page-item">
+                                <a href="#" class="page-link">
+                                    前一页
+                                </a>
+                            </li>
+                            <li class="page-item"><a href="#" class="page-link">1</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function Submit() {
+        let submit = false;
+        let page = 1;
+        let per_page = 5;
+        $.ajax({
+            url: "{{url_for('main.showactivity')}}",
+            data: { 'page': page, 'per_page': per_page, 'username': username },
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            // cache: false,
+            contentType: 'application/x-www-form-urlencoded',
+            success: function (d) {
+                if (d == null || d == '') {
+                    alert("未知错误\n请联系管理员");
+                    submit = false;
+                }
+                else {
+                    let str = "";
+                    let pages = data.zpage;
+                    let total = data.total;
+                    let dpage = data.dpage;
+                    let activity = data.item;
+                    for (let index = 0; index < d.total; index++) {
+                        str += "<tr><td>" + d.item.id +
+                            "</td><td>" + d.item.username +
+                            "</td><td>" + d.item.lasttime +
+                            "</td><td>" + "**" + "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    console.log(d.item.username);
+                    submit = true;
+                }
+            },
+        });
+        return submit;
+    }
+
+    // function getTable() {
+    //     let page = json.stringify(1);
+    //     let per_page = json.stringify(5);
+    //     // let username = username;
+    //     $.ajax({
+    //         url: "{{url_for('main.showactivity')}}",
+    //         data: { 'page': page, 'per_page': per_page, 'username': json.stringify(username) },
+    //         type: 'POST',
+    //         dataType: 'json',
+    //         // async: false,
+    //         // cache: false,
+    //         contentType: 'application/x-www-form-urlencoded',
+    //         success: function (d) {
+    //             console.log(d.item.username)
+    //             let str = "";
+    //             let pages = data.zpage;
+    //             let total = data.total;
+    //             let dpage = data.dpage;
+    //             let activity = data.item;
+    //             for (let index = 0; index < d.total; index++) {
+    //                 str += "<tr><td>" + d.item.id +
+    //                     "</td><td>" + d.item.username +
+    //                     "</td><td>" + d.item.lasttime +
+    //                     "</td><td>" + "**" + "</td></tr>";
+    //             }
+    //             $("#tableText").html(str);
+    //         },
+    //     })
+    // };
+
+</script>
+</body>
+</html>
+{#{% endblock %}#}

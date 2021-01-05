@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>用户管理</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <link href="../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="../static/css/dashboard.css" rel="stylesheet">
+    <style type="text/css">
+        .table>tbody>tr>td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header" style="width:100%">
+            <a class="navbar-brand" href="#">XX系统</a>
+            <a class="navbar-brand" style="float: right;">XX欢迎你</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="./user-manage.html">用户管理<span class="sr-only">(current)</span></a></li>
+                <li><a href="./user-event-manage.html">用户活动管理</a></li>
+                <li class="active"><a href="./file-upload.html">文件上传</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h2 class="sub-header">文件上传表单</h2>
+            <div style="width: 600px;">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">名称:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="inputEmail3" placeholder="请输入名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">起始时间:</label>
+                        <div class="col-sm-10">
+<!--                             <input type="password" class="form-control" id="inputPassword3" placeholder="请输入起始时间">-->
+                            <div id="start_time" class="input-group date col-md-5" data-date-format="yyyy-mm-dd HH:ii p" data-link-field="dtp_input1">
+                                <input class="form-control" size="16" type="text" value="" readonly placeholder="请输入起始时间">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                            </div>
+                            <input type="hidden" id="dtp_input1" value="" /><br/>
+                        </div>
+                    </div >
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">结束时间:</label>
+                        <div class="col-sm-10">
+                            <div id="end_time" class="input-group date col-md-5" data-date="2020-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dt">
+                                <input class="form-control" size="16" type="text" value="" readonly placeholder="请输入结束时间">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                            </div>
+                            <input type="hidden" id="dtp_input1" value="" /><br/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">内容:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="inputPassword3" placeholder="请输入内容">
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding: 10px 0;">
+                        <label for="inputPassword3" class="col-sm-2 control-label">上传视频:</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="exampleInputFileVedio"  accept="video/*"/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding: 10px 0;">
+                        <label for="inputPassword3" class="col-sm-2 control-label">上传音频:</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="exampleInputFileAudio"  accept="audio/*"/>
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding: 10px 0;">
+                        <label for="inputPassword3" class="col-sm-2 control-label">上传图片:</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="exampleInputFileImage" accept="image/*"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-default">取消</button>
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../static/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../static/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $('#start_time').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+    $('#end_time').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+</script>
+
+</body>
+</html>

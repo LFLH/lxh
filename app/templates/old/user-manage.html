@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>用户活动管理</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <link href="../static/css/dashboard.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        .table>tbody>tr>td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table>thead>tr>th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .dropdown-menu li{
+            text-align: left;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+    <div class="container-fluid">
+        <div class="navbar-header" style="width: 100%">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <div class="dropdown" style="float: right">
+                <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
+                    <li><a href="#" style="color: #9d9d9d">欢迎：***</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d">用户中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
+                            <li><a href="#" style="color: #9d9d9d"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：管理员</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" style="color: #9d9d9d"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：***</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="./login.html" style="color: #9d9d9d"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
+                <li class="active"><a class="nav-link" href="./user-manage.html">用户管理</a></li>
+                <li><a class="nav-link" href="./event-manage.html">用户活动管理</a></li>
+            </ul>
+        </div>
+        <div class="col-md-10 offset-md-2 main">
+            <h2 class="sub-header">用户列表</h2>
+            <div class="table-responsive" style="padding-top: 10px">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>用户名</th>
+                        <th>活动上传时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="success">
+                        <td>1,001</td>
+                        <td>Lorem</td>
+                        <td>2020-10-23 10:12:13</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">修改</button>
+                            <button class="btn btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1,002</td>
+                        <td>amet</td>
+                        <td>2020-10-23 10:12:13</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">修改</button>
+                            <button class="btn btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    <tr class="warning">
+                        <td>1,003</td>
+                        <td>Integer</td>
+                        <td>2020-10-23 10:12:13</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">修改</button>
+                            <button class="btn btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1,003</td>
+                        <td>libero</td>
+                        <td>2020-10-23 10:12:13</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">修改</button>
+                            <button class="btn btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    <tr class="info">
+                        <td>1,004</td>
+                        <td>dapibus</td>
+                        <td>2020-10-23 10:12:13</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">修改</button>
+                            <button class="btn btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1,005</td>
+                        <td>Nulla</td>
+                        <td>2020-10-23 10:12:13</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">修改</button>
+                            <button class="btn btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1,006</td>
+                        <td>nibh</td>
+                        <td>2020-10-23 10:12:13</td>
+                        <td>
+                            <button class="btn btn-info btn-sm">修改</button>
+                            <button class="btn btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <ul class="pagination" style="float: right;">
+                    <li class="page-item">
+                        <a class="page-link" href="#">前一页</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">4</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">5</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">后一页</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
