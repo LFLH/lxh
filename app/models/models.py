@@ -77,6 +77,7 @@ class UDeclare(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # 用户申报编号
     userid = db.Column(db.Integer, db.ForeignKey('user.id'))  # 用户编号
     uptime = db.Column(db.DateTime, default=datetime.datetime.now)  # 提交时间
+    type = db.Column(db.Integer, default=0)  # 状态，0或1
     datas = db.relationship('Data', secondary=UDCD, backref=db.backref('udcdatas', lazy='dynamic'))
 
     def __repr__(self):

@@ -45,7 +45,7 @@ def searchsystrain():
 @main.route('/tgabilityuser', methods=['GET', 'POST'])
 def tgabilityuser():
     if request.method == 'GET':
-        id = request.form.get('id')
+        id = request.args.get('id')
     else:
         id = request.form.get('id')
     utrain = UTrain.query.filter_by(id=id).first()

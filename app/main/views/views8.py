@@ -4,20 +4,37 @@ from flask import request, jsonify, Response
 
 from app import db
 from app.main import main
-from app.models.models import Activity, Declare, User, Train
+from app.models.models import Activity, Declare, User, Train, UDeclare, DUDC
 
 
 # 获取申报和参与申报的用户数、各月提交数、活动报名人数
 @main.route('/manageall')
 def manageall():
     activities = Activity.query.all()
+    # 所有活动报名的总人数
+    activity_users_num = 0
     # 各月提交活动统计
     activity_month = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0,
                       '7': 0, '8': 0, '9': 0, '10': 0, '11': 0, '12': 0}
     for activity in activities:
         activity_month[str(activity.updatetime.month)] += 1
+        for user in activity.users:
+            if user.id:
+                activity_users_num += 1
+    # print(activity_users_num)
+    # 申报的任务数
+    declare_num = []
+    declares = Declare.query.all()
+    for declare in declares:
+        declare_num.append(declare.id)
+    # 申报任务的用户数
+    declare_user_num = []
+    udclares = UDeclare.query.all()
+    for udclare in udclares:
+        declare_user_num.append(udclare.userid)
+    ud = {"申报任务数": len(set(declare_num)), "参与申报用户数": len(set(declare_user_num))}
 
-    return jsonify(activity_month)
+    return jsonify(activity_month, ud)
 
 
 # 列表显示用户申报信息
@@ -40,9 +57,12 @@ def searchdeclareuser():
 @main.route('/tgdeclareuser', methods=['GET', 'POST'])
 def tgdeclareuser():
     if request.method == 'GET':
-        pass
+        id = request.args.get('id')
     else:
-        pass
+        id = request.form.get('id')
+    udeclare = UDeclare.query.filter_by(id=id).first()
+    udeclare.type = 1
+    db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
 
@@ -79,3 +99,9 @@ def searchabilityuser():
                            'endtime': tra.endtime, 'uptime': t.uptime})
     # print(result)
     return jsonify(result)
+
+
+# 获取用户提交活动数、系统要求参与数、各月提交数、活动状态、培训申请状态
+@main.route('/olduserall')
+def olduserall():
+    pass

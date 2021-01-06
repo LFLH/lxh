@@ -5,7 +5,7 @@ import datetime
 import json
 import os
 import time
-from flask import request, jsonify, Response
+from flask import request, jsonify, Response, session
 
 from app import db
 from app.main import main
@@ -31,20 +31,19 @@ def addsysactivity():
         endtime = request.form.get('endtime')
         stoptime = request.form.get('stoptime')
         main = request.form.get('main')
-    # username = session.get('username')
-    # begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    # endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
-    # stoptime = stoptime.datetime.strptime(stoptime, '%Y-%m-%d')
-    # user = User.query.filter(User.username == username).all()[0]
+    username = session.get('username')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    stoptime = stoptime.datetime.strptime(stoptime, '%Y-%m-%d')
+    user = User.query.filter(User.username == username).all()[0]
     userid = 1
-    activity = Activity(name=name, begintime=begintime, endtime=endtime, stoptime=stoptime, main=main,
-                        type=type, userid=userid)
+    activity = Activity(name=name, begintime=begintime, endtime=endtime, stoptime=stoptime, main=main, type=type, userid=userid)
     db.session.add(activity)
     db.session.commit()
-    # user.updatetime = activity.uptime
-    # db.session.add(user)
-    # db.session.commit()
-    # session["activityid"] = activity.id
+    user.updatetime = activity.uptime
+    db.session.add(user)
+    db.session.commit()
+    session["activityid"] = activity.id
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
 
