@@ -1,11 +1,13 @@
 """
     自主活动
 """
-from flask import request, jsonify, Response
-from app.main import main
-from app.models.models import UDeclare, Activity, Declare, DUDC, User, Train
+import json
+
+from flask import request, Response
+
 from app import db
-import os, json, datetime, time
+from app.main import main
+from app.models.models import Activity
 
 
 # 通过自主活动
@@ -34,14 +36,14 @@ def bhuseractivity():
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
 
-# 删除自主活动
-@main.route('/deleteactivity', methods=['GET', 'POST'])
-def deleteactivity():
-    if request.method == 'GET':
-        name = request.args.get('name')
-    else:
-        name = request.form.get('name')
-    activity = Activity.query.filter_by(name=name).first()
-    db.session.delete(activity)
-    db.session.commit()
-    return Response(json.dumps({'status': True}), mimetype='application/json')
+# # 删除自主活动
+# @main.route('/deleteactivity', methods=['GET', 'POST'])
+# def deleteactivity():
+#     if request.method == 'GET':
+#         name = request.args.get('name')
+#     else:
+#         name = request.form.get('name')
+#     activity = Activity.query.filter_by(name=name).first()
+#     db.session.delete(activity)
+#     db.session.commit()
+#     return Response(json.dumps({'status': True}), mimetype='application/json')

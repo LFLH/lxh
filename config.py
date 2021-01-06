@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = 'key'
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/lxh'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:000220@127.0.0.1:3306/lxh?charset=utf8'
     # 'mysql+mysqlconnector://root:123456@39.96.44.243/teach_achievement'
     # 反向生成models.py : sqlacodegen mysql+mysqlconnector://root:@127.0.0.1/teach_achievement > new_models.py
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True

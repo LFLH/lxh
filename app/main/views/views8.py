@@ -37,9 +37,13 @@ def searchdeclareuser():
 
 
 # 通过用户申报
-@main.route('/tgdeclareuser')
+@main.route('/tgdeclareuser', methods=['GET', 'POST'])
 def tgdeclareuser():
-    pass
+    if request.method == 'GET':
+        pass
+    else:
+        pass
+    return Response(json.dumps({'status': True}), mimetype='application/json')
 
 
 # 添加新的申报任务
