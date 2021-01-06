@@ -1,8 +1,9 @@
-from flask import request,jsonify,Response
+from flask import request, jsonify, Response
 from app.main import main
-from app.models.models import User,Activity,AD,Data
+from app.models.models import User, Activity, AD, Data
 from app import db
-import os,json
+import os, json
+
 
 @main.after_app_request
 def after_request(response):
