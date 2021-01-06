@@ -15,6 +15,7 @@ class User(db.Model):
     userudc=db.relationship('UDeclare', backref='userudc')#UDeclare外键
     userut = db.relationship('UTrain', backref='userut')  # UTrain外键
     usersr = db.relationship('Record', backref='userr')  # Record外键
+    usersc=db.relationship('Score',backref='usersc')# Score外键
 
     def __repr__(self):
         return self
@@ -96,7 +97,7 @@ class UTrain(db.Model):
     id=db.Column(db.Integer, primary_key=True, autoincrement=True)#用户申请培训编号
     userid=db.Column(db.Integer, db.ForeignKey('user.id'))#用户编号
     uptime=db.Column(db.DateTime, default=datetime.datetime.now)#提交时间
-    type=db.Column(db.Integer，default=0)#状态，0或1
+    type=db.Column(db.Integer,default=0)#状态，0或1
     datas=db.relationship('Data', secondary=UTD, backref=db.backref('utdatas', lazy='dynamic'))
 
     def __repr__(self):
@@ -118,10 +119,23 @@ class Train(db.Model):
         return self
 
 #表 14用户分数表(用户编号,年份,分数)
-Score=db.Table('score',db.Column('userid',db.Integer,db.ForeignKey('user.id')),db.Column('year',db.Integer,default=int(datetime.datetime.now().strftime('%Y'))),db.Column('score',db.Integer))
+class Score(db.Model):
+    __tablename__="score"
+    userid=db.Column(db.Integer,db.ForeignKey('user.id'),primary_key=True)
+    year=db.Column(db.Integer,default=int(datetime.datetime.now().strftime('%Y')),primary_key=True)
+    score=db.Column(db.Integer)
+
+    def __repr__(self):
+        return self
 
 #表 15系统设置表(次数)
-System=db.Table('system',db.Column('times',db.Integer,default=10))
+class System(db.Model):
+    __tablename__='system'
+    type=db.Column(db.String(255),primary_key=True)#类型
+    main=db.Column(db.String(255))#内容
+
+    def __repr__(self):
+        return self
 
 #表 16用户报告文件表(用户报告编号,文件id)
 RD=db.Table('rd',db.Column('rid', db.Integer, db.ForeignKey('record.id')),db.Column('dataid', db.Integer, db.ForeignKey('data.id')))
