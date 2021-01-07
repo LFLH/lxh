@@ -25,7 +25,11 @@ def addability():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
+    userid = 1
+    uptime = datetime.datetime.now()
+    utrain = UTrain(userid=userid, uptime=uptime)
     train = Train(name=name, begintime=begintime, endtime=endtime, main=main)
+
     db.session.add(train)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')

@@ -1,10 +1,10 @@
 import json
 
-from flask import request, jsonify, Response
+from flask import request, jsonify, Response, session
 
 from app import db
 from app.main import main
-from app.models.models import Activity, Declare, User, Train, UDeclare, DUDC
+from app.models.models import Activity, Declare, User, Train, UDeclare, DUDC, UTrain
 
 
 # 获取申报和参与申报的用户数、各月提交数、活动报名人数
@@ -104,4 +104,31 @@ def searchabilityuser():
 # 获取用户提交活动数、系统要求参与数、各月提交数、活动状态、培训申请状态
 @main.route('/olduserall')
 def olduserall():
-    pass
+    # 统计用户提交的活动数量
+    # username = session.get('username')
+    # userid = User.query.filter_by(username=username).first().id
+    userid = 1
+    activities = Activity.query.filter_by(userid=userid).all()
+    user_activity_num = len(activities)
+    # 总任务数量
+    # 各月提交活动统计
+    activity_month = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0,
+                      '7': 0, '8': 0, '9': 0, '10': 0, '11': 0, '12': 0}
+    # 统计活动状态
+    activity_status = {}
+    for activity in activities:
+        activity_month[str(activity.updatetime.month)] += 1
+        activity_status.update({activity.name: activity.status})
+
+    # 培训申请状态 根据用户，找到对应的utrain，再找到对应的train, utrain-train一对一
+    user = User.query.filter_by(id=userid).first()
+    # user.userut：用户提交的用户申请培训表
+    train_type = {}
+    for ut in user.userut:
+        train_type.update({ut.tuts.first().name: ut.type})
+
+    # 活动申请状态
+    activity_status = {}
+    for activity in activities:
+        activity_status.update({activity.name: activity.status})
+    return jsonify(activity_month, activity_status, train_type, activity_status)
