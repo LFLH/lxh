@@ -136,9 +136,11 @@
                             $("#LoginForm").attr("action", "./login");
                         }else{
                             if(re.type=="sysadmin"){
-                                $("#LoginForm").attr("action", "./manageuser");
-                            }else{
-                                $("#LoginForm").attr("action", "./useractivity");
+                                $("#LoginForm").attr("action", "./manage");
+                            }else if(re.checked==1){
+                                $("#LoginForm").attr("action", "./olduser");
+                            }else if(re.checked==0){
+                                $("#LoginForm").attr("action", "./newuser");
                             }
                         }
                     }
