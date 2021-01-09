@@ -37,6 +37,14 @@ def useractivity():
     else:
         return render_template('useractivity.html',username=user["username"])
 
+@main.route('/manage',methods=['GET','POST'])
+def manageuser():
+    user = session.get('user')
+    if user == None:
+        return redirect('/login')
+    else:
+        return render_template('manage.html',username=user["username"])
+
 @main.route('/manageuser',methods=['GET','POST'])
 def manageuser():
     user = session.get('user')

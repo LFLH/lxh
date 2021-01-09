@@ -10,7 +10,7 @@ class User(db.Model):
     type = db.Column(db.String(255))  # sysadmin或user
     checked=db.Column(db.Integer)#单位类别,0或1
     updatetime = db.Column(db.DateTime, default=datetime.datetime.now)  # 最后操作更新时间
-    endtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 申报截止时间s
+    endtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 申报截止时间
     usersa = db.relationship('Activity', backref='usera')#Activity外键
     userudc=db.relationship('UDeclare', backref='userudc')#UDeclare外键
     userut = db.relationship('UTrain', backref='userut')  # UTrain外键
@@ -38,7 +38,7 @@ class Activity(db.Model):
     updatetime = db.Column(db.DateTime, default=datetime.datetime.now)  # 活动上传时间
     stoptime= db.Column(db.DateTime, default=datetime.datetime.now)  # 活动报名截止时间
     main=db.Column(db.Text)#活动内容
-    status = db.Column(db.Integer,default=0)#状态，0创建，1驳回，2通过
+    status = db.Column(db.Integer,default=0)#状态，0创建，1驳回，2通过，3删除
     userid = db.Column(db.Integer, db.ForeignKey('user.id'))#外键
     datas = db.relationship('Data', secondary=AD, backref=db.backref('adatas', lazy='dynamic'))
     users=db.relationship('User', secondary=AU, backref=db.backref('ausers', lazy='dynamic'))
