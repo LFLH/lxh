@@ -2,7 +2,7 @@ from flask import request,jsonify,session,redirect,Response
 from app.main import main
 from app.models.models import User,Activity,AD,Data
 from app import db
-import json
+import json,datetime
 
 @main.after_app_request
 def after_request(response):
@@ -25,7 +25,14 @@ def userlogin():
     if len(user)>0:
         session['user']={'username':user[0].username,'userid':user[0].id}
         #return jsonify([{'type': user[0].type, 'status': True}])
-        return Response(json.dumps({'type': user[0].type, 'status': True}), mimetype='application/json')
+        if(user[0].type=='sysadmin'):
+            return Response(json.dumps({'type': user[0].type, 'status': True,'checked':user[0].checked}), mimetype='application/json')
+        elif(user[0].checked==1):
+            return Response(json.dumps({'type': user[0].type, 'status': True,'checked':user[0].checked}), mimetype='application/json')
+        elif(user[0].endtime>datetime.datetime.now()):
+            return Response(json.dumps({'type': user[0].type, 'status': True, 'checked': user[0].checked}),mimetype='application/json')
+        else:
+            return Response(json.dumps({'status': False}), mimetype='application/json')
     else:
         #return jsonify([{'status': False}])
         return Response(json.dumps({'status': False}), mimetype='application/json')

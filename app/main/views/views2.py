@@ -126,17 +126,15 @@ def addactivitycs():
     endtime = request.args.get('endtime')
     main = request.args.get('main')
     type = request.args.get('type')
-    username = session.get('username')
     begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
-    cxtime = endtime - begintime
-    user = User.query.filter(User.username == username).all()[0]
-    userid = user.id
-    activity = Activity(name=name, begintime=begintime, endtime=endtime, cxtime=cxtime, main=main, type=type,
-                        userid=userid)
+    user=session.get('user')
+    userid = user['userid']
+    user=User.query.filter(User.id==userid).all()[0]
+    activity = Activity(name=name, typeuser='自主',begintime=begintime, endtime=endtime, main=main, type=type,userid=userid)
     db.session.add(activity)
     db.session.commit()
-    user.updatetime = activity.uptime
+    user.updatetime = activity.updatetime
     db.session.add(user)
     db.session.commit()
     filelist=['video','music','image','pdf','word']
@@ -176,7 +174,7 @@ def addactivitycs():
             f=open(file_data,'wb')
             f.write(filedata[i][j])
             f.close()
-            data = Data(type=type, data=file_data)
+            data = Data(name = file.filename,type=filelist[i],path=file_data,newname=new_filename)
             db.session.add(data)
             db.session.commit()
             activity.datas.append(data)
@@ -193,16 +191,17 @@ def showactivity():
     else:
         page = request.json.get('page')
         per_page = request.json.get('per_page')
-    username=session.get("username")
+    user = session.get('user')
+    userid = user['userid']
     page=int(page)
     per_page=int(per_page)
-    activity = Activity.query.join(User).filter(Activity.userid == User.id).filter(Activity.status!="delete").filter(User.username == username).order_by(-Activity.uptime).paginate(page, per_page, error_out=False)
+    activity = Activity.query.filter(Activity.userid == userid).filter(Activity.status!=3).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
         itemss = {'number': count + i + 1, 'id': items[i].id, 'activityname': items[i].name,'type':items[i].type,
-                  'begintime': str(items[i].begintime),"endtime":str(items[i].endtime),"main":items[i].main}
+                  'begintime': str(items[i].begintime),"endtime":str(items[i].endtime),"main":items[i].main,"status":items[i].status}
         item.append(itemss)
     data = {'zpage': activity.pages, 'total': activity.total, 'dpage': activity.page, 'item': item}
     return Response(json.dumps(data), mimetype='application/json')
