@@ -107,4 +107,4 @@ def showscore():
             result.update({name: [{score.year: score.score}]})
         else:
             result[name].append({score.year: score.score})
-    return jsonify(result
+    return jsonify(result)

@@ -52,7 +52,7 @@ def detailuseractivity():
     da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'video':filedata['video'],'music':filedata['music'],'image':filedata['image'],'pdf':filedata['pdf'],'word':filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')
 
-@main.route('detailsysactivity',methods=['GET','POST'])
+@main.route('/detailsysactivity',methods=['GET','POST'])
 def detailsysactivity():
     if request.method == "GET":
         id = request.args.get('id')
