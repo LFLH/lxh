@@ -11,6 +11,7 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#扫码签到
 @main.route('/useractivitysign/<string:activityid>',methods=['GET','POST'])
 def useractivitysign(activityid):
     activityid=int(activityid)
@@ -18,12 +19,19 @@ def useractivitysign(activityid):
     if activity.endtime<datetime.datetime.now():
         s='/useractivitysign/'+str(activityid)+'/fail'
         return redirect(s)
-    return render_template('useractivitysign.html')
+    else:
+        userz = activity.users
+        user = []
+        for users in userz:
+            user.append(users.username)
+        return render_template('useractivitysign.html',user=user)
 
+#扫码过期
 @main.route('/useractivitysign/<string:activityid>/fail',methods=['GET','POST'])
 def useractivitysignfail(activityid):
     return render_template('useractivitysignfail.html')
 
+#签到成功
 @main.route('/useractivitysign/<string:activityid>/success',methods=['GET','POST'])
 def useractivitysignsuccess(activityid):
     return render_template('useractivitysignsuccess.html')

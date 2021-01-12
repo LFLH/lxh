@@ -16,12 +16,15 @@ def after_request(response):
 #添加用户
 @main.route('/adduser',methods=['GET', 'POST'])
 def adduser():
+    #根据用户名添加用户
     if request.method == "GET":
         username = request.args.get('username')
     else:
         username = request.json.get('username')
     k = random.randint(8, 20)
+    #自动生成密码
     password=''.join(random.sample(string.ascii_letters + string.digits, k))
+    #添加用户
     user=User(username=username,password=password,type='user',checked=0)
     db.session.add(user)
     db.session.commit()
