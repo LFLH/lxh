@@ -1,49 +1,19 @@
-"""
-    自主活动
-"""
-import json
-
-from flask import request, Response
-
-from app import db
+#/newuser的后端API
+from flask import request,jsonify,session,redirect,Response
 from app.main import main
-from app.models.models import Activity
+from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System
+from app import db
+import json,datetime,random,string
+from sqlalchemy import or_,and_
 
+@main.after_app_request
+def after_request(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    return response
 
-# 通过自主活动
-@main.route('/tguseractivity', methods=['GET', 'POST'])
-def tguseractivity():
-    if request.method == 'GET':
-        name = request.args.get('name')
-    else:
-        name = request.form.get('name')
-    activity = Activity.query.filter_by(name=name).first()
-    activity.status = 2
-    db.session.commit()
-    return Response(json.dumps({'status': True}), mimetype='application/json')
-
-
-# 驳回自主活动
-@main.route('/bhuseractivity', methods=['GET', 'POST'])
-def bhuseractivity():
-    if request.method == 'GET':
-        name = request.args.get('name')
-    else:
-        name = request.form.get('name')
-    activity = Activity.query.filter_by(name=name).first()
-    activity.status = 1
-    db.session.commit()
-    return Response(json.dumps({'status': True}), mimetype='application/json')
-
-
-# # 删除自主活动
-# @main.route('/deleteactivity', methods=['GET', 'POST'])
-# def deleteactivity():
-#     if request.method == 'GET':
-#         name = request.args.get('name')
-#     else:
-#         name = request.form.get('name')
-#     activity = Activity.query.filter_by(name=name).first()
-#     db.session.delete(activity)
-#     db.session.commit()
-#     return Response(json.dumps({'status': True}), mimetype='application/json')
+# 用户提交申报材料
+@main.route('/adduserdeclare')
+def adduserdeclare():
+    return Response(json.dumps({}), mimetype='application/json')

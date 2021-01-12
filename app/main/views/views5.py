@@ -1,7 +1,9 @@
-from flask import render_template,session,redirect,request
+#/managedeclareadd的后端API
+from flask import request,jsonify,session,redirect,Response
 from app.main import main
-from urllib import request as request2
-import json
+from app.models.models import User,Activity,AD,Data,Declare,UDeclare
+from app import db
+import json,datetime
 
 @main.after_app_request
 def after_request(response):
@@ -10,61 +12,7 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
-@main.route('/')
-def index():
-    return redirect('/login')
-
-@main.route('/login',methods=['GET','POST'])
-def login():
-    user = session.get('user')
-    if user!=None:
-        session.pop('username', None)
-    return render_template('login.html')
-
-@main.route('/userupdata',methods=['GET','POST'])
-def userupdata():
-    user = session.get('user')
-    if user==None:
-        return redirect('/login')
-    else:
-        return render_template('userupdata.html',username=user["username"])
-
-@main.route('/useractivity',methods=['GET','POST'])
-def useractivity():
-    user = session.get('user')
-    if user == None:
-        return redirect('/login')
-    else:
-        return render_template('useractivity.html',username=user["username"])
-
-@main.route('/manage',methods=['GET','POST'])
-def manage():
-    user = session.get('user')
-    if user == None:
-        return redirect('/login')
-    else:
-        return render_template('manage.html',username=user["username"])
-
-@main.route('/manageuser',methods=['GET','POST'])
-def manageuser():
-    user = session.get('user')
-    if user == None:
-        return redirect('/login')
-    else:
-        return render_template('manageuser.html',username=user["username"])
-
-@main.route('/manageactivity',methods=['GET','POST'])
-def manageactivity():
-    user = session.get('user')
-    if user == None:
-        return redirect('/login')
-    else:
-        return render_template('manageactivity.html',username=user["username"])
-
-@main.route('/manageaddtype',methods=['GET','POST'])
-def manageaddtype():
-    user = session.get('user')
-    if user == None:
-        return redirect('/login')
-    else:
-        return render_template('manageaddtype.html', username=user["username"])
+#添加新的申报任务
+@main.route('/adddeclare',methods=['GET','POST'])
+def adddeclare():
+    return Response(json.dumps({}), mimetype='application/json')

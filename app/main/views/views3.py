@@ -1,10 +1,9 @@
-from flask import request,jsonify,Response
+#/manageactivity的后端API
+from flask import request,jsonify,session,redirect,Response
 from app.main import main
 from app.models.models import User,Activity,AD,Data
 from app import db
-import os,json
-import random,string,datetime
-from sqlalchemy import or_,and_
+import json,datetime
 
 @main.after_app_request
 def after_request(response):
@@ -13,71 +12,122 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
-@main.route('/adduser',methods=['GET', 'POST'])
-def adduser():
-    if request.method == "GET":
-        username = request.args.get('username')
+#添加系统活动
+@main.route('/addsysactivity', methods=['GET', 'POST'])
+def addsysactivity():
+    if request.method == 'GET':
+        name = request.args.get('name')
+        typeuser = '自主'
+        type = request.args.get('type')
+        begintime = request.args.get('begintime')
+        endtime = request.args.get('endtime')
+        stoptime = request.args.get('stoptime')
+        main = request.args.get('main')
     else:
-        username = request.json.get('username')
-    k = random.randint(8, 20)
-    password=''.join(random.sample(string.ascii_letters + string.digits, k))
-    user=User(username=username,password=password,type='user',checked=0)
+        name = request.form.get('name')
+        typeuser = '自主'
+        type = request.form.get('type')
+        begintime = request.form.get('begintime')
+        endtime = request.form.get('endtime')
+        stoptime = request.form.get('stoptime')
+        main = request.form.get('main')
+    username = session.get('username')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    stoptime = stoptime.datetime.strptime(stoptime, '%Y-%m-%d')
+    user = User.query.filter(User.username == username).all()[0]
+    userid = 1
+    activity = Activity(name=name, begintime=begintime, endtime=endtime, stoptime=stoptime, main=main, type=type, userid=userid)
+    db.session.add(activity)
+    db.session.commit()
+    user.updatetime = activity.uptime
     db.session.add(user)
     db.session.commit()
+    session["activityid"] = activity.id
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
-@main.route('/searchuser',methods=['GET', 'POST'])
-def searchuser():
+#列表显示活动
+@main.route('/searchactivity',methods=['GET', 'POST'])
+def searchactivity():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
     else:
         page = request.json.get('page')
         per_page = request.json.get('per_page')
-    #倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
-    page=int(page)
-    per_page = int(per_page)
-    #查询用户需要sysadmin用户和老用户、未过期用户
-    user=User.query.filter(and_(or_(User.checked==1,and_(User.checked==0,User.endtime>datetime.datetime.now()))),User.type!='sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
-    items=user.items
-    item=[]
-    count=(int(page)-1)*int(per_page)
-    for i in range(len(items)):
-        itemss={'number':count+i+1,'id':items[i].id,'username':items[i].username,'password':items[i].password,'lasttime':str(items[i].updatetime),'status':items[i].checked}
-        item.append(itemss)
-    data={'zpage':user.pages,'total':user.total,'dpage':user.page,'item':item}
-    return Response(json.dumps(data), mimetype='application/json')
-
-@main.route('/deleteuser',methods=['GET', 'POST'])
-def deleteuser():
-    if request.method == "GET":
-        id = request.args.get('id')
-        page = request.args.get('page')  # 当前页
-        per_page = request.args.get('per_page')  # 平均页数
-    else:
-        id = request.json.get('id')
-        page = request.json.get('page')
-        per_page = request.json.get('per_page')
-    #移除用户的相关活动及数据
     page = int(page)
     per_page = int(per_page)
-    user=User.query.filter(User.id==id).all()[0]
-    user.checked=0
-    activitys=Activity.query.filter(Activity.userid==id).all()
-    for activity in activitys:
-        activity.status=3
-        db.session.add(activity)
-    db.session.commit()
-    db.session.add(user)
-    db.session.commit()
-    # 倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
-    user = User.query.filter(and_(or_(User.checked == 1, and_(User.checked == 0, User.endtime > datetime.datetime.now()))),User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
-    items = user.items
+    activity = Activity.query.filter(Activity.status != 3).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
-        itemss = {'number': count + i + 1, 'id': items[i].id, 'username': items[i].username,
-                  'password': items[i].password, 'lasttime': str(items[i].updatetime), 'status': items[i].checked}
+        itemss = {'number': count + i + 1, 'id': items[i].id, 'activityname': items[i].name, 'typeuser':items[i].typeuser,'type': items[i].type,
+                  'begintime': str(items[i].begintime), "endtime": str(items[i].endtime),'status':items[i].status}
         item.append(itemss)
-    data = {'zpage': user.pages, 'total': user.total, 'dpage': user.page, 'item': item}
+    data = {'zpage': activity.pages, 'total': activity.total, 'dpage': activity.page, 'item': item}
     return Response(json.dumps(data), mimetype='application/json')
+
+#查看自主活动信息
+@main.route('/detailuseractivity',methods=['GET', 'POST'])
+def detailuseractivity():
+    if request.method == "GET":
+        id = request.args.get('id')
+    else:
+        id = request.json.get('id')
+    activity=Activity.query.filter(Activity.id==id).all()[0]
+    data=activity.datas
+    filedata={'video':[],'music':[],'image':[],'pdf':[],'word':[]}
+    for datai in data:
+        filedata[datai.type].append(datai.name)
+    da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'video':filedata['video'],'music':filedata['music'],'image':filedata['image'],'pdf':filedata['pdf'],'word':filedata['word']}
+    return Response(json.dumps(da), mimetype='application/json')
+
+#通过自主活动
+@main.route('/tguseractivity', methods=['GET', 'POST'])
+def tguseractivity():
+    if request.method == 'GET':
+        name = request.args.get('name')
+    else:
+        name = request.form.get('name')
+    activity = Activity.query.filter_by(name=name).first()
+    activity.status = 2
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
+
+#驳回自主活动
+@main.route('/bhuseractivity', methods=['GET', 'POST'])
+def bhuseractivity():
+    if request.method == 'GET':
+        name = request.args.get('name')
+    else:
+        name = request.form.get('name')
+    activity = Activity.query.filter_by(name=name).first()
+    activity.status = 1
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
+
+#查看系统活动信息
+@main.route('/detailsysactivity',methods=['GET','POST'])
+def detailsysactivity():
+    if request.method == "GET":
+        id = request.args.get('id')
+    else:
+        id = request.json.get('id')
+    activity=Activity.query.filter(Activity.id==id).all()[0]
+    userz=activity.users
+    user=[]
+    for users in userz:
+        user.append(users.username)
+    da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user}
+    return Response(json.dumps(da), mimetype='application/json')
+
+#生成报名表
+@main.route('/xlsxsysactivity',methods=['GET','POST'])
+def xlsxsysactivity():
+    return Response(json.dumps({}), mimetype='application/json')
+
+#生成二维码
+@main.route('/ewmsysactivity',methods=['GET','POST'])
+def ewmsysactivity():
+    return Response(json.dumps({}), mimetype='application/json')
