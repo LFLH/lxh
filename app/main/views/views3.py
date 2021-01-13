@@ -1,7 +1,7 @@
 #/manageactivity的后端API
 from flask import request,jsonify,session,redirect,Response,send_from_directory,abort,make_response,send_file
 from app.main import main
-from app.models.models import User,Activity,AD,Data
+from app.models.models import User,Activity,AD,Data,AU
 from app import db
 import json,datetime,xlwt,os,mimetypes,time,qrcode
 
@@ -126,7 +126,7 @@ def detailsysactivity():
         id = request.json.get('id')
     activity=Activity.query.filter(Activity.id==id).all()[0]
     # 获取系统活动的报名用户
-    userz=activity.users
+    userz=User.query.join(AU).join(Activity).filter(Activity.id==id).all()
     user=[]
     for users in userz:
         user.append(users.username)
@@ -144,7 +144,7 @@ def xlsxsysactivity():
         id = request.json.get('id')
     activity=Activity.query.filter(Activity.id==id).all()[0]
     # 获取系统活动的报名用户
-    userz=activity.users
+    userz = User.query.join(AU).join(Activity).filter(Activity.id == id).all()
     user=[]
     for users in userz:
         user.append(users.username)

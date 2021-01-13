@@ -21,13 +21,21 @@ def adduser():
         username = request.args.get('username')
     else:
         username = request.json.get('username')
-    k = random.randint(8, 20)
-    #自动生成密码
-    password=''.join(random.sample(string.ascii_letters + string.digits, k))
-    #添加用户
-    user=User(username=username,password=password,type='user',checked=0)
-    db.session.add(user)
-    db.session.commit()
+    user=User.query.filter(User.username==username).all()
+    #不存在用户
+    if len(user)==0:
+        k = random.randint(8, 20)
+        #自动生成密码
+        password=''.join(random.sample(string.ascii_letters + string.digits, k))
+        #添加用户
+        newuser=User(username=username,password=password,type='user',checked=0)
+        db.session.add(newuser)
+        db.session.commit()
+    #存在用户
+    else:
+        user[0].endtime=datetime.datetime.now()
+        db.session.add(user[0])
+        db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #删除用户

@@ -43,6 +43,28 @@ def create_dir(s):
 #自主活动提交
 @main.route('/addactivitycs',methods=['GET','POST'])
 def addactivitycs():
+    # 创建文件夹
+    filelist = ['video', 'music', 'image', 'pdf', 'word']
+    upload_files = {}
+    file_dir = {}
+    file_dir['base'] = create_dir('data')
+    filedata = []
+    for i in range(len(filelist)):
+        filedata.append([])
+        upload_files[filelist[i]] = request.files.getlist(filelist[i])
+        file_dir[filelist[i]] = create_dir('data\\' + filelist[i])
+    # 检查文件类型及大小
+    for i in range(len(filelist)):
+        for file in upload_files[filelist[i]]:
+            filename = secure_filename(file.filename)
+            ext = filename.rsplit('.')
+            ext = ext[len(ext) - 1].lower()
+            type = panduan(ext)
+            filedata[i].append(file.read())
+            j = len(filedata[i]) - 1
+            size = int(len(filedata[i][j]) / 1024 / 1024)
+            if type != filelist[i] or size > 100:
+                return Response(json.dumps({'status': False}), mimetype='application/json')
     name = request.args.get('name')
     begintime = request.args.get('begintime')
     endtime = request.args.get('endtime')
@@ -53,35 +75,15 @@ def addactivitycs():
     user=session.get('user')
     userid = user['userid']
     user=User.query.filter(User.id==userid).all()[0]
+    #创建活动
     activity = Activity(name=name, typeuser='自主',begintime=begintime, endtime=endtime, main=main, type=type,userid=userid)
     db.session.add(activity)
     db.session.commit()
+    # 修改用户操作时间
     user.updatetime = activity.updatetime
     db.session.add(user)
     db.session.commit()
-    filelist=['video','music','image','pdf','word']
-    upload_files={}
-    file_dir = {}
-    file_dir['base'] = create_dir('data')
-    filedata=[]
-    for i in range(len(filelist)):
-        filedata.append([])
-        upload_files[filelist[i]]=request.files.getlist(filelist[i])
-        file_dir[filelist[i]] = create_dir('data\\'+filelist[i])
-    for i in range(len(filelist)):
-        for file in upload_files[filelist[i]]:
-            filename = secure_filename(file.filename)
-            ext = filename.rsplit('.')
-            ext = ext[len(ext) - 1].lower()
-            type = panduan(ext)
-            filedata[i].append(file.read())
-            j=len(filedata[i])-1
-            size = int(len(filedata[i][j])/ 1024 / 1024)
-            if type!=filelist[i] or size>100:
-                activity.status = "delete"
-                db.session.add(activity)
-                db.session.commit()
-                return Response(json.dumps({'status': False}), mimetype='application/json')
+    # 保存文件
     for i in range(len(filelist)):
         upload_file=upload_files[filelist[i]]
         for j in range(len(upload_file)):

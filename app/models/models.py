@@ -16,6 +16,7 @@ class User(db.Model):
     userut = db.relationship('UTrain', backref='userut')  # UTrain外键
     usersr = db.relationship('Record', backref='userr')  # Record外键
     usersc=db.relationship('Score',backref='usersc')# Score外键
+    uersau=db.relationship('AU', backref='userau')#AU外键
 
     def __repr__(self):
         return self
@@ -24,7 +25,15 @@ class User(db.Model):
 AD = db.Table('ad', db.Column('activityid', db.Integer, db.ForeignKey('activity.id')),db.Column('dataid', db.Integer, db.ForeignKey('data.id')))
 
 #表 5活动报名表(活动id,用户id，状态,ip地址)
-AU = db.Table('au', db.Column('activityid', db.Integer, db.ForeignKey('activity.id')),db.Column('userid', db.Integer, db.ForeignKey('user.id')),db.Column('type',db.Integer),db.Column('ip',db.String(255)))
+class AU(db.Model):
+    __tablename__='au'
+    activityid=db.Column(db.Integer, db.ForeignKey('activity.id'),primary_key=True)
+    userid=db.Column(db.Integer, db.ForeignKey('user.id'),primary_key=True)
+    type=db.Column(db.Integer,default=0)
+    ip=db.Column(db.String(255))
+
+    def __repr__(self):
+        return self
 
 #表 2活动表
 class Activity(db.Model):
@@ -41,7 +50,7 @@ class Activity(db.Model):
     status = db.Column(db.Integer,default=0)#状态，0创建，1驳回，2通过，3删除
     userid = db.Column(db.Integer, db.ForeignKey('user.id'))#外键
     datas = db.relationship('Data', secondary=AD, backref=db.backref('adatas', lazy='dynamic'))
-    users=db.relationship('User', secondary=AU, backref=db.backref('ausers', lazy='dynamic'))
+    aus = db.relationship('AU', backref='aus')  # AU外键
 
     def __repr__(self):
         return self

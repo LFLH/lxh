@@ -15,4 +15,20 @@ def after_request(response):
 #添加新的申报任务
 @main.route('/addability',methods=['GET','POST'])
 def addability():
-    return Response(json.dumps({}), mimetype='application/json')
+    if request.method == "GET":
+        name = request.args.get('name')
+        begintime = request.args.get('begintime')
+        endtime = request.args.get('endtime')
+        main = request.args.get('main')
+    else:
+        name = request.form.get('name')
+        begintime = request.form.get('begintime')
+        endtime = request.form.get('endtime')
+        main = request.form.get('main')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    #创建能力提升培训
+    train=Train(name=name,begintime=begintime,endtime=endtime,main=main)
+    db.session.add(train)
+    db.session.commit()
+    return Response(json.dumps({'status':True}), mimetype='application/json')
