@@ -1,0 +1,50 @@
+<title>manageabilityadd</title>
+{% extends "base_Txx.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2>能力提升培训添加</h2>
+        <form id="form">
+        <div class="form-group">
+          <label for="name">能力提升培训名：</label>
+          <input type="text" class="form-control" id="name" name="abilityName">
+        </div>
+        <div class="form-group">
+          <label for="startTime">培训开始时间：</label>
+          <input type="date" class="form-control" id="startTime" name="time1" >
+        </div>
+        <div class="form-group">
+          <label for="stopTime">培训结束时间：</label>
+          <input type="date" class="form-control" id="stopTime" name="time2">
+        </div>
+        <div class="form-group">
+          <label for="content">培训内容：</label>
+          <input type="text" class="form-control" id="content" name="abilityContent">
+        </div>
+        <div style="text-align:center">
+         <button id="cancel" type="button" style="margin:50px">取消</button>
+         <button id="submit" type="button" style="margin:50px">添加</button>
+{#         <button id="submit" onclick="alert($('#content').val())" type="button" style="margin:50px">添加</button>#}
+        </div>
+      </form>
+    </div>
+
+{% endblock %}
+
+<script>
+    $(function () {
+        $("#form")(function () {
+            $("#cancel").click(function () {
+                $("#name").attr("value","");
+                $('#startTime').val('');
+                $('#stopTime').val('');
+                $('#content').val('');
+        });
+            $("#submit").click(function () {
+               alert("hhhhhhhh")
+        })
+        });
+
+    });
+
+</script>

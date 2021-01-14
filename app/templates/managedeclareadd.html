@@ -1,0 +1,71 @@
+<title>managedeclareadd</title>
+{% extends "base_Txx.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2>申报任务添加</h2>
+        <form>
+        <div class="form-group">
+          <label for="name" >申报任务名：</label>
+          <input type="text" class="form-control" id="name" name="name">
+        </div>
+        <div class="form-group">
+          <label for="startTime">申报开始时间：</label>
+          <input type="date" class="form-control" id="startTime" >
+        </div>
+        <div class="form-group">
+          <label for="stopTime">申报结束时间：</label>
+          <input type="date" class="form-control" id="stopTime" >
+        </div>
+        <div class="form-group">
+          <label for="content">申报内容：</label>
+          <input type="text" class="form-control" id="content" >
+        </div>
+        <div style="text-align:center">
+         <button id="cancel" type="button" style="margin:50px">取消</button>
+         <button id="submit" type="button" style="margin:50px">添加</button>
+       </div>
+      </form>
+    </div>
+
+{% endblock %}
+
+<script>
+    $(function () {
+        $("#submit").click(function () {
+             var name = $('#name').val();
+             var startTime = $('#startTime').val();
+             var stopTime = $('#stopTime').val();
+             var content = $('#content').val();
+             alert('名字为：'+ $('#name').val());
+
+
+             if(name == null){
+                 alert('培训名不能为空！');
+                 return
+             }
+             if(startTime == null){
+                 alert('请选择开始时间！');
+                 return
+             }
+             if(stopTime != null){
+                 if(startTime > stopTime){
+                     alert('结束时间不能早于开始时间！');
+                     return
+                 }
+             }else {
+                 alert('请选择结束时间！');
+                 return
+             }
+             if(content == null){
+                 alert('培训内容不能为空！');
+             }
+        });
+        $("#cancel").click(function () {
+            $("#name").attr("value","");
+            $('#startTime').val('');
+            $('#stopTime').val('');
+            $('#content').val('');
+        });
+    });
+</script>
