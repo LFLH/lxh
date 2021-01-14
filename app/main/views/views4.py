@@ -13,7 +13,7 @@ def after_request(response):
     return response
 
 #列表显示用户申报信息
-@main.route('/searchdeclareuser')
+@main.route('/searchdeclareuser',methods=['GET','POST'])
 def searchdeclareuser():
     if request.method == "GET":
         page = request.args.get('page')#当前页

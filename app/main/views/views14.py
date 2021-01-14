@@ -14,6 +14,7 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#判断文件类型
 def panduan(ext):
     video=['asf','asx','dvr-ms','wm','wmp','wmv','ra','ram','rm','rmvb','mov','qt','f4v','flv','hlv','swf','ifo','vob','dat','m1v','m2p','m2t','m2ts','m2v','m4b','m4p','m4v','mp2v','mp4','mpe','mpeg','mpeg4','mpg','mpv2','pva','tp','ts','mpeg1','mpeg2','3g2','3gp','3gp2','3gpp','2634','amv','avi','bik','divx','dpg','evo','h264','ivm','k3g','mkv','mod','mp4v','mts','nsr','nsv','ogm','ogv','pfv','pmf','pmp','pss','scm','skm','tod','tpr','trp','vp6','vp7','webm','wtv','mp41','dv','mtv','mxf','vro','vdat']
     music=['ape','cda','flac','tta','wma','wav','wv','aac','aif','aiff','amr','dts','dtshd','m1a','m2a','m4a','m4r','mid','midi','mka','mp2','mp3','mp5','mpa','mpc','ogg','rmi','tak','ogx','au','ac3','mp1','opus','dsf','dff']
@@ -34,6 +35,7 @@ def panduan(ext):
         type='error'
     return type
 
+#创建文件夹
 def create_dir(s):
     file_dir = os.path.join(s)
     if not os.path.exists(file_dir):

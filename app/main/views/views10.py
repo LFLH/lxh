@@ -14,7 +14,23 @@ def after_request(response):
     return response
 
 # 显示系统信息
-@main.route('/showsystem')
+@main.route('/showsystem',methods=['GET','POST'])
 def showsystem():
     system = System.query.first()
-    return jsonify({'类型': system.type, '内容': system.main})
+    return Response(json.dumps({'type': system.type, 'main': system.main}), mimetype='application/json')
+
+#修改系统信息
+@main.route('/updatesystem',methods=['GET','POST'])
+def updatesystem():
+    if request.method == "GET":
+        type = request.args.get('type')#当前页
+        main=request.args.get('main')#平均页数
+    else:
+        type = request.json.get('main')
+        main = request.json.get('main')
+    #修改系统信息
+    system=System.query.filter(System.type==type).all()[0]
+    system.main=main
+    db.session.add(system)
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')

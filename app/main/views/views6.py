@@ -13,7 +13,7 @@ def after_request(response):
     return response
 
 # 列表显示用户申请培训信息
-@main.route('/searchabilityuser')
+@main.route('/searchabilityuser',methods=['GET','POST'])
 def searchabilityuser():
     if request.method == "GET":
         page = request.args.get('page')#当前页

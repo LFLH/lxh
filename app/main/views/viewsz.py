@@ -1,6 +1,6 @@
 #前端界面展示
 from flask import render_template,session,redirect,request
-from app.models.models import Activity
+from app.models.models import Activity,User,AU
 from app.main import main
 import datetime
 
@@ -20,10 +20,11 @@ def useractivitysign(activityid):
         s='/useractivitysign/'+str(activityid)+'/fail'
         return redirect(s)
     else:
-        userz = activity.users
+        # 获取系统活动的报名用户
+        userz = User.query.join(AU).join(Activity).filter(Activity.id == id).all()
         user = []
         for users in userz:
-            user.append(users.username)
+            user.append({"id":users.id,"username":users.username})
         return render_template('useractivitysign.html',user=user)
 
 #扫码过期

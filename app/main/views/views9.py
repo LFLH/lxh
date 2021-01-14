@@ -67,9 +67,11 @@ def deleteuser():
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
+        # 返回用户id，用户名，密码，最后操作时间，状态
         itemss = {'number': count + i + 1, 'id': items[i].id, 'username': items[i].username,
                   'password': items[i].password, 'lasttime': str(items[i].updatetime), 'status': items[i].checked}
         item.append(itemss)
+    # 返回总页数、活动总数、当前页、用户集合
     data = {'zpage': user.pages, 'total': user.total, 'dpage': user.page, 'item': item}
     return Response(json.dumps(data), mimetype='application/json')
 
@@ -86,13 +88,15 @@ def searchuser():
     page=int(page)
     per_page = int(per_page)
     #查询用户需要sysadmin用户和老用户、未过期用户
-    user=User.query.filter(and_(or_(User.checked==1,and_(User.checked==0,User.endtime>datetime.datetime.now()))),User.type!='sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    user=User.query.filter(and_(or_(User.checked==1,and_(User.checked==0,User.endtime>datetime.datetime.now())),User.type!='sysadmin')).order_by(-User.updatetime).paginate(page, per_page, error_out=False)
     items=user.items
     item=[]
     count=(int(page)-1)*int(per_page)
     for i in range(len(items)):
+        #返回用户id，用户名，密码，最后操作时间，状态
         itemss={'number':count+i+1,'id':items[i].id,'username':items[i].username,'password':items[i].password,'lasttime':str(items[i].updatetime),'status':items[i].checked}
         item.append(itemss)
+    # 返回总页数、活动总数、当前页、用户集合
     data={'zpage':user.pages,'total':user.total,'dpage':user.page,'item':item}
     return Response(json.dumps(data), mimetype='application/json')
 
