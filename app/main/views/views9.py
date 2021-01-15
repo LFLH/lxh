@@ -16,15 +16,26 @@ def after_request(response):
 #添加用户
 @main.route('/adduser',methods=['GET', 'POST'])
 def adduser():
+    #根据用户名添加用户
     if request.method == "GET":
         username = request.args.get('username')
     else:
         username = request.json.get('username')
-    k = random.randint(8, 20)
-    password=''.join(random.sample(string.ascii_letters + string.digits, k))
-    user=User(username=username,password=password,type='user',checked=0)
-    db.session.add(user)
-    db.session.commit()
+    user=User.query.filter(User.username==username).all()
+    #不存在用户
+    if len(user)==0:
+        k = random.randint(8, 20)
+        #自动生成密码
+        password=''.join(random.sample(string.ascii_letters + string.digits, k))
+        #添加用户
+        newuser=User(username=username,password=password,type='user',checked=0)
+        db.session.add(newuser)
+        db.session.commit()
+    #存在用户
+    else:
+        user[0].endtime=datetime.datetime.now()
+        db.session.add(user[0])
+        db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #删除用户
@@ -56,9 +67,11 @@ def deleteuser():
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
+        # 返回用户id，用户名，密码，最后操作时间，状态
         itemss = {'number': count + i + 1, 'id': items[i].id, 'username': items[i].username,
                   'password': items[i].password, 'lasttime': str(items[i].updatetime), 'status': items[i].checked}
         item.append(itemss)
+    # 返回总页数、活动总数、当前页、用户集合
     data = {'zpage': user.pages, 'total': user.total, 'dpage': user.page, 'item': item}
     return Response(json.dumps(data), mimetype='application/json')
 
@@ -75,13 +88,15 @@ def searchuser():
     page=int(page)
     per_page = int(per_page)
     #查询用户需要sysadmin用户和老用户、未过期用户
-    user=User.query.filter(and_(or_(User.checked==1,and_(User.checked==0,User.endtime>datetime.datetime.now()))),User.type!='sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    user=User.query.filter(and_(or_(User.checked==1,and_(User.checked==0,User.endtime>datetime.datetime.now())),User.type!='sysadmin')).order_by(-User.updatetime).paginate(page, per_page, error_out=False)
     items=user.items
     item=[]
     count=(int(page)-1)*int(per_page)
     for i in range(len(items)):
+        #返回用户id，用户名，密码，最后操作时间，状态
         itemss={'number':count+i+1,'id':items[i].id,'username':items[i].username,'password':items[i].password,'lasttime':str(items[i].updatetime),'status':items[i].checked}
         item.append(itemss)
+    # 返回总页数、活动总数、当前页、用户集合
     data={'zpage':user.pages,'total':user.total,'dpage':user.page,'item':item}
     return Response(json.dumps(data), mimetype='application/json')
 
