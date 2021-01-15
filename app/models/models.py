@@ -30,7 +30,7 @@ class AU(db.Model):
     activityid=db.Column(db.Integer, db.ForeignKey('activity.id'),primary_key=True)
     userid=db.Column(db.Integer, db.ForeignKey('user.id'),primary_key=True)
     type=db.Column(db.Integer,default=0)
-    ip=db.Column(db.String(255))
+    ip=db.Column(db.String(255),default="255.255.255.255",primary_key=True)
 
     def __repr__(self):
         return self

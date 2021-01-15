@@ -1,7 +1,7 @@
 #/usertrainregister的后端API
 from flask import request,jsonify,session,redirect,Response
 from app.main import main
-from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,AU
+from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,AU,TUT
 from app import db
 import json,datetime,random,string,os
 from sqlalchemy import or_,and_
@@ -25,6 +25,8 @@ def searchsystrain():
         per_page = request.json.get('per_page')
     page=int(page)
     per_page=int(per_page)
+    user = session.get('user')
+    userid = user['userid']
     train = Train.query.order_by(-Train.endtime).paginate(page, per_page, error_out=False)
     items = train.items
     item = []
@@ -33,7 +35,11 @@ def searchsystrain():
         if items[i].endtime<datetime.datetime.now():
             status=1
         else:
-            status=0
+            tut=Train.query.join(TUT).join(UTrain).filter(and_(Train.id==items[i].id,UTrain.userid==userid)).count()
+            if tut>0:
+                status=1
+            else:
+                status=0
         # 返回培训名、开始时间、结束时间、状态
         itemss={'number': count + i + 1,'id':items[i].id,'name': items[i].name, 'begintime': str(items[i].begintime), 'endtime': str(items[i].endtime),'status':status}
         item.append(itemss)
