@@ -143,7 +143,7 @@
                 </div>
                     <div class="form-group" style="margin-top: 120px">
                         <div class="col-sm-10">
-                            <button class="btn btn-outline-dark btn-lg" style="margin-left: 80px">取消</button>
+                            <button id="del_txt" class="btn btn-outline-dark btn-lg" style="margin-left: 80px">取消</button>
                             <button type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 180px">上传</button>
                         </div>
                     </div>
@@ -154,14 +154,25 @@
 </div>
 
 <script>
-{#   将文字和文件上传到后端 #}
+    {#取消键实现报告名和文件内容全部取消的功能#}
+$(function(){
+   $("#del_txt").click(function(){
+       $("#name").val("");
+       $("#exampleInputFilePDF").val("");
+       $("#exampleInputFileWord").val("");
+       $("#exampleInputFileImage").val("");
+       $("#exampleInputFileVedio").val("");
+   })
+});
+
+{# 将文字和文件上传到后端 #}
     $(document).ready(function(){
         $("#update").submit(function(){
             let name = $('#name').val();
             str_url='./addactivitycs?name='+name;
-            console.log("$(\"#update\")[0]=",$("#update")[0]);
+            {#console.log("$(\"#update\")[0]=",$("#update")[0]);#}
             var formData = new FormData($("#update")[0]);
-            console.log("formData=",formData);
+            {#console.log("formData=",formData);#}
             $.ajax({
                 type: "POST",
                 data: formData,

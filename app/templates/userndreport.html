@@ -112,6 +112,7 @@
 {# control-label：label标签就变成了可控制的标签#}
                     <label for="name" class="col-sm-2 control-label" style="font-size: 20px">报告名:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
+{#  required: required 属性规定必需在提交表单之前填写输入字段。#}
                         <input class="form-control" id="name" placeholder="请输入名称" required>
                     </div>
                 </div>
@@ -137,7 +138,7 @@
                 </div>
                     <div class="form-group" style="margin-top: 120px">
                         <div class="col-sm-10">
-                            <button class="btn btn-outline-dark btn-lg" style="margin-left: 80px">取消</button>
+                            <button id='del_txt' class="btn btn-outline-dark btn-lg" style="margin-left: 80px">取消</button>
                             <button id="submit" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 180px">上传</button>
                         </div>
                     </div>
@@ -152,14 +153,25 @@
 </div>
 
 <script>
+{#取消键实现报告名和文件内容全部取消的功能#}
+$(function(){
+   $("#del_txt").click(function(){
+       $("#name").val("");
+       $("#exampleInputFilePDF").val("");
+       $("#exampleInputFileWord").val("");
+       $("#exampleInputFileImage").val("");
+   })
+});
+
+
 {#   将文字和文件上传到后端 #}
     $(document).ready(function(){
         $("#update").submit(function(){
             let name = $('#name').val();
             str_url='./addactivitycs?name='+name;
-            console.log("$(\"#update\")[0]=",$("#update")[0]);
+            {#console.log("$(\"#update\")[0]=",$("#update")[0]);#}
             var formData = new FormData($("#update")[0]);
-            console.log("formData=",formData);
+            {#console.log("formData=",formData);#}
             $.ajax({
                 type: "POST",
                 data: formData,

@@ -144,7 +144,8 @@
                 <lable style="font-size: 20px ;margin-top: 20px">每年举办的活动次数：</lable>
                 <br>
 {#                <input type="number" value="2" min="0" max="1000" step="1" style="margin-top: 20px"/>#}
-                <input id="receive_num" type="text" class="form-control" style="float: right;margin-top: 20px" placeholder="按设置按钮选择活动次数" value="">
+{#                <input id="receive_num" type="text" class="form-control" style="float: right;margin-top: 20px" placeholder="按设置按钮选择活动次数" value="">#}
+                <div id="receive_num" style="text-align:center;font-size: 20px ;float: right;margin-top: 20px;border: black solid;width:40px;height: 40px"></div>
                 </br>
             </form>
             <form style="margin-top: 220px">
@@ -182,16 +183,20 @@ $(function () {
 　　openddt.click(function () {
 　　$(this).siblings(".dropdown-menu").toggle();
 　　});
-})
+});
 
 {#    设置活动次数#}
 $(document).ready(function(){
     $("#set_activity_update").click(function(){
         let num = $("#set_number").val();
-         $("#receive_num").val(num);
+         {#$("#receive_num").val(num);#}
+        $("#receive_num").append(num)
     });
     $("#set_delete").click(function(){
-        $("#receive_num").val(null);
+        {#$("#receive_num").val(null);#}
+{#        获取div中的元素#}
+        $("#receive_num").html("");
+
     })
 });
 

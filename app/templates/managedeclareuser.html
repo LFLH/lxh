@@ -32,10 +32,13 @@
             border:1px solid black;
             {#z-index: 9999; /*这个数值要足够大，才能够显示在最上层*/#}
             position: absolute;
+            {#position:fixed;#}
+            {#bottom: 0;#}
             background: #FFF;
             display: none;
             top: 50%;
-            left: 30%;
+            left:30%;
+
         }
     </style>
 </head>
@@ -172,23 +175,62 @@
                     </nav>
                 </div>
             </form>
+
+
             <div class="box" >
-           {# 后端返回的具体详细信息在view4中 #}
+{#            后端返回的具体详细信息在view4中#}
                 <h2 style="margin-top: 5px;text-align: center">申报任务详情</h2>
-                <div >
-                    <label style="font-size: 20px">申报内容：</label>
-                    <div style="padding-left: 20px;">
-                        <p >what</p>
+                <div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">申报内容：</label>
+                    <p style="display: inline;width: 450px">申报任务上传文件简要内容</p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">用户：</label>
+                    <p style="display: inline;width: 450px">基地2</p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">申报开始时间：</label>
+                    <p style="display: inline;width: 450px">2020-12-12 00：00：00</p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">申报结束时间：</label>
+                    <p style="display: inline;width: 450px">2020-12-12 00：00：00</p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">申报提交时间：</label>
+                    <p style="display: inline;width: 450px">2020-12-12 00：00：00</p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">PDF文件：</label>
+                    <p style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">word文件：</label>
+                    <p style="display: inline;width: 450px"></p>
                     </div>
                 </div>
                 <div>
-
-
                 </div>
-
-                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px; margin-top: 450px">取消</button>
-                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px;margin-top: 450px">通过</button>
+                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px; margin-bottom: 10px">取消</button>
+                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px;margin-bottom: 10px">通过</button>
             </div>
+
+
+{#            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">#}
+{#                <div class="modal-dialog">#}
+{#                    <div class="modal-content">#}
+{#                        <div class="modal-header">#}
+{#                            <h4 class="modal-title" id="myModalLabel">申报任务详情</h4>#}
+{#                        </div>#}
+{#                        <div class="modal-body">在这里添加一些文本</div>#}
+{#                        <div class="modal-footer">#}
+{#                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>#}
+{#                            <button type="button" class="btn btn-primary">提交更改</button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
         </div>
         </div>
 </div>
@@ -225,8 +267,8 @@ $(document).ready(function(){
             {#dpage = data.dpage;#}
             {#let result_declareuser = result;#}
             {#console.log("result_declareuser=",result_declareuser)#}
-            let str=""
-            len_declareuser=result.length
+            let str="";
+            len_declareuser=result.length;
             {#console.log("len_declareuser=",len_declareuser)#}
             for (let index = 0; index < len_declareuser; index++) {
                 {#console.log("result[index].begintime=",result[index].begintime)#}
@@ -249,7 +291,6 @@ $(document).ready(function(){
         $('.box').css('display','block');
         {#$('.box').show();#}
         return false;
-
     });
     $("#close_delete").click(function(){
         $('.box').css('display','none');
@@ -263,6 +304,7 @@ $(document).ready(function(){
 });
 
 
+{#对于操作中查看按钮的子组件的写作内容会有帮助#}
 {#$("#btn1").click(function(){#}
 {#    $("#test1").text(function(i,origText){#}
 {#        return "旧文本: " + origText + " 新文本: Hello world! (index: " + i + ")";#}
