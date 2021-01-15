@@ -1,7 +1,7 @@
-#/newuser的后端API
+#/userndreport的后端API
 from flask import request,jsonify,session,redirect,Response
 from app.main import main
-from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System
+from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,AU,Record
 from app import db
 import json,datetime,random,string,os
 from sqlalchemy import or_,and_
@@ -16,9 +16,12 @@ def after_request(response):
 
 #判断上传文件类型
 def panduan(ext):
+    image=['bmp','pcx','png','gif','jpeg','tiff','cgm','dxf','cdr','wmf','eps','emf','pict','jpg']
     word=['doc','docx']
     pdf=['pdf']
-    if ext in word:
+    if ext in image:
+        type='image'
+    elif ext in word:
         type='word'
     elif ext in pdf:
         type='pdf'
@@ -33,11 +36,12 @@ def create_dir(s):
         os.makedirs(file_dir)
     return file_dir
 
-# 用户提交申报材料
-@main.route('/adduserdeclare',methods=['GET', 'POST'])
-def adduserdeclare():
+
+#提交年度报告
+@main.route('/addndreport',methods=['GET','POST'])
+def addndreport():
     # 创建文件夹
-    filelist = ['pdf', 'word']
+    filelist = ['image', 'pdf', 'word']
     upload_files = {}
     file_dir = {}
     file_dir['base'] = create_dir('data')
@@ -58,12 +62,13 @@ def adduserdeclare():
             size = int(len(filedata[i][j]) / 1024 / 1024)
             if type != filelist[i] or size > 100:
                 return Response(json.dumps({'status': False}), mimetype='application/json')
-    user=session.get('user')
-    userid=user['userid']
+    name = request.args.get('name')
+    user = session.get('user')
+    userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]
-    #创建用户申报
-    udeclare=UDeclare(userid=userid)
-    db.session.add(udeclare)
+    # 创建报告
+    record = Record(userid=userid, name=name)
+    db.session.add(record)
     db.session.commit()
     # 修改用户操作时间
     user.updatetime = datetime.datetime.now()
@@ -78,7 +83,7 @@ def adduserdeclare():
             ext = filename.rsplit('.')
             ext = ext[len(ext) - 1].lower()  # 获取文件后缀
             type = filelist[i]
-            new_filename = str(userid) + "_" + str(udeclare.id) + "_" + str(j + 1) + '.' + ext  # 修改了上传的文件名
+            new_filename = str(userid) + "_" + str(record.id) + "_" + str(j + 1) + '.' + ext  # 修改了上传的文件名
             file.save(os.path.join(file_dir[type], new_filename))  # 保存文件到目录
             file_data = 'data\\' + type + "\\" + new_filename
             f = open(file_data, 'wb')
@@ -87,12 +92,7 @@ def adduserdeclare():
             data = Data(name=file.filename, type=filelist[i], path=file_data, newname=new_filename)
             db.session.add(data)
             db.session.commit()
-            udeclare.datas.append(data)
-    db.session.add(udeclare)
-    db.session.commit()
-    #连接申报和用户申报
-    declare=Declare.query.order_by(-Declare.id).all()[0]
-    declare.udeclares.append(udeclare)
-    db.session.add(declare)
+            record.datas.append(data)
+    db.session.add(record)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')

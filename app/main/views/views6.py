@@ -1,10 +1,9 @@
-from flask import request,jsonify,g
+#/manageabilityuser的后端API
+from flask import request,jsonify,session,redirect,Response
 from app.main import main
-from app.models.models import User,Activity,AD,Data
-from werkzeug.utils import secure_filename
+from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,TUT
 from app import db
-import os
-import base64,datetime,time
+import json,datetime
 
 @main.after_app_request
 def after_request(response):
@@ -13,83 +12,75 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
-def create_dir(s):
-    file_dir = os.path.join(s)
-    if not os.path.exists(file_dir):
-        os.makedirs(file_dir)
-    return file_dir
-
-@main.route('/wxaddactivity',methods=['POST'])
-def wxaddactivity():
+# 列表显示用户申请培训信息
+@main.route('/searchabilityuser',methods=['GET','POST'])
+def searchabilityuser():
     if request.method == "GET":
-        name = request.args.get('name')
-        begintime = request.args.get('begintime')
-        endtime = request.args.get('endtime')
-        main = request.args.get('main')
-        type = request.args.get('type')
-        username = request.args.get('username')
+        page = request.args.get('page')#当前页
+        per_page=request.args.get('per_page')#平均页数
     else:
-        name = request.form.get('name')
-        begintime = request.form.get('begintime')
-        endtime = request.form.get('endtime')
-        main = request.form.get('main')
-        type = request.form.get('type')
-        username = request.form.get('username')
-    by = str(begintime).split('年')[0]
-    bm = str(begintime).split('年')[1].split('月')[0]
-    bd = str(begintime).split('年')[1].split('月')[1].split('日')[0]
-    bH = str(begintime).split('年')[1].split('月')[1].split('日')[1].split('时')[0]
-    bM = str(begintime).split('年')[1].split('月')[1].split('日')[1].split('时')[1].split('分')[0]
-    begintime2 = by + "-" + bm + "-" + bd + " " + bH + ":" + bM + ":00"
-    begintime = datetime.datetime.strptime(begintime2, '%Y-%m-%d %H:%M:%S')
-    ey = str(endtime).split('年')[0]
-    em = str(endtime).split('年')[1].split('月')[0]
-    ed = str(endtime).split('年')[1].split('月')[1].split('日')[0]
-    eH = str(endtime).split('年')[1].split('月')[1].split('日')[1].split('时')[0]
-    eM = str(endtime).split('年')[1].split('月')[1].split('日')[1].split('时')[1].split('分')[0]
-    endtime2 = ey + "-" + em + "-" + ed + " " + eH + ":" + eM + ":00"
-    endtime = datetime.datetime.strptime(endtime2, '%Y-%m-%d %H:%M:%S')
-    cxtime = endtime - begintime
-    user = User.query.filter(User.username == username).all()[0]
-    userid = user.id
-    activity = Activity(name=name, begintime=begintime, endtime=endtime, cxtime=cxtime, main=main, type=type,userid=userid)
-    db.session.add(activity)
-    db.session.commit()
-    return jsonify({"activityid":activity.id})
+        page = request.json.get('page')
+        per_page = request.json.get('per_page')
+    page = int(page)
+    per_page = int(per_page)
+    # 连表查询未过期的用户申请培训
+    utrain=UTrain.query.join(TUT).join(Train).filter(Train.endtime>datetime.datetime.now()).order_by(-UTrain.uptime).paginate(page, per_page, error_out=False)
+    items = utrain.items
+    item = []
+    count = (int(page) - 1) * int(per_page)
+    for i in range(len(items)):
+        # 获取用户名
+        username = User.query.filter_by(id=items[i].userid).all()[0].username
+        # 获取对应的培训任务
+        train = Train.query.join(TUT).join(UTrain).filter(UTrain.id == items[i].id).all()[0]
+        # 用户申请状态
+        if items[i].type == 1:
+            status = 1
+        elif train.endtime < datetime.datetime.now():
+            status = 1
+        else:
+            status = 0
+        # 返回id，用户名，培训名，培训起始时间，结束时间，提交时间，能否点击通过按钮的状态
+        itemss = {'number': count + i + 1, 'id': items[i].id, 'username': username,'name':train.name,'begintime': str(train.begintime),
+                  'endtime': str(train.endtime), 'uptime': str(items[i].uptime),'status':status}
+        item.append(itemss)
+    # 返回总页数、活动总数、当前页、用户申报集合
+    data = {'zpage': utrain.pages, 'total': utrain.total, 'dpage': utrain.page, 'item': item}
+    return Response(json.dumps(data), mimetype='application/json')
 
-@main.route('/wxupdate',methods=['POST'], strict_slashes=False)
-def wxupdate():
-    activityid=request.form.get('activityid')
-    filetype = request.form.get('filetype')
-    i=request.form.get('i')
-    activityid=int(activityid)
-    i=int(i)
-    activity=Activity.query.filter(Activity.id==activityid).all()[0]
-    file_dir = {}
-    file_dir['base'] = create_dir('data')
-    file_dir['video'] = create_dir('data\\video')
-    file_dir['music'] = create_dir('data\music')
-    file_dir['image'] = create_dir('data\image')
-    f = request.files['myfile']  # 从表单的file字段获取文件，myfile为该表单的name值
-    if f:  # 判断是否是允许上传的文件类型
-        k=i+1
-        filename = secure_filename(f.filename)
-        ext = filename.rsplit('.', 1)[1]  # 获取文件后缀
-        new_filename = str(activity.userid) + "_" + str(activity.id) + "_" + str(k) + '.' + ext  # 修改了上传的文件名
-        f.save(os.path.join(file_dir[filetype], new_filename))  # 保存文件到目录
-        file_data = 'data\\' + filetype + "\\" + new_filename
-        data = Data(type=filetype, data=file_data)
-        db.session.add(data)
-        db.session.commit()
-        activity.datas.append(data)
-        db.session.add(activity)
-        db.session.commit()
-        user = User.query.filter(User.id == activity.userid).all()[0]
-        user.updatetime = activity.uptime
-        db.session.add(user)
-        db.session.commit()
-        bf = bytes(new_filename, encoding="utf8")
-        token = base64.b64encode(bf)
-        return jsonify({"errno": 0, "errmsg": "上传成功", "token": str(token, encoding="utf-8"),"activityid":activity.id})
+
+#显示用户申请培训详细信息
+@main.route('/detailabilityuser',methods=['GET','POST'])
+def detailabilityuser():
+    if request.method == 'GET':
+        id = request.args.get('id')
     else:
-        return jsonify({"errno": 1001, "errmsg": "上传失败"})
+        id = request.form.get('id')
+    # 获取用户申请培训
+    utrain=UTrain.query.filter(UTrain.id==id).all()[0]
+    # 获取用户名
+    name = User.query.filter_by(id=utrain.userid).all()[0].username
+    # 获取对应的申报任务
+    train = Train.query.join(TUT).join(UTrain).filter(UTrain.id == utrain.id).all()[0]
+    # 获取文件
+    data = utrain.datas
+    filedata = {'image':[],'pdf': [], 'word': []}
+    for datai in data:
+        filedata[datai.type].append(datai.name)
+    #培训名，培训内容，用户名，提交时间,pdf,word，图片
+    da={"name":train.name,"main":train.main,"username":name,"uptime":str(utrain.uptime),"pdf":filedata["pdf"],"word":filedata["word"],"image":filedata["image"]}
+    return Response(json.dumps(da), mimetype='application/json')
+
+#通过用户申请培训
+@main.route('/tgabilityuser', methods=['GET', 'POST'])
+def tgabilityuser():
+    if request.method == 'GET':
+        id = request.args.get('id')
+    else:
+        id = request.form.get('id')
+    # 修改申请状态
+    utrain = UTrain.query.filter_by(id=id).first()
+    utrain.type = 1
+    db.session.add(utrain)
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')

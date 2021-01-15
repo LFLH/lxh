@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>老用户提交科技周报告</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <link href="../static/css/dashboard.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style type="text/css">
+        .table>tbody>tr>td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table>thead>tr>th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .dropdown-menu li{
+            text-align: left;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+    <div class="container-fluid" style="">
+        <div class="navbar-header" style="width: 100%">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <div class="dropdown" style="float: right">
+                <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+{#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
+{#                <li><a class="nav-link" href="#">已提交活动</a></li>#}
+{#                <li><a class="nav-link" href="#">活动提交</a></li>#}
+{#                <li><a class="nav-link" href="{{ url_for('main.useractivityregister') }}">活动报名</a></li>#}
+{#                <li><a class="nav-link" href="#">培训报名</a></li>#}
+{#                <li><a class="nav-link" href="{{ url_for('main.userndreport') }}">年度总结提交</a></li>#}
+{#                <li><a class="nav-link" href="{{ url_for('main.userkjzreport') }}">科技周报告提交</a></li>#}
+{#            </ul>#}
+              <div id="accordion">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="#">已提交活动</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="#">活动提交</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link"  href="{{ url_for('main.useractivityregister') }}">活动报名</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                      <a class="collapsed card-link" href="#">培训报名</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{ url_for('main.userndreport')}}">年度总结提交</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+         <h2 class="sub-header" style="margin-top: 10px">科技周报告提交</h2>
+{# enctype='multipart/form-data：指表单数据bai有多部分构成，既有文本数据，又有文件等二进制数据#}
+            <form id="update" enctype='multipart/form-data'>
+            <!--<form method="POST" id="update" enctype='multipart/form-data'>-->
+                <div class="form-group">
+{# control-label：label标签就变成了可控制的标签#}
+                    <label for="name" class="col-sm-2 control-label" style="font-size: 20px">报告名:</label>
+                    <div class="col-sm-5" style="padding-left: 20px;">
+                        <input class="form-control" id="name" placeholder="请输入名称" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputFilePDF" class="control-label" style="font-size: 20px">上传PDF文件:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="pdf" id="exampleInputFilePDF" accept="application/pdf"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileWord" class="control-label" style="font-size: 20px">上传word文件:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="word" id="exampleInputFileWord" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
+"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileImage" class="control-label" style="font-size: 20px">上传图片:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="image" id="exampleInputFileImage" accept="image/*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputFileVedio" class="control-label">上传视频:</label>
+                    <div class="col-sm-10">
+                        <input type="file" multiple="" name="video" id="exampleInputFileVedio" accept="video/*"/>
+                    </div>
+                </div>
+                    <div class="form-group" style="margin-top: 120px">
+                        <div class="col-sm-10">
+                            <button id="del_txt" class="btn btn-outline-dark btn-lg" style="margin-left: 80px">取消</button>
+                            <button type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 180px">上传</button>
+                        </div>
+                    </div>
+
+            </form>
+      </div>
+    </div>
+</div>
+
+<script>
+    {#取消键实现报告名和文件内容全部取消的功能#}
+$(function(){
+   $("#del_txt").click(function(){
+       $("#name").val("");
+       $("#exampleInputFilePDF").val("");
+       $("#exampleInputFileWord").val("");
+       $("#exampleInputFileImage").val("");
+       $("#exampleInputFileVedio").val("");
+   })
+});
+
+{# 将文字和文件上传到后端 #}
+    $(document).ready(function(){
+        $("#update").submit(function(){
+            let name = $('#name').val();
+            str_url='./addactivitycs?name='+name;
+            {#console.log("$(\"#update\")[0]=",$("#update")[0]);#}
+            var formData = new FormData($("#update")[0]);
+            {#console.log("formData=",formData);#}
+            $.ajax({
+                type: "POST",
+                data: formData,
+                url: str_url,
+                contentType: false,
+                 processData: false,
+                 success:function(result){
+                    console.log("result=",result);
+                    Flush();
+                    Toast(result.status);
+                 }
+            });
+            return false;
+        });
+        function Flush(){
+            $('#name').val('');
+            $('#exampleInputFilePDF').val('');
+            $('#exampleInputFileWord').val('');
+            $('#exampleInputFileImage').val('');
+            $('#exampleInputFileVedio').val('');
+        }
+        function Toast(status){
+            if(status==true){
+                msg="年度总结上传成功！";
+            }else{
+                msg="年度总结上传失败！";
+            }
+            {#创建一个div，显示msg，显示后再移除该div#}
+            $(document).ready(function(){
+                $("#show_msg_div").text(msg);
+                $("#show_msg_div").css("width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;");
+                setTimeout(function(){
+                    let t = 0.5;
+                    setTimeout(function(){
+                        $("#show_msg_div").empty(msg);
+                    }, t * 1000)
+                })
+          });
+            {#var m = document.createElement('div');#}
+            {#m.innerHTML = msg;#}
+            {#m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";#}
+            {#document.body.appendChild(m);#}
+            {#setTimeout(function() {#}
+            {#    var d = 0.5;#}
+            {#    m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';#}
+            {#    m.style.opacity = '0';#}
+            {#    setTimeout(function() { document.body.removeChild(m) }, d * 1000);#}
+
+        }
+    });
+</script>
+</body>
