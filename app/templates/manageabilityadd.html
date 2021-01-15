@@ -31,20 +31,40 @@
 
 {% endblock %}
 
-<script>
+{% block js %}
     $(function () {
-        $("#form")(function () {
             $("#cancel").click(function () {
-                $("#name").attr("value","");
+                $("#name").val('');
                 $('#startTime').val('');
                 $('#stopTime').val('');
                 $('#content').val('');
         });
             $("#submit").click(function () {
-               alert("hhhhhhhh")
+                var content = $("#content").val();
+                var startTime = $('#startTime').val();
+                var stopTime = $('#stopTime').val();
+                var name= $('#name').val();
+
+                 if(name == ''){
+                 alert('名字不能为空！');
+                 return
+                 }
+                 if(startTime == ''){
+                     alert('请选择开始时间！');
+                     return
+                 }
+                 if(stopTime != ''){
+                     if(startTime > stopTime){
+                         alert('结束时间不能早于开始时间！');
+                         return
+                     }
+                 }else {
+                     alert('请选择结束时间！');
+                     return
+                 }
+                if(content == '') {
+                    alert("内容不能为空！");
+                }
         })
         });
-
-    });
-
-</script>
+{% endblock %}
