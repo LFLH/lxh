@@ -55,8 +55,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
-            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
+        <div class="col-md-2 sidebar">
+            <!--<ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
                 <li><a class="nav-link"
                         href="{{url_for('main.manageactivity')}}">活动管理</a></li>
                 <li><a class="nav-link" href="{{url_for('main.managedeclareuser')}}">申报管理</a></li>
@@ -64,7 +64,56 @@
                 <li><a class="nav-link" href="#">考核管理</a></li>
                 <li class="active"><a class="nav-link" href="#">用户管理</a></li>
                 <li><a class="nav-link" href="#">系统设置</a></li>
-            </ul>
+            </ul>-->
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
+                  </div>
+                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
+                      <a class="nav-link" href="#">申报任务添加</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
+                  </div>
+                  <div id="collapseThree" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
+                          <a class="nav-link" href="#">能力提升培训添加</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
+                  </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto">
             <h2 class="sub-header">用户列表</h2>
@@ -76,7 +125,7 @@
                         <nav class="navbar navbar-light bg-light">
                             <form class="form-inline">
                                 <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                        data-target="#myModal">添加</button>
+                                        data-target="#addModal">添加</button>
                                 <div class="form-group">
                                     <input type="file" class="form-control-file" id="exampleFormControlFile1" style="margin-left: 15px">
                                 </div>
@@ -148,7 +197,7 @@
 
 <!-- 添加模态框 #removeModal -->
 <form class="form-inline">
-    <div class="modal fade" id="myModal">
+    <div class="modal fade" id="addModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -158,6 +207,7 @@
                 </div>
 
                 <div class="modal-body">
+                    <form>
                     <div class="form-group">
                         <label for="username" class="control-label" style="display: inline"
                                >单位名称：</label>
@@ -167,9 +217,10 @@
                                    id="username" placeholder="请设置账号" required>
                         </div>
                     </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" value="提交">
+                    <button id="save" type="button" class="btn btn-primary" value="提交">
                         确认
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -253,52 +304,12 @@
 </script>-->
 <script type="text/javascript">
     $(document).ready(function(){
-        let dpage=1
-        let pages=1
-        let per_page=10
-        let d_per_page=10
-        let idz=new Array(10);
-        $.ajax({
-            type:'GET',
-            url:'./searchuser',
-            data:{'page':1,'per_page':per_page},
-            dataType:'json',
-            async: false,
-            cache: false,
-            contentType: 'application/json',
-            success:function(data){
-                pages = data.zpage;
-                let total = data.total;
-                dpage = data.dpage;
-                let activity = data.item;
-                let str=""
-                d_per_page=data.item.length
-                for (let index = 0; index < data.item.length; index++) {
-                idz[index]=data.item[index].id
-                str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].lasttime +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
-                }
-                $("#tableText").html(str);
-                let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
-                strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>"
-                for(let index=2;index<=pages;index++){
-                    strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
-                }
-                strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
-                $("#page-li").html(strli);
-                let s="#li"+dpage
-                $(s).css("border-color","blue");
-                if(dpage<pages){
-                    let r=dpage+1
-                    let rs="#li"+r
-                    $(rs).css("border-left-color","blue");
-                }else{
-                    $("#next").css("border-left-color","blue");
-                }
-            }
-        });
+        var dpage=1
+        var pages=1
+        var per_page=10
+        var d_per_page=10
+        var idz=new Array(10);
+        init(dpage,pages,per_page,d_per_page,idz);
         $("#prev").click(function(){
             if(dpage==1){
                 alert("该页是第一页！");
@@ -331,7 +342,9 @@
                             idz[index]=data.item[index].id
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
+                            "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
@@ -380,7 +393,9 @@
                             idz[index]=data.item[index].id
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
+                            "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
@@ -429,6 +444,7 @@
                             console.log(idz[index])
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
                         }
@@ -493,7 +509,64 @@
                 
             });
         }
+        $('#save').click(function (){
+            $.ajax({
+                url:'./adduser',
+                type:'get',
+                data:$("#addModal form").serialize(),
+                success:function(data){
+                    console.log(data);
+                    $("#addModal").modal("hide")
+                    init(dpage,pages,per_page,d_per_page,idz);
+            }
+            })
+        })
     });
+    function init(dpage,pages,per_page,d_per_page,idz){
+        $.ajax({
+            type:'GET',
+            url:'./searchuser',
+            data:{'page':1,'per_page':per_page},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(data){
+                pages = data.zpage;
+                let total = data.total;
+                dpage = data.dpage;
+                let activity = data.item;
+                let str=""
+                d_per_page=data.item.length
+                for (let index = 0; index < data.item.length; index++) {
+                idz[index]=data.item[index].id
+                str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].password +
+                            "</td><td>" + data.item[index].lasttime +
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                }
+                $("#tableText").html(str);
+                let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
+                strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>"
+                for(let index=2;index<=pages;index++){
+                    strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
+                }
+                strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
+                $("#page-li").html(strli);
+                let s="#li"+dpage
+                $(s).css("border-color","blue");
+                if(dpage<pages){
+                    let r=dpage+1
+                    let rs="#li"+r
+                    $(rs).css("border-left-color","blue");
+                }else{
+                    $("#next").css("border-left-color","blue");
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>
