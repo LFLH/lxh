@@ -53,7 +53,11 @@
                 <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
                     <li><a class="nav-link"
                             href="{{url_for('main.useractivity')}}">已提交活动</a></li>
-                    <li class="active"><a class="nav-link" href="#">添加新活动</a></li>
+                    <li class="active"><a class="nav-link" href="#">活动提交</a></li>
+                    <li><a class="nav-link" href="#">活动报名</a></li>
+                    <li><a class="nav-link" href="{{url_for('main.usertrainregister')}}">培训报名</a></li>
+                    <li><a class="nav-link" href="#">年度总结提交</a></li>
+                    <li><a class="nav-link" href="#">科技周报告提交</a></li>
                 </ul>
             </div>
         </div>
@@ -118,8 +122,8 @@
                 <div class="form-group">
                     <label for="exampleInputFileImage" class="control-label">上传word文件:</label>
                     <div class="col-sm-10">
-                        <input type="file" multiple="" name="word" id="exampleInputFileWord" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
-"/>
+                        <input type="file" multiple="" name="word" id="exampleInputFileWord"
+                               accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
                     </div>
                 </div>
                     <div class="form-group">
@@ -160,6 +164,16 @@
             let endtime = $('#endtime').val();
             let main = $('#content').val();
             let type = $('#type').val();
+            //测试修改自主活动信息
+            //s='./updateactivity?id=6&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
+            //测试提交年度报告
+            //s='./addndreport?name='+name
+            //测试科技周报告
+            //s='./addkjzreport?name='+name
+            //测试用户提交申报材料
+            //s='./adduserdeclare'
+            //测试培训报名
+            //s='./bmsystrain?id=1'
             s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
             var formData = new FormData($("#update")[0]);
             console.log(formData);
