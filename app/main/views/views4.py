@@ -64,7 +64,8 @@ def detaildeclareuser():
     data=udeclare.datas
     filedata = {'pdf': [], 'word': []}
     for datai in data:
-        filedata[datai.type].append(datai.name)
+        dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
+        filedata[datai.type].append(dataz)
     #用户名，申报起始时间，结束时间，提交时间,pdf,word
     da={'name':name,'begintime': str(declare.begintime),'endtime': str(declare.endtime),'uptime': str(udeclare.uptime),'pdf':filedata['pdf'],'word':filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')

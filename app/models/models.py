@@ -157,6 +157,8 @@ class Record(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey('user.id'))  # 用户编号
     year = db.Column(db.Integer, default=int(datetime.datetime.now().strftime('%Y')))  # 年份
     name = db.Column(db.String(255))  # 报告名
+    type=db.Column(db.String(255))  # 报告类型
+    status=db.Column(db.Integer, default=0)  # 报告状态
     datas = db.relationship('Data', secondary=RD, backref=db.backref('rdatas', lazy='dynamic'))
 
     def __repr__(self):
