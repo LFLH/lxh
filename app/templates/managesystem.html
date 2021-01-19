@@ -88,10 +88,21 @@
 {#                <li><a class="nav-link" href="{{url_for('main.managesystem')}}">系统设置</a></li>#}
 {#            </ul>#}
           <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="#">活动管理</a>
+{#                <div class="card">#}
+{#                    <div class="card-header">#}
+{#                        <a class="collapsed card-link"  href="#">活动管理</a>#}
+{#                    </div>#}
+{#                </div>#}
+              <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>
+                  </div>
+                  <div id="collapseOne" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>
+                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>
                     </div>
+                  </div>
                 </div>
 
                 <div class="card">
@@ -150,7 +161,7 @@
             </form>
             <form style="margin-top: 220px">
                 <button id='set_delete' type="button" class="btn btn-outline-dark btn-lg" style="margin-left: 80px">清空</button>
-                <button type="button" class="btn btn-outline-dark btn-lg" style="margin-left: 180px" data-toggle="modal" data-target="#myModal">设置</button>
+                <button type="button" class="btn btn-outline-dark btn-lg" style="margin-left: 180px" data-toggle="modal" data-target="#myModal" id="set">设置</button>
             </form>
             {#div悬浮框#}
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -165,7 +176,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" id="set_activity_update" data-dismiss="modal">修改提交</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-default" id="set_activity_del" data-dismiss="modal">关闭</button>
                     </div>
                 </div>
             </div>
@@ -187,11 +198,67 @@ $(function () {
 
 {#    设置活动次数#}
 $(document).ready(function(){
+    let type = 1;
+    $.ajax({
+                type:'GET',
+                url:'./showsystem',
+                data:{},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(result){
+                    $("#receive_num").append(result.main);
+                }
+            });
+    $("#set").click(function () {
+        $("#receive_num").html("");
+    });
+    $("#set_activity_del").click(function () {
+         $.ajax({
+                type:'GET',
+                url:'./showsystem',
+                data:{},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(result){
+                    $("#receive_num").append(result.main);
+                }
+            });
+    });
     $("#set_activity_update").click(function(){
         let num = $("#set_number").val();
-         {#$("#receive_num").val(num);#}
-        $("#receive_num").append(num)
+        $("#receive_num").append(num);
+        $.ajax({
+                type:'GET',
+                url:'./updatesystem',
+                data:{'type':type,'main':num},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(result){
+                  console.log("result=",result);
+                  Toast(result.status);
+                }
+            });
+          function Toast(status){
+                if(status==true){
+                    msg="设置成功！";
+                }else{
+                    msg="设置失败！";
+                }
+                {#创建一个div，显示msg，显示后再移除该div#}
+                $(document).ready(function(){
+                    setTimeout(function(){
+                        alert(msg)
+                    },1000)
+              });
+    }
     });
+
     $("#set_delete").click(function(){
         {#$("#receive_num").val(null);#}
 {#        获取div中的元素#}
