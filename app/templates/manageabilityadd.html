@@ -65,6 +65,25 @@
                 if(content == '') {
                     alert("内容不能为空！");
                 }
-        })
+                $.ajax({
+                    type: "GET",
+                    url: "/addability",
+                    data: {name:$('#name').val(),begintime:$('#startTime').val(),endtime:$('#stopTime').val(),main:$("#content").val()},
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function () {
+                        Flush();
+                    }
+                });
+            });
+            function Flush(){
+                $('#name').val('');
+                $('#startTime').val('');
+                $('#stopTime').val('');
+                $('#content').val('');
+                alert("添加成功！")
+            }
         });
 {% endblock %}

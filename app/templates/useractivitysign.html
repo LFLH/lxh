@@ -8,13 +8,34 @@
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+{#<div>{{ user }}</div>#}
 <div class="container" style="text-align: center">
-    <a href="#" class="list-group-item">基地1</a>
-    <a href="#" class="list-group-item">基地2</a>
-    <a href="#" class="list-group-item">基地3</a>
-    <a href="#" class="list-group-item">基地4</a>
-    <a href="#" class="list-group-item">基地5</a>
-
+    <ul id="listview" class="list-group">
+        {% for idx in user %}
+        <li class="list-group-item">{{ idx.get("username") }}</li>
+        {% endfor %}
+    </ul>
 </div>
+
+<script>
+
+    $(function () {
+        $("#listview").on('click','li',function () {
+            href = window.location.href;
+            window.location.href = href + "/success";
+            $.ajax({
+                type: 'GET',
+                url: '/signuseractivity',
+                data: {},
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success: function () {
+                }
+            });
+        })
+    })
+</script>
 </body>
 </html>

@@ -21,7 +21,7 @@ def useractivitysign(activityid):
         return redirect(s)
     else:
         # 获取系统活动的报名用户
-        userz = User.query.join(AU).join(Activity).filter(Activity.id == id).all()
+        userz = User.query.join(AU).join(Activity).filter(Activity.id == activityid).all()
         user = []
         for users in userz:
             user.append({"id":users.id,"username":users.username})

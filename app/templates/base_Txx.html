@@ -14,8 +14,7 @@
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="~/Content/bootstrapValidator/js/bootstrapValidator.min.js"></script>
-    <link href="~/Content/bootstrapValidator/css/bootstrapValidator.min.css" rel="stylesheet" />
+
 
     <style type="text/css">
         .table>tbody>tr>td {
@@ -89,8 +88,8 @@
                   </div>
                   <div id="collapseOne" class="collapse" data-parent="#accordion">
                     <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.useractivity')}}">查看活动</a>
-                      <a class="nav-link" href="{{url_for('main.userupdata')}}">提交活动</a>
+                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>
+                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>
                     </div>
                   </div>
                 </div>
