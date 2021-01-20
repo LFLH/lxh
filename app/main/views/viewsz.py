@@ -55,6 +55,11 @@ def manage():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype']!='sysadmin' :
+        if user['checked']==1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('manage.html',username=user["username"])
 
@@ -64,6 +69,11 @@ def manageactivity():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('manageactivity.html',username=user["username"])
 
@@ -73,6 +83,11 @@ def managedeclareuser():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('managedeclareuser.html',username=user["username"])
 
@@ -82,6 +97,11 @@ def managedeclareadd():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('managedeclareadd.html',username=user["username"])
 
@@ -91,6 +111,11 @@ def manageabilityuser():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('manageabilityuser.html',username=user["username"])
 
@@ -100,6 +125,11 @@ def manageabilityadd():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('manageabilityadd.html',username=user["username"])
 
@@ -109,6 +139,11 @@ def manageexamine():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('manageexamine.html',username=user["username"])
 
@@ -118,6 +153,11 @@ def manageuser():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('manageuser.html',username=user["username"])
 
@@ -127,6 +167,11 @@ def managesystem():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
     else:
         return render_template('managesystem.html',username=user["username"])
 
@@ -134,8 +179,13 @@ def managesystem():
 @main.route('/newuser',methods=['GET','POST'])
 def newuser():
     user = session.get('user')
+    print(user)
     if user == None:
         return redirect('/login')
+    elif user['usertype']=='sysadmin':
+        return redirect('/manage')
+    elif user['checked']==1:
+        return redirect('/olduser')
     else:
         return render_template('newuser.html',username=user["username"])
 
@@ -145,8 +195,12 @@ def olduser():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
     else:
-        return render_template('oldser.html',username=user["username"])
+        return render_template('olduser.html',username=user["username"])
 
 #用户已提交活动
 @main.route('/useractivity',methods=['GET','POST'])
@@ -154,6 +208,10 @@ def useractivity():
     user = session.get('user')
     if user == None:
         return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
     else:
         return render_template('useractivity.html',username=user["username"])
 
@@ -163,6 +221,10 @@ def userupdata():
     user = session.get('user')
     if user==None:
         return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
     else:
         return render_template('userupdata.html',username=user["username"])
 
@@ -172,6 +234,10 @@ def useractivityregister():
     user = session.get('user')
     if user==None:
         return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
     else:
         return render_template('useractivityregister.html',username=user["username"])
 
@@ -181,6 +247,10 @@ def usertrainregister():
     user = session.get('user')
     if user==None:
         return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
     else:
         return render_template('usertrainregister.html',username=user["username"])
 
@@ -190,6 +260,10 @@ def userndreport():
     user = session.get('user')
     if user==None:
         return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
     else:
         return render_template('userndreport.html',username=user["username"])
 
@@ -199,5 +273,9 @@ def userkjzreport():
     user = session.get('user')
     if user==None:
         return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
     else:
         return render_template('userkjzreport.html',username=user["username"])

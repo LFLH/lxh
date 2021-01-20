@@ -23,10 +23,10 @@ def showsystem():
 @main.route('/updatesystem',methods=['GET','POST'])
 def updatesystem():
     if request.method == "GET":
-        type = request.args.get('type')#当前页
-        main=request.args.get('main')#平均页数
+        type = request.args.get('type')
+        main=request.args.get('main')
     else:
-        type = request.json.get('main')
+        type = request.json.get('type')
         main = request.json.get('main')
     #修改系统信息
     system=System.query.filter(System.type==type).all()[0]

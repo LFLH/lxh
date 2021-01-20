@@ -74,7 +74,7 @@ def addkjzreport():
     userid=user['userid']
     user = User.query.filter(User.id == userid).all()[0]
     # 创建报告
-    record=Record(userid=userid,name=name)
+    record=Record(userid=userid,name=name,type="科技周")
     db.session.add(record)
     db.session.commit()
     # 修改用户操作时间

@@ -33,11 +33,11 @@ def adddeclare():
     db.session.add(declare)
     db.session.commit()
     #设置新用户提交时间
-    user=User.query.filter(and_(User.checked==0,User.type=='user')).all()
-    now=str(datetime.datetime.now()).split('-')[0]
+    maxdate = '9999-12-31 23:59:59'
+    maxdate = datetime.datetime.strptime(maxdate, '%Y-%m-%d %H:%M:%S')
+    user=User.query.filter(and_(User.checked==0,User.type=='user',User.endtime==maxdate)).all()
     for i in range(len(user)):
-        if str(user[i].endtime).split('-')[0]==now:
-            user[i].endtime=endtime
-            db.session.add(user[i])
-            db.session.commit()
+        user[i].endtime=endtime
+        db.session.add(user[i])
+        db.session.commit()
     return Response(json.dumps({'status':True}), mimetype='application/json')

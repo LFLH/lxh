@@ -164,63 +164,51 @@ $(function(){
 });
 
 
-{#   将文字和文件上传到后端 #}
-    $(document).ready(function(){
-        $("#update").submit(function(){
-            let name = $('#name').val();
-            str_url='./addactivitycs?name='+name;
-            {#console.log("$(\"#update\")[0]=",$("#update")[0]);#}
-            var formData = new FormData($("#update")[0]);
-            {#console.log("formData=",formData);#}
-            $.ajax({
-                type: "POST",
-                data: formData,
-                url: str_url,
-                contentType: false,
-                 processData: false,
-                 success:function(result){
-                    console.log("result=",result);
-                    Flush();
-                    Toast(result.status);
-                 }
-            });
-            return false;
+$(document).ready(function(){
+    $("#update").submit(function(){
+        let name = $('#name').val();
+        str_url='./addndreport?name='+name;
+        {#定义一个formData对象，FormData类中上传表单#}
+        var formData = new FormData($("#update")[0]);
+        $.ajax({
+            type: "POST",
+            data: formData,
+            url: str_url,
+            contentType: false,
+            processData: false,
+            success:function(result){
+                console.log("result=",result);
+                Flush();
+                Toast(result.status);
+           }
         });
-        function Flush(){
-            $('#name').val('');
-            $('#exampleInputFilePDF').val('');
-            $('#exampleInputFileWord').val('');
-            $('#exampleInputFileImage').val('');
-        }
-        function Toast(status){
-            if(status==true){
-                msg="科技周报告提交成功！";
-            }else{
-                msg="科技周报告提交失败！";
-            }
-            {#创建一个div，显示msg，显示后再移除该div#}
-            $(document).ready(function(){
-                $("#show_msg_div").text(msg);
-                $("#show_msg_div").css("width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;");
-                setTimeout(function(){
-                    let t = 0.5;
-                    setTimeout(function(){
-                        $("#show_msg_div").empty(msg);
-                    }, t * 1000)
-                })
-          });
-            {#var m = document.createElement('div');#}
-            {#m.innerHTML = msg;#}
-            {#m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";#}
-            {#document.body.appendChild(m);#}
-            {#setTimeout(function() {#}
-            {#    var d = 0.5;#}
-            {#    m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';#}
-            {#    m.style.opacity = '0';#}
-            {#    setTimeout(function() { document.body.removeChild(m) }, d * 1000);#}
-
-        }
+        return false;
     });
+    function Flush(){
+        $('#name').val('');
+        $('#exampleInputFilePDF').val('');
+        $('#exampleInputFileWord').val('');
+        $('#exampleInputFileImage').val('');
+    }
+    function Toast(status){
+        if(status==true){
+            msg="科技周报告提交成功！";
+        }else{
+            msg="科技周报告提交失败！";
+        }
+        {#创建一个div，显示msg，显示后再移除该div#}
+        $(document).ready(function(){
+            {#$("#show_msg_div").text(msg);#}
+            {#$("#show_msg_div").show();#}
+            setTimeout(function(){
+                {#$("#show_msg_div").hide();#}
+                {#$("#show_msg_div").empty(msg);#}
+                alert(msg)
+            },2000)
+      });
+
+    }
+});
 
 </script>
 </body>

@@ -26,6 +26,17 @@
             text-align: left;
             padding-left: 10px;
         }
+        .box{
+            width: 600px;
+            height: 500px;
+            border:1px solid black;
+            position: absolute;
+            background: #FFF;
+            display: none;
+            top: 20%;
+            left:30%;
+            overflow:scroll;
+        }
     </style>
 </head>
 
@@ -88,10 +99,21 @@
 {#                <li><a class="nav-link" href="{{url_for('main.managesystem')}}">系统设置</a></li>#}
 {#            </ul>#}
           <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="#">活动管理</a>
+{#                <div class="card">#}
+{#                    <div class="card-header">#}
+{#                        <a class="collapsed card-link"  href="#">活动管理</a>#}
+{#                    </div>#}
+{#                </div>#}
+              <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>
+                  </div>
+                  <div id="collapseOne" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>
+                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>
                     </div>
+                  </div>
                 </div>
 
                 <div class="card">
@@ -148,12 +170,15 @@
                             <tr>
                                 <th>序号</th>
                                 <th>用户名</th>
+                                <th>培训任务名</th>
                                 <th>报名开始时间</th>
                                 <th>报名截止时间</th>
                                 <th>提交时间</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
+                        <tbody id="tableText">
+                        </tbody>
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-end" id="page-li">
@@ -161,6 +186,45 @@
                     </nav>
                 </div>
             </form>
+
+            <div class="box" >
+{#            后端返回的具体详细信息在view4中#}
+                <h2 style="margin-top: 5px;text-align: center">能力提升培训详情</h2>
+                <div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">培训名：</label>
+                    <p id="train_name" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">培训内容：</label>
+                    <p id="train_main" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">用户：</label>
+                    <p id="user_name" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">提交时间：</label>
+                    <p id="train_uptime" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">PDF文件：</label>
+                    <p id="train_pdf" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">word文件：</label>
+                    <p id="train_word" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">图片：</label>
+                    <p id="train_image" style="display: inline;width: 450px"></p>
+                    </div>
+                </div>
+                <div>
+                </div>
+                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px; margin-top: 140px">取消</button>
+                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px;margin-top: 140px">通过</button>
+            </div>
 
         </div>
         </div>
@@ -175,48 +239,349 @@ $(function () {
     openddt.click(function () {
         $(this).siblings(".dropdown-menu").toggle();
     });
-})
+});
 
-{#前后端交互：从后端数据库获取数据以及分页处理#}
+var acquire=new Array(10);
+var pass;
+{#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
-    {#没有做每页的数目限制，明天看一下#}
-    {#let dpage=1#}
-    {#let pages=1#}
-    {#let per_page=10#}
-    {#let d_per_page=10#}
-    {#let idz=new Array(10);#}
-    $.ajax({
-        type:'GET',
-        url:'./searchabilityuser',
-        data:{},
-        dataType:'json',
-        async: false,
-        cache: false,
-        contentType: 'application/json',
-        success:function(result){
-            {#pages = data.zpage;#}
-            {#let total = data.total;#}
-            {#dpage = data.dpage;#}
-            let result_declareuser = result;
-            console.log("result_declareuser=",result_declareuser)
-            let str=""
-            len_declareuser=result.length
-            {#console.log("len_declareuser=",len_declareuser)#}
-            for (let index = 0; index < len_declareuser; index++) {
-                {#console.log("result[index].begintime=",result[index].begintime)#}
-                str += "<tr><td>" + result[index].number +
-                            "</td><td>" + result[index].name +
-                            "</td><td>" + result[index].begintime +
-                            "</td><td>" + result[index].endtime +
-                            "</td><td>" + result[index].uptime +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"
-                             +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";
+    {#dpage：应该是表示第几页
+        pages：应该是表示总共的页数
+        d_per_page:总共有多少条数据
+        idz:存储每条数据的id#}
+        let dpage=1;
+        let pages=1;
+        let per_page=10;
+        let d_per_page=10;
+        let idz=new Array(10);
+        $.ajax({
+            type:'GET',
+            url:'./searchabilityuser',
+            data:{'page':1,'per_page':per_page},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(data){
+                pages = data.zpage;
+                let total = data.total;
+                dpage = data.dpage;
+                let activity = data.item;
+                let str="";
+                d_per_page=data.item.length;
+                for (let index = 0; index < data.item.length; index++) {
+                   idz[index]=data.item[index].id;
+                   {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                   let acquire_number;
+                   acquire_number = data.item[index].number;
+                   acquire[acquire_number]=data.item[index].id;
+                   str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].name +
+                            "</td><td>" + data.item[index].begintime +
+                            "</td><td>" + data.item[index].endtime +
+                            "</td><td>" + data.item[index].uptime +
+                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
+                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
+                             +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
                 }
-            $("#tableText").html(str);
-
-
+                $("#tableText").html(str);
+                let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
+                strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>";
+                for(let index=2;index<=pages;index++){
+                    strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
+                }
+                strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>";
+                $("#page-li").html(strli);
+                let s="#li"+dpage;
+                $(s).css("border-color","blue");
+                if(dpage<pages){
+                    let r=dpage+1;
+                    let rs="#li"+r;
+                    $(rs).css("border-left-color","blue");
+                }else{
+                    $("#next").css("border-left-color","blue");
+                }
+            }
+        });
+        $("#prev").click(function(){
+            $('.box').css('display','none');
+            if(dpage==1){
+                alert("该页是第一页！");
+            }else{
+                let s="#li"+dpage;
+                $(s).css("border-color","");
+                if(dpage<pages){
+                    let r2=dpage+1;
+                    let rs2="#li"+r2;
+                    $(rs2).css("border-left-color","");
+                }else{
+                    $("#next").css("border-left-color","");
+                }
+                $.ajax({
+                    type:'GET',
+                    url:'./searchabilityuser',
+                    data:{'page':dpage-1,'per_page':per_page},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        pages = data.zpage;
+                        let total = data.total;
+                        dpage = data.dpage;
+                        let activity = data.item;
+                        let str="";
+                        d_per_page=data.item.length;
+                        for (let index = 0; index < d_per_page; index++) {
+                            idz[index]=data.item[index].id;
+                            {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                            let acquire_number;
+                            acquire_number = data.item[index].number;
+                            acquire[acquire_number]=data.item[index].id;
+                            str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].name +
+                            "</td><td>" + data.item[index].begintime +
+                            "</td><td>" + data.item[index].endtime +
+                            "</td><td>" + data.item[index].uptime +
+                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
+                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
+                             +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
+                        }
+                        $("#tableText").html(str);
+                        let s="#li"+dpage;
+                        $(s).css("border-color","blue");
+                        if(dpage<pages){
+                            let r=dpage+1;
+                            let rs="#li"+r;
+                            $(rs).css("border-left-color","blue");
+                        }else{
+                            $("#next").css("border-left-color","blue");
+                        }
+                    }
+                });
+            }
+        });
+        $("#next").click(function(){
+            $('.box').css('display','none');
+            if(dpage==pages){
+                alert("该页是最后一页！");
+            }else{
+                let s="#li"+dpage;
+                $(s).css("border-color","");
+                if(dpage<pages){
+                    let r2=dpage+1;
+                    let rs2="#li"+r2;
+                    $(rs2).css("border-left-color","");
+                }else{
+                    $("#next").css("border-left-color","");
+                }
+                $.ajax({
+                    type:'GET',
+                    url:'./searchabilityuser',
+                    data:{'page':dpage+1,'per_page':per_page},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        pages = data.zpage;
+                        let total = data.total;
+                        dpage = data.dpage;
+                        let activity = data.item;
+                        let str="";
+                        d_per_page=data.item.length;
+                        for (let index = 0; index < d_per_page; index++) {
+                            idz[index]=data.item[index].id;
+                            {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                            let acquire_number;
+                            acquire_number = data.item[index].number;
+                            acquire[acquire_number]=data.item[index].id;
+                            str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].name +
+                            "</td><td>" + data.item[index].begintime +
+                            "</td><td>" + data.item[index].endtime +
+                            "</td><td>" + data.item[index].uptime +
+                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
+                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
+                             +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
+                        }
+                        $("#tableText").html(str);
+                        let s="#li"+dpage;
+                        $(s).css("border-color","blue");
+                        if(dpage<pages){
+                            let r=dpage+1;
+                            let rs="#li"+r;
+                            $(rs).css("border-left-color","blue");
+                        }else{
+                            $("#next").css("border-left-color","blue");
+                        }
+                    }
+                });
+            }
+        });
+        {#点击那一页就显示哪一页的数据#}
+        for(let index=1;index<=pages;index++){
+            let s="#li"+index;
+            $(s).click(function(){
+                $('.box').css('display','none');
+                let s2="#li"+dpage;
+                $(s2).css("border-color","");
+                if(dpage<pages){
+                    let r2=dpage+1;
+                    let rs2="#li"+r2;
+                    $(rs2).css("border-left-color","");
+                }else{
+                    $("#next").css("border-left-color","");
+                }
+                $.ajax({
+                    type:'GET',
+                    url:'./searchabilityuser',
+                    data:{'page':index,'per_page':per_page},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        pages = data.zpage;
+                        let total = data.total;
+                        dpage = data.dpage;
+                        let activity = data.item;
+                        let str="";
+                        d_per_page=data.item.length;
+                        for (let index = 0; index < data.item.length; index++) {
+                            idz[index]=data.item[index].id;
+                            {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                            let acquire_number;
+                            acquire_number = data.item[index].number;
+                            acquire[acquire_number]=data.item[index].id;
+                            str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].username +
+                            "</td><td>" + data.item[index].name +
+                            "</td><td>" + data.item[index].begintime +
+                            "</td><td>" + data.item[index].endtime +
+                            "</td><td>" + data.item[index].uptime +
+                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
+                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm open' id='"+acquire_number+"' value=查看>"
+                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
+                        }
+                        $("#tableText").html(str);
+                        let s="#li"+dpage;
+                        $(s).css("border-color","blue");
+                        if(dpage<pages){
+                            let r=dpage+1;
+                            let rs="#li"+r;
+                            $(rs).css("border-left-color","blue");
+                        }else{
+                            $("#next").css("border-left-color","blue");
+                        }
+                    }
+                });
+            });
         }
-    })})
+    });
 
+{#操作中的查看详细信息弹窗#}
+$(document).ready(function(){
+   $(document).on("click",".btn-danger",function() {
+        {#先给后端传id#}
+        let user_number = $(this).attr('id');
+        {#获取传递给后端的id#}
+        let acquire_user_id = acquire[user_number];
+        {#为了将查看中的id传递给悬浮框中的通过键#}
+        pass = acquire_user_id;
+         $.ajax({
+            type:'GET',
+            url:'./detailabilityuser',
+            data:{'id':acquire_user_id},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(data){
+                let train_name = data.name;
+                let train_main = data.main;
+                let user_name = data.username;
+                let train_uptime = data.uptime;
+                let train_pdf = data.pdf;
+                let train_word = data.word;
+                let train_image = data.image;
+                $("#train_name").text(train_name);
+                $("#train_main").text(train_main);
+                $("#user_name").text(user_name);
+                $("#train_uptime").text(train_uptime);
+                $("#train_pdf").text(train_pdf);
+                $("#train_word").text(train_word);
+                $("#train_image").text(train_image)
+            }
+        });
+        $('.box').show();
+        return false
+    });
+     {#操作中的通过键交互#}
+     $(document).on("click",".btn-primary",function() {
+        {#先给后端传id#}
+        let user_number = $(this).attr('id');
+        {#获取传递给后端的id#}
+        let acquire_user_id = acquire[user_number];
+        console.log("user_number=",user_number);
+        console.log("acquire_user_id=",acquire_user_id);
+         $.ajax({
+            type:'GET',
+            url:'./tgabilityuser',
+            data:{'id':acquire_user_id},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(result){
+               console.log("result=",result);
+               display_alert(result.status);
+            }
+        })
+    });
+     function display_alert(status){
+        if(status==true){
+            msg="已通过！";
+        }else{
+            msg="通过失败！";
+        }
+        {#创建一个div，显示msg，显示后再移除该div#}
+        $(document).ready(function(){
+            setTimeout(function(){
+                alert(msg)
+            },1000)
+      });
+    }
+    $("#close_delete").click(function(){
+        $('.box').css('display','none');
+        {#$('.box').hide();#}
+        return false;
+    });
+    $("#close_pass").click(function(){
+        $('.box').css('display','none');
+         $.ajax({
+             type: 'GET',
+             url: './tgabilityuser',
+             data: {'id': pass},
+             dataType: 'json',
+             async: false,
+             cache: false,
+             contentType: 'application/json',
+             success: function (result) {
+                 console.log("result=", result);
+                 display_alert(result.status);
+             }
+         });
+       return false;
+    });
+
+});
 </script>
 </body>

@@ -66,7 +66,8 @@ def detailabilityuser():
     data = utrain.datas
     filedata = {'image':[],'pdf': [], 'word': []}
     for datai in data:
-        filedata[datai.type].append(datai.name)
+        dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
+        filedata[datai.type].append(dataz)
     #培训名，培训内容，用户名，提交时间,pdf,word，图片
     da={"name":train.name,"main":train.main,"username":name,"uptime":str(utrain.uptime),"pdf":filedata["pdf"],"word":filedata["word"],"image":filedata["image"]}
     return Response(json.dumps(da), mimetype='application/json')
