@@ -3,8 +3,9 @@ from flask import request,jsonify,session,redirect,Response
 from app.main import main
 from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score
 from app import db
-import json,datetime,random,string
+import json,datetime,random,string,os,xlrd,xlwt
 from sqlalchemy import or_,and_
+from werkzeug.utils import secure_filename
 
 @main.after_app_request
 def after_request(response):
@@ -22,20 +23,63 @@ def adduser():
     else:
         username = request.json.get('username')
     user=User.query.filter(User.username==username).all()
+    maxdate='9999-12-31 23:59:59'
+    maxdate=datetime.datetime.strptime(maxdate, '%Y-%m-%d %H:%M:%S')
     #不存在用户
     if len(user)==0:
         k = random.randint(8, 20)
         #自动生成密码
         password=''.join(random.sample(string.ascii_letters + string.digits, k))
         #添加用户
-        newuser=User(username=username,password=password,type='user',checked=0)
+        newuser=User(username=username,password=password,type='user',checked=0,endtime=maxdate)
         db.session.add(newuser)
         db.session.commit()
     #存在用户
     else:
-        user[0].endtime=datetime.datetime.now()
+        user[0].checked=0
+        user[0].endtime=maxdate
         db.session.add(user[0])
         db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
+
+#批量导入
+@main.route('/exceladduser',methods=['GET', 'POST'])
+def exceladduser():
+    # 创建存储地址data文件夹
+    file_dir = os.path.join('data')
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+    # 创建存储地址data\sysactivity文件夹
+    file_dir = os.path.join('data\\user')
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+    # 创建Excel存储
+    upload_files=request.files.getlist('excel')
+    for file in upload_files:
+        filename = secure_filename(file.filename)
+        ext = filename.rsplit('.')
+        ext = ext[len(ext) - 1].lower()  # 获取文件后缀
+        new_filename = "user" + '.' + ext  # 修改了上传的文件名
+        file.save(os.path.join(file_dir, new_filename))  # 保存文件到目录
+        file_data = 'data\\user\\'+ new_filename
+        # 打开文件
+        workBook = xlrd.open_workbook(file_data)
+        #按索引号获取sheet内容
+        sheet1_content1 = workBook.sheet_by_index(0)  # sheet索引从0开始
+        nrows=sheet1_content1.nrows
+        for i in range(nrows):
+            if i!=0:
+                username=sheet1_content1.cell(i, 0).value
+                user = User.query.filter(User.username == username).all()
+                # 不存在用户
+                if len(user) == 0:
+                    k = random.randint(8, 20)
+                    # 自动生成密码
+                    password = ''.join(random.sample(string.ascii_letters + string.digits, k))
+                    # 添加用户
+                    newuser = User(username=username, password=password, type='user', checked=1)
+                    db.session.add(newuser)
+                    db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #删除用户
@@ -53,7 +97,7 @@ def deleteuser():
     page = int(page)
     per_page = int(per_page)
     user=User.query.filter(User.id==id).all()[0]
-    user.checked=0
+    user.checked=2#删除标识
     activitys=Activity.query.filter(Activity.userid==id).all()
     for activity in activitys:
         activity.status=3

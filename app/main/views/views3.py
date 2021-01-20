@@ -4,6 +4,7 @@ from app.main import main
 from app.models.models import User,Activity,AD,Data,AU
 from app import db
 import json,datetime,xlwt,os,mimetypes,time,qrcode
+import socket
 
 @main.after_app_request
 def after_request(response):
@@ -83,7 +84,8 @@ def detailuseractivity():
     data=activity.datas
     filedata={'video':[],'music':[],'image':[],'pdf':[],'word':[]}
     for datai in data:
-        filedata[datai.type].append(datai.name)
+        dataz={'name':datai.name,'path':datai.path,'newname':datai.newname}
+        filedata[datai.type].append(dataz)
     #返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、视频、音频、图片、pdf、word
     da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'video':filedata['video'],'music':filedata['music'],'image':filedata['image'],'pdf':filedata['pdf'],'word':filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')
@@ -179,6 +181,16 @@ def xlsxsysactivity():
     directory = filed+'data\\sysactivity\\'+str(id)+'\\'
     return send_file(directory+filename, mimetype=str(mimetypes.guess_type(filename)[0]),attachment_filename=filename, as_attachment=True)
 
+#获取本机ip地址
+def get_host_ip():
+    try:
+        s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8',80))
+        ip=s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
+
 #生成二维码
 @main.route('/ewmsysactivity',methods=['GET','POST'])
 def ewmsysactivity():
@@ -188,6 +200,18 @@ def ewmsysactivity():
     else:
         id = request.json.get('id')
     activity = Activity.query.filter(Activity.id == id).all()[0]
+    # 创建存储地址data文件夹
+    file_dir = os.path.join('data')
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+    # 创建存储地址data\sysactivity文件夹
+    file_dir = os.path.join('data\\sysactivity')
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+    # 创建二维码图片存储地址
+    file_new_dir = os.path.join('data\\sysactivity\\' + str(id))
+    if not os.path.exists(file_new_dir):
+        os.makedirs(file_new_dir)
     #生成二维码
     qr = qrcode.QRCode(
         version=5,
@@ -195,7 +219,7 @@ def ewmsysactivity():
         box_size=10,
         border=4,
     )
-    URL='172.26.183.229'#URL可修改
+    URL=get_host_ip()#获取本机ip地址
     url=URL+'/useractivitysign/'+id
     qr.add_data(url)
     qr.make(fit=True)

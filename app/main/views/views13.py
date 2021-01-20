@@ -54,7 +54,8 @@ def detailactivity():
     data = activity.datas
     filedata = {'video': [], 'music': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
-        filedata[datai.type].append(datai.name)
+        dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
+        filedata[datai.type].append(dataz)
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、视频、音频、图片、pdf、word
     da = {'name': activity.name, 'typeuser': activity.typeuser, 'type': activity.type,
           'begintime': str(activity.begintime), 'endtime': str(activity.endtime), 'main': activity.main,
