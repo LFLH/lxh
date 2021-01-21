@@ -525,14 +525,14 @@ $(document).ready(function(){
                 let declare_begintime = data.begintime;
                 let declare_endtime = data.endtime;
                 let declare_uptime = data.uptime;
-                let declare_pdf = data.pdf;
-                let declare_word = data.word;
+                let declare_pdf = data.pdf[0].newname;
+                let declare_word = data.word[0].newname;
                 $("#declare_username").text(user_name);
                 $("#declare_begintime").text(declare_begintime);
                 $("#declare_endtime").text(declare_endtime);
                 $("#declare_uptime").text(declare_uptime);
-                $("#declare_pdf").text(declare_pdf);
-                $("#declare_word").text(declare_word)
+                $("#declare_pdf").html("<a href='/data/pdf/"+declare_pdf+"'>点击查看pdf文件</a>");
+                $("#declare_word").html("<a href='/data/word/"+declare_word+"'>点击查看word文件</a>");
             }
         });
         $('.box').show();
