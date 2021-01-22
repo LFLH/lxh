@@ -67,18 +67,23 @@
             <div id="accordion">
                 <div class="card">
                     <div class="card-header">
-                        <a class="collapsed card-link"  href="#">活动管理</a>
+                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
                     </div>
                 </div>
 
                 <div class="card">
                   <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="{{url_for('main.managedeclareuser')}}">申报管理</a>
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
                   </div>
                   <div id="collapseTwo" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                       <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="#">申报任务添加</a>
+                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
                     </div>
                   </div>
                 </div>
@@ -90,7 +95,7 @@
                   <div id="collapseThree" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                           <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="#">能力提升培训添加</a>
+                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
                     </div>
                   </div>
                 </div>
@@ -121,7 +126,7 @@
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse" style="height: 37px;padding-left: 15px">
                     <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                        data-target="#addModal" style="margin-left: 15px">添加</button>
+                                        data-target="#addModal" style="margin-left: 15px; cursor: pointer">添加</button>
                     </div>
                 </div>
             </nav>
@@ -136,6 +141,7 @@
                             <th>活动类型</th>
                             <th>开始时间</th>
                             <th>结束时间</th>
+                            <th>状态</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -319,9 +325,9 @@
         <div class="modal-body">
           <h2>确认通过？</h2>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" id="pass-foot">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          <button type="button" id="pass" class="btn btn-danger" data-dismiss="modal">通过</button>
+          <button type="button" id="pass" class="btn btn-success" data-dismiss="modal">通过</button>
         </div>
       </div>
     </div>
@@ -380,6 +386,7 @@
         let d_per_page=10
         let idz=new Array(10);
         init(dpage,pages,per_page,d_per_page,idz);
+        //确认驳回按钮
         $("#refuse-foot").on('click', '.refuse', function () {
             var id = $(this).attr("id");
                 $.ajax({
@@ -391,14 +398,28 @@
                         cache: false,
                         contentType: 'application/json',
                         success:function(data){
+                            location.reload()
                             console.log('data',data)
                         }
                     });
         })
-        $(".refuse").click(function (){
-                console.log('34534')
-
-            })
+        //确认通过按钮
+        $("#pass-foot").on('click', '.pass', function () {
+            var id = $(this).attr("id");
+                $.ajax({
+                        type:'GET',
+                        url:'./tguseractivity',
+                        data:{'id':id},
+                        dataType:'json',
+                        async: false,
+                        cache: false,
+                        contentType: 'application/json',
+                        success:function(data){
+                            console.log('data',data)
+                            location.reload()
+                        }
+                    });
+        })
         $("#prev").click(function(){
             if(dpage==1){
                 alert("该页是第一页！");
@@ -429,14 +450,31 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
+                        switch(data.item[index].status) {
+                         case '0':
+                            var sta = '申请中';
+                            break;
+                         case '1':
+                            var sta = '驳回';
+                            break;
+                         case '2':
+                            var sta = '通过';
+                            break;
+                         case '3':
+                            var sta = '删除';
+                            break;
+                        }
                         str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
+                            // "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].activityname +
                             "</td><td>" + data.item[index].type +
+                            "</td><td>" + data.item[index].typeuser +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].main +
-                            "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button><button class='btn btn-danger btn-sm' >删除</button>" + "</tr>";
+                            "</td><td>" + sta +
+                            "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button>" +
+                            "<button class='btn btn-success btn-sm' id='pass"+index+"'>通过</button>" +
+                            "<button class='btn btn-danger btn-sm' >驳回</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -482,14 +520,31 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
+                        switch(data.item[index].status) {
+                         case '0':
+                            var sta = '申请中';
+                            break;
+                         case '1':
+                            var sta = '驳回';
+                            break;
+                         case '2':
+                            var sta = '通过';
+                            break;
+                         case '3':
+                            var sta = '删除';
+                            break;
+                        }
                         str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
+                            // "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].activityname +
                             "</td><td>" + data.item[index].type +
+                            "</td><td>" + data.item[index].typeuser +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].main +
-                            "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button><button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                            "</td><td>" + sta +
+                            "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button>" +
+                            "<button class='btn btn-success btn-sm' id='pass"+index+"'>通过</button>" +
+                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -534,14 +589,31 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
+                        switch(data.item[index].status) {
+                         case '0':
+                            var sta = '申请中';
+                            break;
+                         case '1':
+                            var sta = '驳回';
+                            break;
+                         case '2':
+                            var sta = '通过';
+                            break;
+                         case '3':
+                            var sta = '删除';
+                            break;
+                        }
                         str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
+                            // "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].activityname +
+                            "</td><td>" + data.item[index].typeuser +
                             "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].main +
-                            "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button><button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                            "</td><td>" + sta +
+                            "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button>" +
+                            "<button class='btn btn-success btn-sm' id='pass"+index+"'>通过</button>" +
+                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -558,6 +630,7 @@
             });
         }
         for(let index=0;index<d_per_page;index++){
+            //删除
             let s="#del"+index
             $(s).click(function(){
                 if(d_per_page!=1){
@@ -585,7 +658,9 @@
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + data.item[index].main +
-                                "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button><button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                                "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button>" +
+                                "<button class='btn btn-success btn-sm' id='pass"+index+"'>通过</button>" +
+                                "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
                             }
                             $("#tableText").html(str);
                             let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -652,6 +727,7 @@
                     });
                 }
             });
+            //驳回
             let r="#ref"+index
             $(r).click(function(){
                 $("#refuse-foot").empty();
@@ -660,6 +736,17 @@
                 $("#refuse-foot").html(strRefuse);
                 $("#refModal").modal('show');
             });
+            //通过
+            var p="#pass"+index;
+            $(p).click(function(){
+                console.log(1)
+                $("#pass-foot").empty();
+                var strPass = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'
+                    + '<button id='+ idz[index] +' type="button" class="btn btn-success pass" data-dismiss="modal">通过</button>'
+                $("#pass-foot").html(strPass);
+                $("#passModal").modal('show');
+            });
+            //查看
             let v="#view"+index
             $(v).click(function(){
                 console.log('idz[index]',idz[index])
@@ -804,46 +891,9 @@
                 });
                 // $('#showModal').modal({})
             });
-
-            var p="#pass"+index;
-            $('#p').click(function (){
-                $.ajax({
-                    url:'./tguseractivity',
-                    type:'get',
-                    data:$("#passModal form").serialize(),
-                    success:function(data){
-                        console.log(data);
-                        init(dpage,pages,per_page,d_per_page,idz)
-                    }
-                })
-            })
-             // 点击驳回
-             // var r="#ref"+index;
-             // var refId;
-             //    $('tbody').on('click', '.btn-danger', function () {
-             //      refId = $(this).parent().siblings().first().html();
-             //
-             //          data:{
-             //              id:refId
-             //          };
-             //          console.log(data);
-             //          $("#refModal").modal('show');
-             //    })
-
-            $('#r').click(function (){
-                $.ajax({
-                    url:'./bhuseractivity',
-                    type:'get',
-                    data:$("#refModal form").serialize(),
-                    success:function(data){
-                        console.log(data);
-                        $("#refModal").modal("hide");
-                        $("#refModal").modal('show');
-                    }
-                })
-            })
         }
     });
+
     function init(dpage,pages,per_page,d_per_page,idz){
         $.ajax({
             type:'GET',
@@ -862,16 +912,31 @@
                 d_per_page=data.item.length
                 for (let index = 0; index < data.item.length; index++) {
                 idz[index]=data.item[index].id
+                switch(data.item[index].status) {
+                 case '0':
+                    var sta = '申请中';
+                    break;
+                 case '1':
+                    var sta = '驳回';
+                    break;
+                 case '2':
+                    var sta = '通过';
+                    break;
+                 case '3':
+                    var sta = '删除';
+                    break;
+                }
                 str += "<tr><td>" + data.item[index].number +
                             // "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].activityname +
+                            "</td><td>" + data.item[index].typeuser +
                             "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].main +
+                            "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-primary btn-sm' id='view"+index+"'>查看</button> " +
                             "<button class='btn btn-success btn-sm' id='pass"+index+"'>通过</button>" +
-                            "<button class='btn btn-danger btn-sm' id='ref"+index+"'>驳回</button>" +"</tr>";
+                            "<button class='btn btn-danger btn-sm' id='ref"+index+"' style='margin-left: 5px'>驳回</button>" +"</tr>";
                 }
                 $("#tableText").html(str);
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"

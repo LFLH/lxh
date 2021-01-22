@@ -20,12 +20,7 @@ def useractivitysign(activityid):
         s='/useractivitysign/'+str(activityid)+'/fail'
         return redirect(s)
     else:
-        # 获取系统活动的报名用户
-        userz = User.query.join(AU).join(Activity).filter(Activity.id == activityid).all()
-        user = []
-        for users in userz:
-            user.append({"id":users.id,"username":users.username})
-        return render_template('useractivitysign.html',user=user)
+        return render_template('useractivitysign.html')
 
 #扫码过期
 @main.route('/useractivitysign/<string:activityid>/fail',methods=['GET','POST'])

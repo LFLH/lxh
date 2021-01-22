@@ -106,16 +106,28 @@
 {#                        <a class="collapsed card-link"  href="#">活动管理</a>#}
 {#                    </div>#}
 {#                </div>#}
+{#             <div class="card">#}
+{#                  <div class="card-header">#}
+{#                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>#}
+{#                  </div>#}
+{#                  <div id="collapseOne" class="collapse" data-parent="#accordion">#}
+{#                    <div class="card-body">#}
+{#                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>#}
+{#                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+                
                 <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>
-                  </div>
-                  <div id="collapseOne" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>
-                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
                     </div>
-                  </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
+                    </div>
                 </div>
 
                 <div class="card">
@@ -125,7 +137,7 @@
                   <div id="collapseTwo" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                       <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="#">申报任务添加</a>
+                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
                     </div>
                   </div>
                 </div>
@@ -137,7 +149,7 @@
                   <div id="collapseThree" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                           <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="#">能力提升培训添加</a>
+                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
                     </div>
                   </div>
                 </div>
@@ -525,14 +537,14 @@ $(document).ready(function(){
                 let declare_begintime = data.begintime;
                 let declare_endtime = data.endtime;
                 let declare_uptime = data.uptime;
-                let declare_pdf = data.pdf;
-                let declare_word = data.word;
+                let declare_pdf = data.pdf[0].newname;
+                let declare_word = data.word[0].newname;
                 $("#declare_username").text(user_name);
                 $("#declare_begintime").text(declare_begintime);
                 $("#declare_endtime").text(declare_endtime);
                 $("#declare_uptime").text(declare_uptime);
-                $("#declare_pdf").text(declare_pdf);
-                $("#declare_word").text(declare_word)
+                $("#declare_pdf").html("<a href='/data/pdf/"+declare_pdf+"'>点击查看pdf文件</a>");
+                $("#declare_word").html("<a href='/data/word/"+declare_word+"'>点击查看word文件</a>");
             }
         });
         $('.box').show();

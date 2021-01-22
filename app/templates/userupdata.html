@@ -33,7 +33,7 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
-                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通</a></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
                             <li role="separator" class="divider"></li>
@@ -48,9 +48,8 @@
 </nav>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
-            <div class="col-md-2 sidebar">
-                <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
+        <div class="col-md-2 sidebar">
+                <!--<ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
                     <li><a class="nav-link"
                             href="{{url_for('main.useractivity')}}">已提交活动</a></li>
                     <li class="active"><a class="nav-link" href="#">活动提交</a></li>
@@ -58,9 +57,51 @@
                     <li><a class="nav-link" href="{{url_for('main.usertrainregister')}}">培训报名</a></li>
                     <li><a class="nav-link" href="#">年度总结提交</a></li>
                     <li><a class="nav-link" href="#">科技周报告提交</a></li>
-                </ul>
+                </ul>-->
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.olduser')}}">首页</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.useractivity')}}">已提交活动</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link"  href="{{ url_for('main.useractivityregister') }}">活动报名</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{ url_for('main.userndreport')}}">年度总结提交</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
+                  </div>
+                </div>
             </div>
         </div>
+
         <div class="col-md-10 col-md-offset-2 main ml-auto">
             <h2 class="sub-header">添加新活动</h2>
             <form id="update" enctype='multipart/form-data'>
@@ -164,16 +205,6 @@
             let endtime = $('#endtime').val();
             let main = $('#content').val();
             let type = $('#type').val();
-            //测试修改自主活动信息
-            //s='./updateactivity?id=6&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
-            //测试提交年度报告
-            //s='./addndreport?name='+name
-            //测试科技周报告
-            //s='./addkjzreport?name='+name
-            //测试用户提交申报材料
-            //s='./adduserdeclare'
-            //测试培训报名
-            //s='./bmsystrain?id=1'
             s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
             var formData = new FormData($("#update")[0]);
             console.log(formData);
