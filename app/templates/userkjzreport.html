@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>老用户提交科技周报告</title>
+    <title>科技周报告提交</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
@@ -68,13 +68,18 @@
               <div id="accordion">
                 <div class="card">
                     <div class="card-header">
-                        <a class="collapsed card-link"  href="#">已提交活动</a>
+                        <a class="collapsed card-link"  href="{{url_for('main.olduser')}}">首页</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.useractivity')}}">已提交活动</a>
                     </div>
                 </div>
 
                 <div class="card">
                   <div class="card-header">
-                    <a class="collapsed card-link" href="#">活动提交</a>
+                    <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
                   </div>
                 </div>
 
@@ -86,7 +91,7 @@
 
                 <div class="card">
                   <div class="card-header">
-                      <a class="collapsed card-link" href="#">培训报名</a>
+                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
                   </div>
                 </div>
 

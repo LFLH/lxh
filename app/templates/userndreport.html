@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>老用户提交年度报告</title>
+    <title>年度报告提交</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
@@ -68,13 +68,18 @@
               <div id="accordion">
                 <div class="card">
                     <div class="card-header">
-                        <a class="collapsed card-link"  href="#">已提交活动</a>
+                        <a class="collapsed card-link"  href="{{url_for('main.olduser')}}">首页</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.useractivity')}}">已提交活动</a>
                     </div>
                 </div>
 
                 <div class="card">
                   <div class="card-header">
-                    <a class="collapsed card-link" href="#">活动提交</a>
+                    <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
                   </div>
                 </div>
 
@@ -86,7 +91,7 @@
 
                 <div class="card">
                   <div class="card-header">
-                      <a class="collapsed card-link" href="#">培训报名</a>
+                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
                   </div>
                 </div>
 
@@ -167,7 +172,8 @@ $(function(){
 $(document).ready(function(){
     $("#update").submit(function(){
         let name = $('#name').val();
-        str_url='./addndreport?name='+name;
+        //str_url='./addndreport?name='+name;
+        str_url='./bmsystrain?id='+3;
         {#定义一个formData对象，FormData类中上传表单#}
         var formData = new FormData($("#update")[0]);
         $.ajax({
@@ -192,9 +198,9 @@ $(document).ready(function(){
     }
     function Toast(status){
         if(status==true){
-            msg="科技周报告提交成功！";
+            msg="年度报告提交成功！";
         }else{
-            msg="科技周报告提交失败！";
+            msg="年度报告提交失败！";
         }
         {#创建一个div，显示msg，显示后再移除该div#}
         $(document).ready(function(){

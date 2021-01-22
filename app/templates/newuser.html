@@ -14,12 +14,7 @@
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="~/Content/bootstrapValidator/js/bootstrapValidator.min.js"></script>
-    <link href="~/Content/bootstrapValidator/css/bootstrapValidator.min.css" rel="stylesheet" />
 
-    <link href="../static/bootstrap-fileinput/css/fileinput.css" rel="stylesheet" />
-    <script src="../static/bootstrap-fileinput/js/fileinput.js"></script>
-    <script src="../static/bootstrap-fileinput/js/locales/zh.js"></script>
 
     <style type="text/css">
         .table>tbody>tr>td {
@@ -58,11 +53,11 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
-                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：管理员</a></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：新用户</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
                             <li role="separator" class="divider"></li>
-{#                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>#}
+                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
                             <li role="separator" class="divider"></li>
                         </ul>
                     </li>
@@ -75,29 +70,31 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" data-toggle="collapse" href="#">申报提交</a>
+            <div class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
+                <div id="accordion" style="padding-left: 20px; padding-right: 20px">
+                    <div class="card">
+                        <div class="card-header">
+                            <a class="collapsed card-link" data-toggle="collapse" href="#">申报提交</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+             </div>
         </div>
         <div class="col-md-10" style="margin-top: 50px">
             <div class="container" >
                 <h2>新用户申报</h2>
-                <form>
+                <form id="newuser">
                     <div class="form-group">
-                      <label for="content" class="form-inline" >申报内容：
-{#                      <label for="content">申报内容：#}
-                      <input type="text" class="form-control" id="content" >
-                      </label>
+                        <label for="exampleInputFilePDF" class="control-label" style="font-size: 20px">上传PDF文件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" multiple="" name="pdf" id="file-0" accept="application/pdf"/>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="name" >上传文件： </label>
-                        <br>
-                        <input id="file-0" name="file-0" type="file">
-
+                        <label for="exampleInputFileWord" class="control-label" style="font-size: 20px">上传word文件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" multiple="" name="word" id="file-1" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                        </div>
                     </div>
 
                     <div>
@@ -113,14 +110,42 @@
     $(function(){
         $("#cancel").click(function () {
             $("#file-0").val('');
-            $("#content").val('');
+           $("#file-1").val('');
         });
         $("#submit").click(function () {
-            var content = $("#content").val();
-            if(content == '') {
-                alert("申报内容不能为空！");
+            var file0 = $("#file-0").val();
+            var file1 = $("#file-1").val();
+            if(file0 == '' && file1 == '') {
+                alert("请先选择要添加的文件！");
+                return false;
             }
-        })
+            var formData = new FormData($("#newuser")[0]);
+            console.log(formData);
+            $.ajax({
+                type: "POST",
+                data: formData,
+                url: './adduserdeclare',
+                contentType: false,
+                 processData: false,
+                 success:function(re){
+                     Flush();
+                     Toast(re.status)
+                 }
+            });
+            return false;
+        });
+        function Flush(){
+            $("#file-0").val('');
+            $("#file-1").val('');
+        }
+        function Toast(status) {
+            if (status == true) {
+                alert("添加成功！");
+            }
+            if(status == false) {
+                alert("添加失败！");
+            }
+        }
     })
 </script>
 

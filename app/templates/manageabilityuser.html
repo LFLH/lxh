@@ -104,18 +104,30 @@
 {#                        <a class="collapsed card-link"  href="#">活动管理</a>#}
 {#                    </div>#}
 {#                </div>#}
-              <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>
-                  </div>
-                  <div id="collapseOne" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>
-                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>
+{#             <div class="card">#}
+{#                  <div class="card-header">#}
+{#                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>#}
+{#                  </div>#}
+{#                  <div id="collapseOne" class="collapse" data-parent="#accordion">#}
+{#                    <div class="card-body">#}
+{#                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>#}
+{#                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+                
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
                     </div>
-                  </div>
                 </div>
 
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
+                    </div>
+                </div>
+                
                 <div class="card">
                   <div class="card-header">
                     <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
@@ -123,7 +135,7 @@
                   <div id="collapseTwo" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                       <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="#">申报任务添加</a>
+                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
                     </div>
                   </div>
                 </div>
@@ -135,7 +147,7 @@
                   <div id="collapseThree" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                           <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="#">能力提升培训添加</a>
+                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
                     </div>
                   </div>
                 </div>
@@ -487,6 +499,7 @@ $(document).ready(function(){
         }
     });
 
+var train_image;
 {#操作中的查看详细信息弹窗#}
 $(document).ready(function(){
    $(document).on("click",".btn-danger",function() {
@@ -496,6 +509,8 @@ $(document).ready(function(){
         let acquire_user_id = acquire[user_number];
         {#为了将查看中的id传递给悬浮框中的通过键#}
         pass = acquire_user_id;
+        console.log("user_number=",user_number);
+       console.log("acquire_user_id=",acquire_user_id);
          $.ajax({
             type:'GET',
             url:'./detailabilityuser',
@@ -509,20 +524,41 @@ $(document).ready(function(){
                 let train_main = data.main;
                 let user_name = data.username;
                 let train_uptime = data.uptime;
-                let train_pdf = data.pdf;
-                let train_word = data.word;
-                let train_image = data.image;
+                let train_pdf = data.pdf[0].newname;
+                let train_word = data.word[0].newname;
+                let train_image = data.image[0].newname;
                 $("#train_name").text(train_name);
                 $("#train_main").text(train_main);
                 $("#user_name").text(user_name);
                 $("#train_uptime").text(train_uptime);
-                $("#train_pdf").text(train_pdf);
-                $("#train_word").text(train_word);
-                $("#train_image").text(train_image)
+                $("#train_pdf").html("<a href='/data/pdf/"+train_pdf+"'>点击查看pdf文件</a>");
+                $("#train_word").html("<a href='/data/word/"+train_word+"'>点击查看word文件</a>");
+                $("#train_image").html("<a href='/data/image/"+train_image+"'>点击查看图片</a>")
             }
         });
-        $('.box').show();
-        return false
+         $('.box').show();
+         return false;
+         {#$.ajax({#}
+         {#           type:'GET',#}
+         {#           url:'/data/image/'+train_image+'',#}
+         {#           data:{},#}
+         {#           dataType:'json',#}
+         {#           async: false,#}
+         {#           cache: false,#}
+         {#           contentType: 'application/json',#}
+         {#           success:function(response){#}
+         {#               console.log("你好呀");#}
+         {#               console.log("response=",response)#}
+         {#           },#}
+         {#           error:function(XMLHttpRequest, textStatus){#}
+         {#               console.log("出错了");#}
+         {#               console.log(XMLHttpRequest.status);#}
+	     {#       	    console.log(XMLHttpRequest.readyState);#}
+	     {#       	    console.log(textStatus);#}
+         {#           }#}
+         {#    });#}
+
+
     });
      {#操作中的通过键交互#}
      $(document).on("click",".btn-primary",function() {
