@@ -70,72 +70,75 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-          <div id="accordion">
-{#                <div class="card">#}
-{#                    <div class="card-header">#}
-{#                        <a class="collapsed card-link" data-toggle="collapse" href="#collapseSeven">活动管理</a>#}
+            <div class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
+                <div id="accordion" style="padding-left: 20px; padding-right: 20px">
+
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" href="{{url_for('main.manage')}}">首页</a>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" href="{{url_for('main.manageactivity')}}">活动管理</a>
+                      </div>
+                    </div>
+
+{#                    <div class="card">#}
+{#                      <div class="card-header">#}
+{#                        <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>#}
+{#                      </div>#}
+{#                      <div id="collapseOne" class="collapse" data-parent="#accordion">#}
+{#                        <div class="card-body">#}
+{#                          <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>#}
+{#                          <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>#}
+{#                        </div>#}
+{#                      </div>#}
 {#                    </div>#}
-{#                    <div id="collapseSeven" class="collapse" data-parent="#accordion">#}
-{#                    <div class="card-body">#}
-{#                      <a class="nav-link" href="{{url_for('main.useractivity')}}">查看活动</a>#}
-{#                      <a class="nav-link" href="{{url_for('main.userupdata')}}">提交活动</a>#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>
-                  </div>
-                  <div id="collapseOne" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>
-                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>
+
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
+                      </div>
+                      <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                          <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
+                          <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
+                      </div>
+                      <div id="collapseThree" class="collapse" data-parent="#accordion">
+                        <div class="card-body">
+                              <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
+                              <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
+                    <div class="card">
+                      <div class="card-header">
+                          <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
-                  </div>
-                </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
+                      </div>
+                    </div>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
-                  </div>
+                    <div class="card">
+                      <div class="card-header">
+                        <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
+                      </div>
+                    </div>
                 </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
-                  </div>
-                </div>
-
             </div>
         </div>
 
