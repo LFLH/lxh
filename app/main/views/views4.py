@@ -24,7 +24,7 @@ def searchdeclareuser():
     page = int(page)
     per_page = int(per_page)
     #连表查询未过期的用户申报
-    udeclare=UDeclare.query.join(DUDC).join(Declare).filter(Declare.endtime>datetime.datetime.now()).order_by(-UDeclare.uptime).paginate(page, per_page, error_out=False)
+    udeclare=UDeclare.query.join(DUDC).join(Declare).order_by(-UDeclare.uptime).paginate(page, per_page, error_out=False)
     items = udeclare.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -34,12 +34,15 @@ def searchdeclareuser():
         #获取对应的申报任务
         declare=Declare.query.join(DUDC).join(UDeclare).filter(UDeclare.id==items[i].id).all()[0]
         #用户申报状态
-        if items[i].type==1:
-            status=1
-        elif declare.endtime<datetime.datetime.now():
-            status=1
+        if declare.endtime>datetime.datetime.now():
+            if items[i].type == 1:
+                status = 1#用户申报通过
+            else:
+                status = 0  # 用户申报未通过
+        elif items[i].type==1:
+            status=11#用户申报通过但系统发布申报任务过期
         else:
-            status=0
+            status=10#用户申报未通过但系统发布申报任务过期
         #返回id，用户名，申报起始时间，结束时间，提交时间,能否点击通过按钮的状态
         itemss = {'number': count + i + 1, 'id': items[i].id, 'name': name, 'begintime': str(declare.begintime),'endtime': str(declare.endtime),'uptime': str(items[i].uptime),'status':status}
         item.append(itemss)

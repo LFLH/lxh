@@ -5,11 +5,17 @@ import datetime
 class User(db.Model):
     __tablename__ = 'user'
     id=db.Column(db.Integer, primary_key=True,autoincrement=True )#用户id
-    username=db.Column(db.String(255))#用户名，科普基地单位名称
+    username=db.Column(db.String(255))#用户名
+    name=db.Column(db.String(255))# 科普基地单位名称
+    email=db.Column(db.String(255))# 邮箱
+    phone = db.Column(db.String(255))  # 联系电话
+    address=db.Column(db.String(255))  # 地址
+    createtime=db.Column(db.DateTime, default=datetime.datetime.now)  # 账户创建时间
+    modifiedtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 最后修改信息时间
+    updatetime=db.Column(db.DateTime, default=datetime.datetime.now)  # 最后操作时间
     password=db.Column(db.String(255))#密码，口令
     type = db.Column(db.String(255))  # sysadmin或user
     checked=db.Column(db.Integer)#单位类别,0或1
-    updatetime = db.Column(db.DateTime, default=datetime.datetime.now)  # 最后操作更新时间
     endtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 申报截止时间
     usersa = db.relationship('Activity', backref='usera')#Activity外键
     userudc=db.relationship('UDeclare', backref='userudc')#UDeclare外键
@@ -90,6 +96,7 @@ class Declare(db.Model):
     __tablename__='declare'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # 申报id
     name = db.Column(db.String(255))  # 申报名
+    createtime=db.Column(db.DateTime, default=datetime.datetime.now)  # 申报创建时间
     begintime = db.Column(db.DateTime, default=datetime.datetime.now)  # 申报开始时间
     endtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 申报结束时间
     main = db.Column(db.Text)  # 申报内容
@@ -120,6 +127,7 @@ class Train(db.Model):
     __tablename__ = 'train'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # 培训id
     name = db.Column(db.String(255))  # 培训名
+    createtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 培训创建时间
     begintime = db.Column(db.DateTime, default=datetime.datetime.now)  # 培训开始时间
     endtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 培训结束时间
     main = db.Column(db.Text)  # 培训内容

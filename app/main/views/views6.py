@@ -34,12 +34,15 @@ def searchabilityuser():
         # 获取对应的培训任务
         train = Train.query.join(TUT).join(UTrain).filter(UTrain.id == items[i].id).all()[0]
         # 用户申请状态
-        if items[i].type == 1:
-            status = 1
-        elif train.endtime < datetime.datetime.now():
-            status = 1
+        if train.endtime > datetime.datetime.now():
+            if items[i].type == 1:
+                status = 1  # 用户申请通过
+            else:
+                status = 0  # 用户申请未通过
+        elif items[i].type == 1:
+            status = 11  # 用户申请通过但系统发布申请培训过期
         else:
-            status = 0
+            status = 10  # 用户申请未通过但系统发布申请培训过期
         # 返回id，用户名，培训名，培训起始时间，结束时间，提交时间，能否点击通过按钮的状态
         itemss = {'number': count + i + 1, 'id': items[i].id, 'username': username,'name':train.name,'begintime': str(train.begintime),
                   'endtime': str(train.endtime), 'uptime': str(items[i].uptime),'status':status}
