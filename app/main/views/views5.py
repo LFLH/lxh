@@ -30,10 +30,13 @@ def searchdeclare():
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
-        if items[i].endtime>datetime.datetime.now():
-            status=1#申报未过期
+        if declare.status == 0:
+            if items[i].endtime>datetime.datetime.now():
+                status=1#申报未过期
+            else:
+                status=0#申报过期
         else:
-            status=0#申报过期
+            status=2#未启用的申报，即被作废的申报
         # 返回用户id，用户名，密码，最后操作时间，状态
         itemss = {'number': count + i + 1, 'id': items[i].id, 'name': items[i].name,
                   'createtime': str(items[i].createtime), 'begintime': str(items[i].begintime) ,'endtime': str(items[i].endtime) ,'status': status}
@@ -117,9 +120,13 @@ def deletedeclare():
     else:
         udeclare = UDeclare.query.join(DUDC).join(Declare).filter(Declare.id == declare.id).count()
         if udeclare>0:#已有人申报
-            return Response(json.dumps({'status': False}), mimetype='application/json')
+            declare.status = 1
+            db.session.add(declare)
+            db.session.commit()
+            return Response(json.dumps({'status': True}), mimetype='application/json')
         else:#全新申报
-            db.session.delete(declare)
+            declare.status=1
+            db.session.add(declare)
             db.session.commit()
             return Response(json.dumps({'status': True}), mimetype='application/json')
 

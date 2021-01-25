@@ -34,16 +34,36 @@ def searchdeclareuser():
         #获取对应的申报任务
         declare=Declare.query.join(DUDC).join(UDeclare).filter(UDeclare.id==items[i].id).all()[0]
         #用户申报状态
-        if declare.endtime>datetime.datetime.now():
-            if items[i].type == 1:
-                status = 1#用户申报通过
+        user = User.query.filter(User, id == items[i].userid).all()[0]
+        if user.checked==2:
+            if declare.status==0:
+                if declare.endtime>datetime.datetime.now():
+                    if items[i].type == 1:
+                        status = 21#用户被删除但用户申报通过
+                    else:
+                        status = 20  # 用户被删除但用户申报未通过
+                elif items[i].type==1:
+                    status=31#用户被删除但用户申报通过但系统发布申报任务过期
+                else:
+                    status=30#用户被删除但用户申报未通过但系统发布申报任务过期
             else:
-                status = 0  # 用户申报未通过
-        elif items[i].type==1:
-            status=11#用户申报通过但系统发布申报任务过期
+                status=2#未启用的申报，即被作废的申报
         else:
-            status=10#用户申报未通过但系统发布申报任务过期
+            if declare.status==0:
+                if declare.endtime>datetime.datetime.now():
+                    if items[i].type == 1:
+                        status = 1#用户申报通过
+                    else:
+                        status = 0  # 用户申报未通过
+                elif items[i].type==1:
+                    status=11#用户申报通过但系统发布申报任务过期
+                else:
+                    status=10#用户申报未通过但系统发布申报任务过期
+            else:
+                status=2#未启用的申报，即被作废的申报
         #返回id，用户名，申报起始时间，结束时间，提交时间,能否点击通过按钮的状态
+        # (1通过，0未通过，11用户申报通过但系统发布申报任务过期，10用户申报未通过但系统发布申报任务过期，2未启用的培训，即被作废的培训)
+        # （21用户被删除但用户申报通过，20用户被删除但用户申报未通过，31用户被删除但用户申请通过但系统发布申报任务过期，30用户被删除但用户申请未通过但系统发布申报任务过期）
         itemss = {'number': count + i + 1, 'id': items[i].id, 'name': name, 'begintime': str(declare.begintime),'endtime': str(declare.endtime),'uptime': str(items[i].uptime),'status':status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、用户申报集合

@@ -59,13 +59,22 @@ def searchactivity():
     page = int(page)
     per_page = int(per_page)
     #获取未删除活动倒叙
-    activity = Activity.query.filter(Activity.status != 3).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    activity = Activity.query.order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
+        if items[i].typeuser=='自主':
+            user=User.query.filter(User,id==items[i].userid).all()[0]
+            if user.checked==1:
+                status=items[i].status
+            else:
+                status=10+items[i].status
+        else:
+            status=items[i].status
+        #number，活动id号，活动名，活动类别，活动类型，开始时间，结束时间，状态（0创建，1驳回，2通过，3删除，10+0，1，2，3因用户考核被删除的记录）
         itemss = {'number': count + i + 1, 'id': items[i].id, 'activityname': items[i].name, 'typeuser':items[i].typeuser,'type': items[i].type,
-                  'begintime': str(items[i].begintime), "endtime": str(items[i].endtime),'status':items[i].status}
+                  'begintime': str(items[i].begintime), "endtime": str(items[i].endtime),'status':status}
         item.append(itemss)
     #返回总页数、活动总数、当前页、活动集合
     data = {'zpage': activity.pages, 'total': activity.total, 'dpage': activity.page, 'item': item}
@@ -99,7 +108,7 @@ def tguseractivity():
         id = request.form.get('id')
     id=int(id)
     activity = Activity.query.filter(Activity.id==id).first()
-    activity.status = 2#状态，0创建，1驳回，2通过，3删除
+    activity.status = 2#状态，0创建，1驳回，2通过，3删除，10+0，1，2，3因用户考核被删除的记录
     db.session.add(activity)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -113,7 +122,7 @@ def bhuseractivity():
         id = request.form.get('id')
     id=int(id)
     activity = Activity.query.filter(Activity.id==id).first()
-    activity.status = 1#状态，0创建，1驳回，2通过，3删除
+    activity.status = 1#状态，0创建，1驳回，2通过，3删除，10+0，1，2，3因用户考核被删除的记录
     db.session.add(activity)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -135,6 +144,61 @@ def detailsysactivity():
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、用户组
     da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user}
     return Response(json.dumps(da), mimetype='application/json')
+
+@main.route('/updatesysactivity',methods=['GET','POST'])
+def updatesysactivity():
+    # 获取系统活动的活动名、活动类型、开始时间、结束时间、报名截止时间、活动内容
+    if request.method == 'GET':
+        id=request.args.get('id')
+        name = request.args.get('name')
+        type = request.args.get('type')
+        begintime = request.args.get('begintime')
+        endtime = request.args.get('endtime')
+        stoptime = request.args.get('stoptime')
+        main = request.args.get('main')
+    else:
+        id = request.form.get('id')
+        name = request.form.get('name')
+        type = request.form.get('type')
+        begintime = request.form.get('begintime')
+        endtime = request.form.get('endtime')
+        stoptime = request.form.get('stoptime')
+        main = request.form.get('main')
+    # 处理时间类型数据
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%d')
+    user=session.get('user')
+    userid=user['userid']
+    # 修改活动及存表
+    activity=Activity.query.filter(Activity.id==id).all()[0]
+    activity.name=name
+    activity.type=type
+    activity.begintime=begintime
+    activity.endtime=endtime
+    activity.stoptime=stoptime
+    activity.main=main
+    db.session.add(activity)
+    db.session.commit()
+    user2 = User.query.filter(User.id == userid).all()[0]
+    user2.updatetime = activity.updatetime
+    db.session.add(user2)
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
+
+#删除系统活动
+@main.route('/deletesysactivity',methods=['GET','POST'])
+def deletesysactivity():
+    if request.method == 'GET':
+        id=request.args.get('id')
+    else:
+        id = request.form.get('id')
+    # 修改活动及存表
+    activity = Activity.query.filter(Activity.id == id).all()[0]
+    activity.status=3#删除
+    db.session.add(activity)
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #生成报名表
 @main.route('/xlsxsysactivity',methods=['GET','POST'])
@@ -164,13 +228,18 @@ def xlsxsysactivity():
         os.makedirs(file_new_dir)
     #创建Excel表
     excelTabel = xlwt.Workbook()  # 创建excel对象
-    name=activity.name+"活动签到表"
+    begintime=str(activity.begintime).split('-')
+    begintime=begintime[0]+'年'+begintime[1]+'月'+begintime[2].split(' ')[0]+'日'
+    name=str(begintime+activity.name+"活动签到表")
     sheet1 = excelTabel.add_sheet(name, cell_overwrite_ok=True)
     #填写内容
-    sheet1.write(0,0,"活动报名单位")
-    sheet1.write(0, 1, "签到")
+    sheet1.write_merge(0,0,0,2,name)
+    sheet1.write(1,0,"报名单位编号")
+    sheet1.write(1,1,"活动报名单位")
+    sheet1.write(1, 2, "签到")
     for i in range(len(user)):
-        sheet1.write(i+1, 0, str(user[i]))
+        sheet1.write(i + 2, 0, i+1)
+        sheet1.write(i+2, 1, str(user[i]))
     #以时间戳为Excel文件名
     timestamp=str(time.mktime(time.strptime(str(activity.updatetime), "%Y-%m-%d %H:%M:%S")))
     excelTabel.save('data\\sysactivity\\'+str(id)+'\\'+timestamp+'.xlsx')

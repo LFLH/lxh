@@ -69,7 +69,11 @@ def exceladduser():
         nrows=sheet1_content1.nrows
         for i in range(nrows):
             if i!=0:
-                username=sheet1_content1.cell(i, 0).value
+                username=sheet1_content1.cell(i, 0).value#用户名
+                name=sheet1_content1.cell(i, 1).value#科普单位
+                email =sheet1_content1.cell(i, 2).value#邮箱
+                phone =sheet1_content1.cell(i, 3).value#联系电话
+                address =sheet1_content1.cell(i, 4).value#地址
                 user = User.query.filter(User.username == username).all()
                 # 不存在用户
                 if len(user) == 0:
@@ -77,7 +81,7 @@ def exceladduser():
                     # 自动生成密码
                     password = ''.join(random.sample(string.ascii_letters + string.digits, k))
                     # 添加用户
-                    newuser = User(username=username, password=password, type='user', checked=1)
+                    newuser = User(username=username, password=password, type='user', checked=1,name=name,email=email,phone=phone,address=address)
                     db.session.add(newuser)
                     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -98,22 +102,24 @@ def deleteuser():
     per_page = int(per_page)
     user=User.query.filter(User.id==id).all()[0]
     user.checked=2#删除标识
-    activitys=Activity.query.filter(Activity.userid==id).all()
-    for activity in activitys:
-        activity.status=3
-        db.session.add(activity)
-    db.session.commit()
-    db.session.add(user)
-    db.session.commit()
     # 倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
-    user = User.query.filter(and_(or_(User.checked == 1, and_(User.checked == 0, User.endtime > datetime.datetime.now()))),User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    user = User.query.filter(User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
     items = user.items
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
+        if user.checked==0:
+            if user.endtime>datetime.datetime.now():
+                status=0#新用户
+            else:
+                status=1#未激活用户
+        elif user.checked==1:
+            status=2#正式用户
+        else:
+            status=3#考核未过用户
         # 返回用户id，用户名，密码，最后操作时间，状态
         itemss = {'number': count + i + 1, 'id': items[i].id, 'username': items[i].username,
-                  'password': items[i].password, 'lasttime': str(items[i].updatetime), 'status': items[i].checked}
+                  'password': items[i].password, 'lasttime': str(items[i].updatetime), 'status': status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、用户集合
     data = {'zpage': user.pages, 'total': user.total, 'dpage': user.page, 'item': item}
@@ -132,13 +138,22 @@ def searchuser():
     page=int(page)
     per_page = int(per_page)
     #查询用户需要sysadmin用户和老用户、未过期用户
-    user=User.query.filter(and_(or_(User.checked==1,and_(User.checked==0,User.endtime>datetime.datetime.now())),User.type!='sysadmin')).order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    user=User.query.filter(User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
     items=user.items
     item=[]
     count=(int(page)-1)*int(per_page)
     for i in range(len(items)):
+        if user.checked==0:
+            if user.endtime>datetime.datetime.now():
+                status=0#新用户
+            else:
+                status=1#未激活用户
+        elif user.checked==1:
+            status=2#正式用户
+        else:
+            status=3#考核未过用户
         #返回用户id，用户名，密码，最后操作时间，状态
-        itemss={'number':count+i+1,'id':items[i].id,'username':items[i].username,'password':items[i].password,'lasttime':str(items[i].updatetime),'status':items[i].checked}
+        itemss={'number':count+i+1,'id':items[i].id,'username':items[i].username,'password':items[i].password,'lasttime':str(items[i].updatetime),'status':status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、用户集合
     data={'zpage':user.pages,'total':user.total,'dpage':user.page,'item':item}

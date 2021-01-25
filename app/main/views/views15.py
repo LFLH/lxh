@@ -27,19 +27,19 @@ def searchsysactivity():
     per_page=int(per_page)
     user=session.get('user')
     userid=user['userid']
-    activity = Activity.query.filter(Activity.typeuser=="系统").order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    activity = Activity.query.filter(and_(Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
         if items[i].stoptime<datetime.datetime.now():
-            status=1
+            status=1#已过期
         else:
             au=AU.query.filter(and_(AU.userid==userid,AU.activityid==items[i].id)).count()
             if au>0:
-                status=1
+                status=2#已报名
             else:
-                status=0
+                status=0#未报名
         # 返回活动名、活动类型、开始时间、结束时间、活动内容、状态
         itemss = {'number': count + i + 1, 'id': items[i].id, 'activityname': items[i].name, 'type': items[i].type,
                   'begintime': str(items[i].begintime), "endtime": str(items[i].endtime), "main": items[i].main,

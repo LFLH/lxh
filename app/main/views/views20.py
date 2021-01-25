@@ -25,7 +25,7 @@ def searchrecord():
         per_page = request.json.get('per_page')
     page = int(page)
     per_page = int(per_page)
-    record=Record.query.filter(Record.status!=3).order_by(-Record.id).paginate(page, per_page, error_out=False)
+    record=Record.query.order_by(-Record.id).paginate(page, per_page, error_out=False)
     items = record.items
     item = []
     count = (int(page) - 1) * int(per_page)

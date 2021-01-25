@@ -100,6 +100,7 @@ class Declare(db.Model):
     begintime = db.Column(db.DateTime, default=datetime.datetime.now)  # 申报开始时间
     endtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 申报结束时间
     main = db.Column(db.Text)  # 申报内容
+    status=db.Column(db.Integer,default=0)#申报状态
     udeclares=db.relationship('UDeclare', secondary=DUDC, backref=db.backref('udcs', lazy='dynamic'))
 
     def __repr__(self):
@@ -131,6 +132,7 @@ class Train(db.Model):
     begintime = db.Column(db.DateTime, default=datetime.datetime.now)  # 培训开始时间
     endtime = db.Column(db.DateTime, default=datetime.datetime.now)  # 培训结束时间
     main = db.Column(db.Text)  # 培训内容
+    status = db.Column(db.Integer, default=0)  # 培训状态
     utrains = db.relationship('UTrain', secondary=TUT, backref=db.backref('tuts', lazy='dynamic'))
 
     def __repr__(self):
