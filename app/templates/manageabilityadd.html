@@ -1,89 +1,71 @@
-<title>manageabilityadd</title>
+<title>能力培训添加</title>
 {% extends "base_Txx.html" %}
+
+{% block css %}
+    tbody {
+       counter-reset:sectioncounter;
+    }
+
+    .SortCLASS:before {
+       content:counter(sectioncounter);
+       counter-increment:sectioncounter;
+
+    }
+{% endblock %}
 
 {% block content %}
     <div class="container">
-        <h2>能力提升培训添加</h2>
-        <form id="form">
-        <div class="form-group">
-          <label for="name">能力提升培训名：</label>
-          <input type="text" class="form-control" id="name" name="abilityName">
-        </div>
-        <div class="form-group">
-          <label for="startTime">培训开始时间：</label>
-          <input type="date" class="form-control" id="startTime" name="time1" >
-        </div>
-        <div class="form-group">
-          <label for="stopTime">培训结束时间：</label>
-          <input type="date" class="form-control" id="stopTime" name="time2">
-        </div>
-        <div class="form-group">
-          <label for="content">培训内容：</label>
-          <input type="text" class="form-control" id="content" name="abilityContent">
-        </div>
-        <div style="text-align:center">
-         <button id="cancel" type="button" style="margin:50px">取消</button>
-         <button id="submit" type="button" style="margin:50px">添加</button>
-{#         <button id="submit" onclick="alert($('#content').val())" type="button" style="margin:50px">添加</button>#}
-        </div>
-      </form>
+        <h2 style="padding-top: 20px">能力提升培训记录</h2>
+        <br>
+            <button type="button"  class="btn btn-link" id="add" style="display: inline; margin-left: 26px; font-size: large">+&nbsp;添加能力提升培训</button>
+        <br>
+        <br>
+        <form id="ability" role="form">
+             <div class="form-group">
+                     <div class="input-group col-xs-12">
+                         <div class="input-group-btn">
+                            <select name="type" class="form-control" style="width: auto;">
+                                <option>能力提升培训名</option>
+                                <option>开始时间</option>
+                                <option>结束时间</option>
+                                <option>申报人账户</option>
+                                <option>申报人用户名</option>
+                                <option>申报状态</option>
+                            </select>
+                         </div>
+                            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" id="search" type="submit">搜索</button>
+                            </span>
+                        </div>
+             <br>
+             </div>
+            <div class="form-group">
+                    <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                        <thead style="text-align: center">
+                        <tr>
+                            <th style="width: 8%">序号</th>
+                            <th style="width: 14%">能力提升培训名</th>
+                            <th style="width: 14%">开始时间</th>
+                            <th style="width: 14%">结束时间</th>
+                            <th style="width: 14%">申报人账户</th>
+                            <th style="width: 14%">申报人用户名</th>
+                            <th style="width: 14%">申报状态</th>
+                            <th style="width: 8%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="demoList"></tbody>
+                    </table>
+            </div>
+        </form>
     </div>
 
 {% endblock %}
 
 {% block js %}
     $(function () {
-            $("#cancel").click(function () {
-                $("#name").val('');
-                $('#startTime').val('');
-                $('#stopTime').val('');
-                $('#content').val('');
-        });
-            $("#submit").click(function () {
-                var content = $("#content").val();
-                var startTime = $('#startTime').val();
-                var stopTime = $('#stopTime').val();
-                var name= $('#name').val();
-
-                 if(name == ''){
-                 alert('名字不能为空！');
-                 return
-                 }
-                 if(startTime == ''){
-                     alert('请选择开始时间！');
-                     return
-                 }
-                 if(stopTime != ''){
-                     if(startTime > stopTime){
-                         alert('结束时间不能早于开始时间！');
-                         return
-                     }
-                 }else {
-                     alert('请选择结束时间！');
-                     return
-                 }
-                if(content == '') {
-                    alert("内容不能为空！");
-                }
-                $.ajax({
-                    type: "GET",
-                    url: "/addability",
-                    data: {name:$('#name').val(),begintime:$('#startTime').val(),endtime:$('#stopTime').val(),main:$("#content").val()},
-                    dataType: 'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success:function () {
-                        Flush();
-                    }
-                });
-            });
-            function Flush(){
-                $('#name').val('');
-                $('#startTime').val('');
-                $('#stopTime').val('');
-                $('#content').val('');
-                alert("添加成功！")
-            }
-        });
+        $("#add").on("click", function () {
+                 window.location.href = '/manageabilityadd_new'
+        })
+    })
 {% endblock %}

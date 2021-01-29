@@ -26,8 +26,10 @@ def updatesystem():
         type = request.args.get('type')
         main=request.args.get('main')
     else:
-        type = request.json.get('type')
-        main = request.json.get('main')
+        #type = request.json.get('type')
+        #main = request.json.get('main')
+        type = request.form.get('type')
+        main = request.form.get('main')
     #修改系统信息
     system=System.query.filter(System.type==type).all()[0]
     system.main=main

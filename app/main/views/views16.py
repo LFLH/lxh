@@ -21,8 +21,10 @@ def searchsystrain():
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
     else:
-        page = request.json.get('page')
-        per_page = request.json.get('per_page')
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
     page=int(page)
     per_page=int(per_page)
     user = session.get('user')
@@ -33,13 +35,13 @@ def searchsystrain():
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
         if items[i].endtime<datetime.datetime.now():
-            status=1
+            status=1#已过期
         else:
             tut=Train.query.join(TUT).join(UTrain).filter(and_(Train.id==items[i].id,UTrain.userid==userid)).count()
             if tut>0:
-                status=1
+                status=2#已报名
             else:
-                status=0
+                status=0#未报名
         # 返回培训名、开始时间、结束时间、状态
         itemss={'number': count + i + 1,'id':items[i].id,'name': items[i].name, 'begintime': str(items[i].begintime), 'endtime': str(items[i].endtime),'status':status}
         item.append(itemss)

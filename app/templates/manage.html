@@ -50,7 +50,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎：{{ username }}</a></li>
+                    <li><a href="#" style="color: #9d9d9d">欢迎：{{ name }}</a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -136,9 +136,8 @@
     </div>
 </div>
 
-<script>
+<!--<script>
     //饼状图
-
     $(document).ready(function() {
         var chart = {
             plotBackgroundColor: null,
@@ -313,6 +312,197 @@
         json.plotOptions = plotOptions;
         $('.container3').highcharts(json);
     });
+</script>-->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.ajax({
+            type:'GET',
+            url:'./manageall',
+            data:{},//
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(data){
+                bingzhuangtu1(data.d.yd,data.d.wd);
+                zhuzhuangtu(data.activitycount)
+                bingzhuangtu2(data.t.yt,data.t.wt);
+            }
+        });
+    });
+    //饼状图1
+    function bingzhuangtu1(y,w){
+        var chart = {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        };
+        var legend = {
+            align:'left',
+            verticalAlign: 'top'
+        };
+        var title = {
+            text: '申报提交未提交'
+        };
+        var exporting = {
+            enabled:false
+        };
+        var credits = {
+            enabled:false
+        };
+        var tooltip = {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        };
+        var plotOptions = {
+            pie: {
+                size:120,
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        };
+        var series= [{
+            type: 'pie',
+            data: [
+                {
+                    name: '提交',
+                    y: y,
+                    selected: true
+                },
+                ['未提交',    w]
+            ]
+        }];
+        var json = {};
+        json.chart = chart;
+        json.legend = legend;
+        json.exporting = exporting;
+        json.credits = credits;
+        json.title = title;
+        json.tooltip = tooltip;
+        json.series = series;
+        json.plotOptions = plotOptions;
+        $('.container1').highcharts(json);
+    }
+    //柱状图
+    function zhuzhuangtu(activitycount){
+        var chart = {
+            type: 'column'
+        };
+        var title = {
+            text: '各月活动提交情况'
+        };
+        var xAxis = {
+            categories: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+            crosshair: false
+        };
+        var yAxis = {
+            min: 0,
+            title: {
+                text: '数量'
+            }
+        };
+        var tooltip = {
+            headerFormat: '<span style="font-size:10px">{point.key}</span>',
+            pointFormat: '<h1 style="font-size: 6px;padding:0">月数量: </h1>' +
+                '<h1 style="padding:0"><b>{point.y:.1f} </b></h1>',
+            footerFormat: '',
+            shared: true,
+            useHTML: true
+        };
+        var plotOptions = {
+            column: {
+                pointPadding: 0,
+                borderWidth: 0,
+                groupPadding: 0.1,
+                shadow: false
+            }
+        };
+        var credits = {
+            enabled: false
+        };
+
+        var series= [{
+            name: '各月数量',
+            data: activitycount
+        }];
+
+        var json = {};
+        json.chart = chart;
+        json.title = title;
+        json.tooltip = tooltip;
+        json.xAxis = xAxis;
+        json.yAxis = yAxis;
+        json.series = series;
+        json.plotOptions = plotOptions;
+        json.credits = credits;
+        $('.container2').highcharts(json);
+    }
+    //饼状图2(新活动报名占比)
+    function  bingzhuangtu2(y,w){
+        var chart = {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        };
+        var legend = {
+            align:'left',
+            verticalAlign: 'top'
+        };
+        var exporting = {
+            enabled:false
+        };
+        var credits = {
+            enabled:false
+        };
+        var title = {
+            text: '新活动报名占比'
+        };
+        var tooltip = {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        };
+        var plotOptions = {
+            pie: {
+                size:120,
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        };
+        var series= [{
+            type: 'pie',
+            data: [
+                {
+                    name: '新活动',
+                    y: y,
+                    selected: true
+                },
+                ['其他',    w]
+            ]
+        }];
+
+        var json = {};
+        json.chart = chart;
+        json.legend = legend;
+        json.exporting = exporting;
+        json.credits = credits;
+        json.title = title;
+        json.tooltip = tooltip;
+        json.series = series;
+        json.plotOptions = plotOptions;
+        $('.container3').highcharts(json);
+    }
 </script>
 
 </body>
