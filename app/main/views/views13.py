@@ -21,8 +21,10 @@ def showactivity():
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
     else:
-        page = request.json.get('page')
-        per_page = request.json.get('per_page')
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
     user = session.get('user')
     userid = user['userid']
     #根据用户id获取自主活动
@@ -48,7 +50,8 @@ def detailactivity():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        #id = request.json.get('id')
+        id = request.form.get('id')
     activity = Activity.query.filter(Activity.id == id).all()[0]
     # 获取自主活动的文件名
     data = activity.datas
@@ -178,9 +181,13 @@ def deleteactivity():
         page = request.args.get('page')  # 当前页
         per_page = request.args.get('per_page')  # 平均页数
     else:
-        id = request.json.get('id')
-        page = request.json.get('page')  # 当前页
-        per_page = request.json.get('per_page')  # 平均页数
+        
+        id = request.form.get('id')
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #id = request.json.get('id')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
     page = int(page)
     per_page = int(per_page)
     #根据活动id删除活动

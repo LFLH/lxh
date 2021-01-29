@@ -1,0 +1,92 @@
+<title>manageabilityadd</title>
+{% extends "base_Txx.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2 style="padding-top: 20px">能力提升培训添加</h2>
+        <br>
+        <br>
+        <form id="form">
+        <div class="form-group">
+          <label for="name" style="font-size: large; font-weight: bold">能力提升培训名：</label>
+          <input type="text" class="form-control" id="name" name="abilityName">
+        </div>
+        <div class="form-group">
+          <label for="startTime" style="font-size: large; font-weight: bold">申报开始时间：</label>
+          <input type="date" class="form-control" id="startTime" name="time1" >
+        </div>
+        <div class="form-group" style="font-size: large; font-weight: bold">
+          <label for="stopTime">申报结束时间：</label>
+          <input type="date" class="form-control" id="stopTime" name="time2">
+        </div>
+        <div class="form-group" style="font-size: large; font-weight: bold">
+          <label for="content">能力提升培训内容：</label>
+          <input type="text" class="form-control" id="content" name="abilityContent">
+        </div>
+        <div style="text-align:center">
+         <button id="cancel" type="button" class="btn btn-default" style="margin:50px; background-color: lightgrey;">取消</button>
+         <button id="submit" type="button" class="btn btn-success" style="margin:50px">添加</button>
+{#         <button id="submit" onclick="alert($('#content').val())" type="button" style="margin:50px">添加</button>#}
+        </div>
+      </form>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    $(function () {
+        $("#cancel").click(function () {
+            $("#name").val('');
+            $('#startTime').val('');
+            $('#stopTime').val('');
+            $('#content').val('');
+        });
+        $("#submit").click(function () {
+            var content = $("#content").val();
+            var startTime = $('#startTime').val();
+            var stopTime = $('#stopTime').val();
+            var name= $('#name').val();
+
+             if(name == ''){
+             alert('名字不能为空！');
+             return
+             }
+             if(startTime == ''){
+                 alert('请选择开始时间！');
+                 return
+             }
+             if(stopTime != ''){
+                 if(startTime > stopTime){
+                     alert('结束时间不能早于开始时间！');
+                     return
+                 }
+             }else {
+                 alert('请选择结束时间！');
+                 return
+             }
+            if(content == '') {
+                alert("内容不能为空！");
+            }
+            $.ajax({
+                type: "GET",
+                url: "/addability",
+                data: {name:$('#name').val(),begintime:$('#startTime').val(),endtime:$('#stopTime').val(),main:$("#content").val()},
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function () {
+                    Flush();
+                }
+            });
+        });
+        function Flush(){
+            $('#name').val('');
+            $('#startTime').val('');
+            $('#stopTime').val('');
+            $('#content').val('');
+            alert("添加成功！")
+        }
+    });
+{% endblock %}
+

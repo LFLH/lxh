@@ -19,10 +19,10 @@ def userlogin():
         username = request.args.get('username')
         password=request.args.get('password')
     else:
-        username = request.json.get('username')
-        password = request.json.get('password')
-        #username = request.form.get('username')
-        #password = request.form.get('password')
+        #username = request.json.get('username')
+        #password = request.json.get('password')
+        username = request.form.get('username')
+        password = request.form.get('password')
     user=User.query.filter(User.username==username,User.password==password).all()
     if len(user)>0:
         session['user']={'username':user[0].username,'userid':user[0].id,'usertype':user[0].type,'checked':user[0].checked}

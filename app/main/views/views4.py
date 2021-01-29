@@ -19,8 +19,10 @@ def searchdeclareuser():
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
     else:
-        page = request.json.get('page')
-        per_page = request.json.get('per_page')
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
     page = int(page)
     per_page = int(per_page)
     #连表查询未过期的用户申报

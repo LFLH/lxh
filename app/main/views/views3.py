@@ -1,8 +1,9 @@
 #/manageactivity的后端API
-from flask import request,jsonify,session,redirect,Response,send_from_directory,abort,make_response,send_file
+from flask import request,jsonify,session,redirect,Response,send_from_directory,abort,make_response,send_file,render_template
 from app.main import main
 from app.models.models import User,Activity,AD,Data,AU
 from app import db
+from sqlalchemy import or_,and_
 import json,datetime,xlwt,os,mimetypes,time,qrcode
 import socket
 
@@ -54,8 +55,10 @@ def searchactivity():
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
     else:
-        page = request.json.get('page')
-        per_page = request.json.get('per_page')
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
     page = int(page)
     per_page = int(per_page)
     #获取未删除活动倒叙
@@ -65,7 +68,7 @@ def searchactivity():
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
         if items[i].typeuser=='自主':
-            user=User.query.filter(User,id==items[i].userid).all()[0]
+            user=User.query.filter(User.id==items[i].userid).all()[0]
             if user.checked==1:
                 status=items[i].status
             else:
@@ -87,7 +90,8 @@ def detailuseractivity():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        id = request.form.get('id')
+        #id = request.json.get('id')
     activity=Activity.query.filter(Activity.id==id).all()[0]
     #获取自主活动的文件名
     data=activity.datas
@@ -134,7 +138,8 @@ def detailsysactivity():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        id = request.form.get('id')
+        #id = request.json.get('id')
     activity=Activity.query.filter(Activity.id==id).all()[0]
     # 获取系统活动的报名用户
     userz=User.query.join(AU).join(Activity).filter(Activity.id==id).all()
@@ -207,7 +212,8 @@ def xlsxsysactivity():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        id = request.form.get('id')
+        #id = request.json.get('id')
     activity=Activity.query.filter(Activity.id==id).all()[0]
     # 获取系统活动的报名用户
     userz = User.query.join(AU).join(Activity).filter(Activity.id == id).all()
@@ -233,7 +239,12 @@ def xlsxsysactivity():
     name=str(begintime+activity.name+"活动签到表")
     sheet1 = excelTabel.add_sheet(name, cell_overwrite_ok=True)
     #填写内容
-    sheet1.write_merge(0,0,0,2,name)
+    alignment = xlwt.Alignment()  # Create Alignment  创建对齐
+    alignment.horz = xlwt.Alignment.HORZ_CENTER  # May be: 标准化：HORZ_GENERAL, 左对齐：HORZ_LEFT, 水平对齐居中：HORZ_CENTER, 右对齐：HORZ_RIGHT, 填充：HORZ_FILLED, HORZ_JUSTIFIED, HORZ_CENTER_ACROSS_SEL, HORZ_DISTRIBUTED
+    alignment.vert = xlwt.Alignment.VERT_CENTER  # May be: 顶部对齐：VERT_TOP, 垂直居中：VERT_CENTER, 底部对齐：VERT_BOTTOM, VERT_JUSTIFIED, VERT_DISTRIBUTED
+    style = xlwt.XFStyle()  # Create Style 创建样式
+    style.alignment = alignment  # Add Alignment to Style  为样式添加对齐
+    sheet1.write_merge(0,0,0,2,name,style)
     sheet1.write(1,0,"报名单位编号")
     sheet1.write(1,1,"活动报名单位")
     sheet1.write(1, 2, "签到")
@@ -242,13 +253,13 @@ def xlsxsysactivity():
         sheet1.write(i+2, 1, str(user[i]))
     #以时间戳为Excel文件名
     timestamp=str(time.mktime(time.strptime(str(activity.updatetime), "%Y-%m-%d %H:%M:%S")))
-    excelTabel.save('data\\sysactivity\\'+str(id)+'\\'+timestamp+'.xlsx')
+    excelTabel.save('data\\sysactivity\\'+str(id)+'\\'+name+'.xlsx')
     # 获取文件名及文件绝对路径并将文件上传给前端
-    filename = timestamp+'.xlsx'
+    filename = name+'.xlsx'
     file1=str(os.path.abspath(__file__))
-    filed=file1.split('app\main\\views\\views3.py')[0]
+    filed=file1.split('app')[0]
     directory = filed+'data\\sysactivity\\'+str(id)+'\\'
-    return send_file(directory+filename, mimetype=str(mimetypes.guess_type(filename)[0]),attachment_filename=filename, as_attachment=True)
+    return send_file(directory+filename, mimetype=str(mimetypes.guess_type(filename)[0]),attachment_filename=filename.encode('utf-8').decode('latin1'), as_attachment=True)
 
 #获取本机ip地址
 def get_host_ip():
@@ -267,7 +278,8 @@ def ewmsysactivity():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        id = request.form.get('id')
+        #id = request.json.get('id')
     activity = Activity.query.filter(Activity.id == id).all()[0]
     # 创建存储地址data文件夹
     file_dir = os.path.join('data')
@@ -299,6 +311,46 @@ def ewmsysactivity():
     img.save('data\\sysactivity\\'+str(id)+'\\'+filename)
     # 获取文件名及文件绝对路径并将文件上传给前端
     file1 = str(os.path.abspath(__file__))
-    filed = file1.split('app\main\\views\\views3.py')[0]
+    filed = file1.split('app')[0]
     directory = filed + 'data\\sysactivity\\' + str(id) + '\\'
     return send_file(directory + filename, mimetype=str(mimetypes.guess_type(filename)[0]),attachment_filename=filename, as_attachment=True)
+
+#Web端总体获取需要签到的用户
+@main.route('/websignuser',methods=['GET','POST'])
+def websignuser():
+    # 根据活动id查找系统活动
+    if request.method == "GET":
+        activityid = request.args.get('activityid')
+    else:
+        activityid = request.form.get('activityid')
+        #activityid = request.json.get('activityid')
+    au=AU.query.filter(AU.activityid==activityid).all()
+    userz=[]
+    for a in au:
+        user=User.query.filter(User.id==a.userid).all()[0]
+        userz.append({'name':user.name,'username':user.username,'userid':user.id})
+    return Response(json.dumps({'userz': userz}), mimetype='application/json')
+
+#Web端总体签到
+@main.route('/websign',methods=['GET','POST'])
+def websign():
+    # 获取前端数据
+    if request.method == "GET":
+        activityid = request.args.get('activityid')
+    else:
+        #activityid = request.json.get('activityid')
+        activityid=request.form.get('activityid')
+    userz=request.values.getlist('userz[]')
+    # 获取客户端ip地址
+    ip = request.remote_addr
+    for user in userz:
+        au=AU.query.filter(and_(AU.activityid==activityid,AU.userid==user)).all()[0]
+        au.type=1
+        au.ip=ip
+        db.session.add(au)
+        db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
+
+@main.route('/cs6',methods=['GET','POST'])
+def cs():
+    return render_template('cs6.html')

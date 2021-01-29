@@ -20,8 +20,10 @@ def searchdeclare():
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
     else:
-        page = request.json.get('page')
-        per_page = request.json.get('per_page')
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
     #倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
     page=int(page)
     per_page = int(per_page)
@@ -52,7 +54,8 @@ def detaildeclare():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        #id = request.json.get('id')
+        id = request.form.get('id')
     declare = Declare.query.filter(Declare.id==id).all()[0]
     udeclare=UDeclare.query.join(DUDC).join(Declare).filter(Declare.id==declare.id).all()
     user=[]

@@ -99,6 +99,11 @@ def managedeclareadd():
             return redirect('/newuser')
     else:
         return render_template('managedeclareadd.html',username=user["username"])
+#跳转到能力提升培训任务添加的单独界面
+@main.route('/managedeclareadd_new',methods=['GET','POST'])
+def managedeclareadd_new():
+    user = session.get('user')
+    return render_template('managedeclareadd_new.html', username=user["username"])
 
 #能力提升培训用户管理
 @main.route('/manageabilityuser',methods=['GET','POST'])
@@ -127,6 +132,11 @@ def manageabilityadd():
             return redirect('/newuser')
     else:
         return render_template('manageabilityadd.html',username=user["username"])
+#跳转到能力提升培训任务添加的单独界面
+@main.route('/manageabilityadd_new',methods=['GET','POST'])
+def manageabilityadd_new():
+    user = session.get('user')
+    return render_template('manageabilityadd_new.html', username=user["username"])
 
 #考核管理
 @main.route('/manageexamine',methods=['GET','POST'])
@@ -183,7 +193,11 @@ def newuser():
         return redirect('/olduser')
     else:
         return render_template('newuser.html',username=user["username"])
-
+#新用户申报
+@main.route('/newuser_declare', methods=['GET','POST'])
+def newuser_declare():
+    user = session.get('user')
+    return render_template('newuser_declare.html',username=user["username"])
 #老用户界面
 @main.route('/olduser',methods=['GET','POST'])
 def olduser():
@@ -196,7 +210,11 @@ def olduser():
         return redirect('/newuser')
     else:
         return render_template('olduser.html',username=user["username"])
-
+#老用户账户设置界面
+@main.route('/user_setting',methods=['GET','POST'])
+def user_setting():
+    user = session.get('user')
+    return render_template('user_setting.html',username=user["username"])
 #用户已提交活动
 @main.route('/useractivity',methods=['GET','POST'])
 def useractivity():

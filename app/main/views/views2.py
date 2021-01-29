@@ -27,7 +27,7 @@ def zbfb(a,b):
 @main.route('/manageall',methods=['GET','POST'])
 def manageall():
     #需要申报人数
-    declare=Declare.query.order_by(-Declare.id).all()
+    declare=Declare.query.filter(Declare.status==0).order_by(-Declare.id).all()
     if len(declare)>0:
         declare=declare[0]
         usercount=User.query.filter(and_(User.checked==0,User.type=='user',User.endtime==declare.endtime)).count()
@@ -53,7 +53,7 @@ def manageall():
         activity=Activity.query.filter(and_(Activity.updatetime>=month[i],Activity.updatetime<month[i+1],Activity.typeuser=='自主')).count()
         activitycount.append(activity)
     #需要报名人数
-    train=Train.query.order_by(-Train.id).all()
+    train=Train.query.filter(Train.status==0).order_by(-Train.id).all()
     if len(train)>0:
         train=train[0]
         usercount2=User.query.filter(and_(User.checked==1,User.type=='user')).count()

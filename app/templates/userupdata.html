@@ -164,16 +164,6 @@
             let endtime = $('#endtime').val();
             let main = $('#content').val();
             let type = $('#type').val();
-            //测试修改自主活动信息
-            //s='./updateactivity?id=6&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
-            //测试提交年度报告
-            //s='./addndreport?name='+name
-            //测试科技周报告
-            //s='./addkjzreport?name='+name
-            //测试用户提交申报材料
-            //s='./adduserdeclare'
-            //测试培训报名
-            //s='./bmsystrain?id=1'
             s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
             var formData = new FormData($("#update")[0]);
             console.log(formData);

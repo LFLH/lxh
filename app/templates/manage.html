@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>用户活动管理</title>
+    <title>首页</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
@@ -70,18 +70,63 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
-            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
-                <li><a class="nav-link"
-                       href="{{url_for('main.manageuser')}}">用户管理</a></li>
-                <li><a class="nav-link" href="#">用户活动管理</a></li>
-                <li><a class="nav-link" href="#">申报管理</a></li>
-                <li><a class="nav-link" href="#">能力提升管理</a></li>
-                <li><a class="nav-link" href="#">考核管理</a></li>
-                <li><a class="nav-link" href="#">系统设置</a></li>
-            </ul>
+        <div class="col-md-2 sidebar">
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
+                  </div>
+                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
+                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
+                  </div>
+                  <div id="collapseThree" class="collapse" data-parent="#accordion">
+                    <div class="card-body">
+                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
+                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
+                  </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-10" style="margin-top: 50px">
+        <div class="col-md-10 offset-2" style="margin-top: 50px">
             <div class="row">
                 <div class="col-4 container1" style="float:left;"></div>
                 <div class="col-4 container2" style="float:left;"></div>
@@ -135,10 +180,10 @@
             data: [
                 {
                     name: '提交',
-                    y: 70.11,
+                    y: 70,
                     selected: true
                 },
-                ['未提交',    29.89]
+                ['未提交',    30]
             ]
         }];
 
