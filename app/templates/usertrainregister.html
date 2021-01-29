@@ -12,7 +12,6 @@
     <script src="../static/js/bootstrap.bundle.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-{#    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.css" rel="stylesheet">#}
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -26,6 +25,17 @@
             text-align: left;
             padding-left: 10px;
         }
+        /*.box{
+            width: 600px;
+            height: 500px;
+            border:1px solid black;
+            position: absolute;
+            background: #FFF;
+            display: none;
+            top: 20%;
+            left:30%;
+            overflow:scroll;
+        }*/
     </style>
 </head>
 <body>
@@ -35,11 +45,11 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }}</a></li>
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }}</a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
-                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
                             <li role="separator" class="divider"></li>
@@ -52,21 +62,12 @@
         </div>
     </div>
 </nav>
-<script>
+<!--<script>
     let username = '{{username}}';
-</script>
+</script>-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 sidebar">
-            <!--<ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
-                <li><a class="nav-link" href="{{url_for('main.useractivity')}}">已提交活动</a></li>
-                <li><a class="nav-link"
-                        href="{{url_for('main.userupdata')}}">添加新活动</a></li>
-                <li><a class="nav-link" href="#">活动报名</a></li>
-                <li class="active"><a class="nav-link" href="#">培训报名</a></li>
-                <li><a class="nav-link" href="#">年度总结提交</a></li>
-                <li><a class="nav-link" href="#">科技周报告提交</a></li>
-            </ul>-->
             <div id="accordion">
                 <div class="card">
                     <div class="card-header">
@@ -93,7 +94,7 @@
 
                 <div class="card">
                   <div class="card-header">
-                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
+                      <a class="collapsed card-link" href="#">培训报名</a>
                   </div>
                 </div>
 
@@ -112,7 +113,6 @@
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto">
             <h2 class="sub-header">林学会能力提升培训列表</h2>
-            <form action="/showactivity" method="POST" onsubmit="return Submit();">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover" id="mytable">
                         <thead>
@@ -121,12 +121,12 @@
                                 <th>培训任务名</th>
                                 <th>报名开始时间</th>
                                 <th>报名截止时间</th>
+                                <th>报名情况</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody id="tableText">
                         </tbody>
-
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-end" id="page-li">
@@ -145,207 +145,730 @@
                         </ul>
                     </nav>
                 </div>
-            </form>
+            <!--<div class="box" >
+                <h2 style="margin-top: 5px;text-align: center">林学会培训详情</h2>
+                <div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">培训主题：</label>
+                    <p id="train_name" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">培训内容：</label>
+                    <p id="train_main" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">培训报名开始时间：</label>
+                    <p id="train_begintime" style="display: inline;width: 450px"></p>
+                    </div>
+                    <div>
+                    <label style="font-size: 20px;display: inline;width:50px">培训报名截止时间：</label>
+                    <p id="train_endtime" style="display: inline;width: 450px"></p>
+                    </div>
+                </div>
+                <div>
+                </div>
+                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px;  margin-top: 140px">取消</button>
+                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px; margin-top: 140px">报名</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+<!-- 查看模态框 #showModal -->
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myshowModal">培训详情</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="show" enctype='multipart/form-data'>
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">培训主题:</label>
+                        <div class="col-sm-5" style="padding-left: 20px;">
+                            <input class="form-control" id="name" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="content" class="col-sm-2 control-label">培训内容:</label>
+                        <div class="col-sm-5" style="padding-left: 20px;">
+                            <input class="form-control" id="content" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="begintime" class="col-sm-3 control-label">报名起始时间:</label>
+                        <div class="col-sm-4" style="padding-left: 20px;">
+                            <input class="form-control" id="begintime" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="endtime" class="col-sm-3 control-label">报名截止时间:</label>
+                        <div class="col-sm-4" style="padding-left: 20px;">
+                            <input class="form-control" id="endtime" disabled>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 报名模态框 #applyModal -->
+<div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myapplyModal">活动详情</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update" enctype='multipart/form-data'>
+                    <div class="form-group">
+                        <label for="InputFilePDF" class="control-label">PDF文件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" multiple="" name="pdf" id="InputFilePDF"
+                                   accept="application/pdf"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="InputFileWord" class="control-label">word文件:</label>
+                        <div class="col-sm-10">
+                            <input type="file" multiple="" name="word" id="InputFileWord"
+                                   accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="InputFileImage" class="control-label">图片:</label>
+                        <div class="col-sm-10">
+                            <input type="file" multiple="" name="image" id="InputFileImage" accept="image/*"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="apply-centain">报名</button>
+            </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function(){
-        let dpage=1
-        let pages=1
-        let per_page=10
-        $.ajax({
+    $(document).ready(function () {
+        var dpage = 1 //当前页
+        var pages = 1 //总页数
+        var per_page = 10 //每页显示
+        var d_per_page = 10
+        var idz = new Array(10);
+        init();
+        function init(){
+            $.ajax({
+            type: 'GET',
+            url: './searchsystrain',
+            data: {'page': dpage, 'per_page': per_page},
+            dataType: 'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success: function (data) {
+                console.log('data',data)
+                pages = data.zpage;
+                let total = data.total;
+                dpage = data.dpage;
+                let activity = data.item;
+                let str = ""
+                for (let index = 0; index < data.item.length; index++) {
+                    switch(data.item[index].status) {
+                         case 0:
+                            var sta = '未报名';
+                            break;
+                         case 1:
+                            var sta = '已报名';
+                            break;
+                    }
+                    str += "<tr><td>" + data.item[index].number +
+                        "</td><td>" + data.item[index].name +
+                        "</td><td>" + data.item[index].begintime +
+                        "</td><td>" + data.item[index].endtime +
+                        "</td><td>" + sta +
+                        "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                        "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
+                }
+                $("#tableText").html(str);
+                let strli = "<li class='page-item'><a class='page-link' href='#' id='prev'>前一页</a></li>"
+                strli += "<li class='page-item'><a id=li" + 1 + " href='#' class='page-link page-num'>" + 1 + "</a></li>"
+                for (let index = 2; index <= pages; index++) {
+                    strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link page-num'>" + index + "</a></li>"
+                }
+                strli += "<li class='page-item'><a class='page-link' href='#' id='next'>后一页</a></li>"
+                $("#page-li").html(strli);
+                let s = "#li" + dpage
+                $(s).css("border-color", "blue");
+                if (dpage < pages) {
+                    let r = dpage + 1
+                    let rs = "#li" + r
+                    $(rs).css("border-left-color", "blue");
+                } else {
+                    $("#next").css("border-left-color", "blue");
+                }
+            }
+        });
+        }
+        // 查看培训
+        $("#mytable").on("click", ".user-active-view", function () {
+            var id = $(this).data('id')
+            $.ajax({
+                type:'GET',
+                url:'./detailsystrain',
+                data:{'id':id},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    $("#showModal").find("#name").val(data.name)
+                    $("#showModal").find("#content").val(data.main)
+                    $("#showModal").find("#begintime").val(data.begintime)
+                    $("#showModal").find("#endtime").val(data.endtime)
+                    $("#showModal").modal('show')
+                }
+            });
+        })
+        // 报名培训
+        $("#mytable").on("click", ".user-active-apply", function () {
+            $("#apply-centain").attr("data-id",$(this).data('id'));
+            $("#applyModal").modal('show')
+        })
+        $("#mytable").on("click", ".user-active-apply", function () {
+            $("#apply-centain").click(function() {
+                var id = $(this).data("id");
+                s='./bmsystrain?id='+id
+                var formData = new FormData($("#edit")[0]);
+                $.ajax({
+                    type: "POST",
+                    data: formData,
+                    url: s,
+                    contentType: false,
+                    processData: false,
+                    success:function(re){
+                        console.log(2222),
+                        Flush();
+                        Toast(re.status);
+                        init();
+                    }
+                });
+            })
+            function Flush(){
+            $('#name').val('');
+            $('#starttime').val('');
+            $('#endtime').val('');
+            $('#content').val('');
+            $('#type').val('');
+            $('#exampleInputFileVedio').val('');
+            $('#exampleInputFileAudio').val('');
+            $('#exampleInputFileImage').val('');
+            $('#exampleInputFilePDF').val('');
+            $('#exampleInputFileWord').val('');
+        };
+            function Toast(status){
+            if(status==true){
+                msg="报名成功！";
+            }else{
+                msg="报名失败！";
+            }
+            var m = document.createElement('div');
+            m.innerHTML = msg;
+            m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";
+            document.body.appendChild(m);
+            setTimeout(function() {
+                var d = 0.5;
+                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                m.style.opacity = '0';
+                setTimeout(function() { document.body.removeChild(m) }, d * 1000);
+            });
+        };
+        })
+
+        // 前一页
+        $("#page-li").on("click", "#prev", function () {
+            if (dpage == 1) {
+                alert("该页是第一页！");
+            } else {
+                let s = "#li" + dpage
+                $(s).css("border-color", "");
+                if (dpage < pages) {
+                    let r2 = dpage + 1
+                    let rs2 = "#li" + r2
+                    $(rs2).css("border-left-color", "");
+                } else {
+                    $("#next").css("border-left-color", "");
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: './searchsystrain',
+                    data: {'page': dpage - 1, 'per_page': per_page},
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        pages = data.zpage;
+                        let total = data.total;
+                        dpage = data.dpage;
+                        let activity = data.item;
+                        let str = ""
+                        for (let index = 0; index < data.item.length; index++) {
+                            switch(data.item[index].status) {
+                                 case 0:
+                                    var sta = '未报名';
+                                    break;
+                                 case 1:
+                                    var sta = '已报名';
+                                    break;
+                            }
+                            str += "<tr><td>" + data.item[index].number +
+                                "</td><td>" + data.item[index].name +
+                                "</td><td>" + data.item[index].begintime +
+                                "</td><td>" + data.item[index].endtime +
+                                "</td><td>" + sta +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button>" +
+                                "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
+                        }
+                        $("#tableText").html(str);
+                        let s = "#li" + dpage
+                        $(s).css("border-color", "blue");
+                        if (dpage < pages) {
+                            let r = dpage + 1
+                            let rs = "#li" + r
+                            $(rs).css("border-left-color", "blue");
+                        } else {
+                            $("#next").css("border-left-color", "blue");
+                        }
+                    }
+                });
+            }
+        })
+        // 后一页
+        $("#page-li").on("click", "#next", function () {
+            if (dpage == pages) {
+                alert("该页是最后一页！");
+            } else {
+                let s = "#li" + dpage
+                $(s).css("border-color", "");
+                if (dpage < pages) {
+                    let r2 = dpage + 1
+                    let rs2 = "#li" + r2
+                    $(rs2).css("border-left-color", "");
+                } else {
+                    $("#next").css("border-left-color", "");
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: './searchsystrain',
+                    data: {'page': dpage + 1, 'per_page': per_page},
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        pages = data.zpage;
+                        let total = data.total;
+                        dpage = data.dpage;
+                        let activity = data.item;
+                        let str = ""
+                        for (let index = 0; index < data.item.length; index++) {
+                            switch(data.item[index].status) {
+                                 case 0:
+                                    var sta = '未报名';
+                                    break;
+                                 case 1:
+                                    var sta = '已报名';
+                                    break;
+                            }
+                            str += "<tr><td>" + data.item[index].number +
+                                "</td><td>" + data.item[index].name +
+                                "</td><td>" + data.item[index].begintime +
+                                "</td><td>" + data.item[index].endtime +
+                                "</td><td>" + sta +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
+                        }
+                        $("#tableText").html(str);
+                        let s = "#li" + dpage
+                        $(s).css("border-color", "blue");
+                        if (dpage < pages) {
+                            let r = dpage + 1
+                            let rs = "#li" + r
+                            $(rs).css("border-left-color", "blue");
+                        } else {
+                            $("#next").css("border-left-color", "blue");
+                        }
+                    }
+                });
+            }
+        })
+        $("#page-li").on("click", ".page-num", function () {
+            var self = this
+            var pageNum = $(this).text();
+            $.ajax({
+                    type: 'GET',
+                    url: './searchsystrain',
+                    data: {'page': pageNum, 'per_page': per_page},
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        pages = data.zpage;
+                        let total = data.total;
+                        dpage = data.dpage;
+                        let activity = data.item;
+                        let str = ""
+                        for (let index = 0; index < data.item.length; index++) {
+                            switch(data.item[index].status) {
+                                 case 0:
+                                    var sta = '未报名';
+                                    break;
+                                 case 1:
+                                    var sta = '已报名';
+                                    break;
+                            }
+                            str += "<tr><td>" + data.item[index].number +
+                                "</td><td>" + data.item[index].name +
+                                "</td><td>" + data.item[index].begintime +
+                                "</td><td>" + data.item[index].endtime +
+                                "</td><td>" + sta +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button>" +
+                                "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
+                        }
+                        $("#tableText").html(str);
+                        $(self).css("border-color", "blue").parent().siblings().children().css("border-color", "#dee2e6")
+                    }
+                });
+        })
+    });
+</script>
+<!--<script>
+
+var acquire=new Array(10);
+var pass;
+
+$(document).ready(function(){
+    let dpage=1;
+    let pages=1;
+    let per_page=10;
+    let d_per_page=10;
+    let idz=new Array(10);
+    $.ajax({
+        type:'GET',
+        url:'./searchsystrain',
+        data:{'page':1,'per_page':per_page},
+        dataType:'json',
+        async: false,
+        cache: false,
+        contentType: 'application/json',
+        success:function(data){
+            pages = data.zpage;
+            let total = data.total;
+            dpage = data.dpage;
+            let activity = data.item;
+            let str="";
+            d_per_page=data.item.length;
+            for (let index = 0; index < data.item.length; index++) {
+               idz[index]=data.item[index].id;
+               // 获取列表中的序号number,将列表中的number作为acquire数组的index
+               let acquire_number;
+               acquire_number = data.item[index].number;
+               acquire[acquire_number]=data.item[index].id;
+               str += "<tr><td>" + data.item[index].number +
+                        "</td><td>" + data.item[index].name +
+                        "</td><td>" + data.item[index].begintime +
+                        "</td><td>" + data.item[index].endtime +
+                        "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
+                       +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+            }
+            $("#tableText").html(str);
+            let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
+            strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>";
+            for(let index=2;index<=pages;index++){
+                strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
+            }
+            strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>";
+            $("#page-li").html(strli);
+            let s="#li"+dpage;
+            $(s).css("border-color","blue");
+            if(dpage<pages){
+                let r=dpage+1;
+                let rs="#li"+r;
+                $(rs).css("border-left-color","blue");
+            }else{
+                $("#next").css("border-left-color","blue");
+            }
+        }
+    });
+    $("#prev").click(function(){
+        $('.box').css('display','none');
+        if(dpage==1){
+            alert("该页是第一页！");
+        }else{
+            let s="#li"+dpage;
+            $(s).css("border-color","");
+            if(dpage<pages){
+                let r2=dpage+1;
+                let rs2="#li"+r2;
+                $(rs2).css("border-left-color","");
+            }else{
+                $("#next").css("border-left-color","");
+            }
+            $.ajax({
+                type:'GET',
+                url:'/searchsystrain',
+                data:{'page':dpage-1,'per_page':per_page},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str="";
+                    d_per_page=data.item.length;
+                    for (let index = 0; index < d_per_page; index++) {
+                        idz[index]=data.item[index].id;
+                        // 获取列表中的序号number,将列表中的number作为acquire数组的index
+                        let acquire_number;
+                        acquire_number = data.item[index].number;
+                        acquire[acquire_number]=data.item[index].id;
+                        str += "<tr><td>" + data.item[index].number +
+                        "</td><td>" + data.item[index].name +
+                        "</td><td>" + data.item[index].begintime +
+                        "</td><td>" + data.item[index].endtime +
+                        "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
+                       +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    let s="#li"+dpage;
+                    $(s).css("border-color","blue");
+                    if(dpage<pages){
+                        let r=dpage+1;
+                        let rs="#li"+r;
+                        $(rs).css("border-left-color","blue");
+                    }else{
+                        $("#next").css("border-left-color","blue");
+                    }
+                }
+            });
+        }
+    });
+    $("#next").click(function(){
+        $('.box').css('display','none');
+        if(dpage==pages){
+            alert("该页是最后一页！");
+        }else{
+            let s="#li"+dpage;
+            $(s).css("border-color","");
+            if(dpage<pages){
+                let r2=dpage+1;
+                let rs2="#li"+r2;
+                $(rs2).css("border-left-color","");
+            }else{
+                $("#next").css("border-left-color","");
+            }
+            $.ajax({
+                type:'GET',
+                url:'./searchsystrain',
+                data:{'page':dpage+1,'per_page':per_page},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str="";
+                    d_per_page=data.item.length;
+                    for (let index = 0; index < d_per_page; index++) {
+                        idz[index]=data.item[index].id;
+                        // 获取列表中的序号number,将列表中的number作为acquire数组的index
+                        let acquire_number;
+                        acquire_number = data.item[index].number;
+                        acquire[acquire_number]=data.item[index].id;
+                        str += "<tr><td>" + data.item[index].number +
+                        "</td><td>" + data.item[index].name +
+                        "</td><td>" + data.item[index].begintime +
+                        "</td><td>" + data.item[index].endtime +
+                        "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
+                       +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    let s="#li"+dpage;
+                    $(s).css("border-color","blue");
+                    if(dpage<pages){
+                        let r=dpage+1;
+                        let rs="#li"+r;
+                        $(rs).css("border-left-color","blue");
+                    }else{
+                        $("#next").css("border-left-color","blue");
+                    }
+                }
+            });
+        }
+    });
+    // 点击那一页就显示哪一页的数据
+    for(let index=1;index<=pages;index++){
+        let s="#li"+index;
+        $(s).click(function(){
+            $('.box').css('display','none');
+            let s2="#li"+dpage;
+            $(s2).css("border-color","");
+            if(dpage<pages){
+                let r2=dpage+1;
+                let rs2="#li"+r2;
+                $(rs2).css("border-left-color","");
+            }else{
+                $("#next").css("border-left-color","");
+            }
+            $.ajax({
+                type:'GET',
+                url:'./searchsysactivity',
+                data:{'page':index,'per_page':per_page},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str="";
+                    d_per_page=data.item.length;
+                    for (let index = 0; index < data.item.length; index++) {
+                        idz[index]=data.item[index].id;
+                        // 获取列表中的序号number,将列表中的number作为acquire数组的index
+                        let acquire_number;
+                        acquire_number = data.item[index].number;
+                        acquire[acquire_number]=data.item[index].id;
+                        str += "<tr><td>" + data.item[index].number +
+                        "</td><td>" + data.item[index].activityname +
+                        "</td><td>" + data.item[index].begintime +
+                        "</td><td>" + data.item[index].endtime +
+                        "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm open' id='"+acquire_number+"' value=查看>"
+                        +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    let s="#li"+dpage;
+                    $(s).css("border-color","blue");
+                    if(dpage<pages){
+                        let r=dpage+1;
+                        let rs="#li"+r;
+                        $(rs).css("border-left-color","blue");
+                    }else{
+                        $("#next").css("border-left-color","blue");
+                    }
+                }
+            });
+        });
+    }
+});
+
+// 操作中的查看详细信息弹窗
+$(document).ready(function(){
+   $(document).on("click",".btn-danger",function() {
+        // 先给后端传id
+        let user_number = $(this).attr('id');
+        // 获取传递给后端的id
+        let acquire_user_id = acquire[user_number];
+         // 为了将查看中的id传递给悬浮框中的通过键
+        pass = acquire_user_id;
+         $.ajax({
             type:'GET',
-            url:'./showactivity',
-            data:{'page':1,'per_page':per_page},
+            url:'./detailsystrain',
+            data:{'id':acquire_user_id},
             dataType:'json',
             async: false,
             cache: false,
             contentType: 'application/json',
             success:function(data){
-                pages = data.zpage;
-                let total = data.total;
-                dpage = data.dpage;
-                let activity = data.item;
-                let str=""
-                for (let index = 0; index < data.item.length; index++) {
-                str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].activityname +
-                            "</td><td>" + data.item[index].type +
-                            "</td><td>" + data.item[index].begintime +
-                            "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].main +
-                            "</td><td>"+ "**" + "</tr>";
-                }
-                $("#tableText").html(str);
-                let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
-                strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>"
-                for(let index=2;index<=pages;index++){
-                    strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
-                }
-                strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
-                $("#page-li").html(strli);
-                let s="#li"+dpage
-                $(s).css("border-color","blue");
-                if(dpage<pages){
-                    let r=dpage+1
-                    let rs="#li"+r
-                    $(rs).css("border-left-color","blue");
-                }else{
-                    $("#next").css("border-left-color","blue");
-                }
+                var train_name = data.name;
+                var train_begintime = data.begintime;
+                var train_endtime = data.endtime;
+                var train_main = data.main;
+                $("#train_name").text(train_name);
+                $("#train_begintime").text(train_begintime);
+                $("#train_endtime").text(train_endtime);
+                $("#train_main").text(train_main);
             }
         });
-        $("#prev").click(function(){
-            if(dpage==1){
-                alert("该页是第一页！");
-            }else{
-                let s="#li"+dpage
-                $(s).css("border-color","");
-                if(dpage<pages){
-                    let r2=dpage+1
-                    let rs2="#li"+r2
-                    $(rs2).css("border-left-color","");
-                }else{
-                    $("#next").css("border-left-color","");
-                }
-                $.ajax({
-                    type:'GET',
-                    url:'./showactivity',
-                    data:{'page':dpage-1,'per_page':per_page},
-                    dataType:'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success:function(data){
-                        pages = data.zpage;
-                        let total = data.total;
-                        dpage = data.dpage;
-                        let activity = data.item;
-                        let str=""
-                        for (let index = 0; index < data.item.length; index++) {
-                        str += "<tr><td>" + data.item[index].number +
-                                    "</td><td>" + data.item[index].activityname +
-                                    "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
-                                    "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + data.item[index].main +
-                                    "</td><td>"+ "**" + "</tr>";
-                        }
-                        $("#tableText").html(str);
-                        let s="#li"+dpage
-                        $(s).css("border-color","blue");
-                        if(dpage<pages){
-                            let r=dpage+1
-                            let rs="#li"+r
-                            $(rs).css("border-left-color","blue");
-                        }else{
-                            $("#next").css("border-left-color","blue");
-                        }
-                    }
-                });
-            }
-        });
-        $("#next").click(function(){
-            if(dpage==pages){
-                alert("该页是最后一页！");
-            }else{
-                let s="#li"+dpage
-                $(s).css("border-color","");
-                if(dpage<pages){
-                    let r2=dpage+1
-                    let rs2="#li"+r2
-                    $(rs2).css("border-left-color","");
-                }else{
-                    $("#next").css("border-left-color","");
-                }
-                $.ajax({
-                    type:'GET',
-                    url:'./showactivity',
-                    data:{'page':dpage+1,'per_page':per_page},
-                    dataType:'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success:function(data){
-                        pages = data.zpage;
-                        let total = data.total;
-                        dpage = data.dpage;
-                        let activity = data.item;
-                        let str=""
-                        for (let index = 0; index < data.item.length; index++) {
-                        str += "<tr><td>" + data.item[index].number +
-                                    "</td><td>" + data.item[index].activityname +
-                                    "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
-                                    "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + data.item[index].main +
-                                    "</td><td>"+ "**" + "</tr>";
-                        }
-                        $("#tableText").html(str);
-                        let s="#li"+dpage
-                        $(s).css("border-color","blue");
-                        if(dpage<pages){
-                            let r=dpage+1
-                            let rs="#li"+r
-                            $(rs).css("border-left-color","blue");
-                        }else{
-                            $("#next").css("border-left-color","blue");
-                        }
-                    }
-                });
-            }
-        });
-        for(let index=1;index<=pages;index++){
-            let s="#li"+index;
-            $(s).click(function(){
-                let s2="#li"+dpage
-                $(s2).css("border-color","");
-                if(dpage<pages){
-                    let r2=dpage+1
-                    let rs2="#li"+r2
-                    $(rs2).css("border-left-color","");
-                }else{
-                    $("#next").css("border-left-color","");
-                }
-                $.ajax({
-                    type:'GET',
-                    url:'./showactivity',
-                    data:{'page':index,'per_page':per_page},
-                    dataType:'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success:function(data){
-                        pages = data.zpage;
-                        let total = data.total;
-                        dpage = data.dpage;
-                        let activity = data.item;
-                        let str=""
-                        for (let index = 0; index < data.item.length; index++) {
-                        str += "<tr><td>" + data.item[index].number +
-                                    "</td><td>" + data.item[index].activityname +
-                                    "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
-                                    "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + data.item[index].main +
-                                    "</td><td>"+ "<button class='btn btn-primary btn-sm'>查看</button>" + "</tr>";
-                        }
-                        $("#tableText").html(str);
-                        let s="#li"+dpage
-                        $(s).css("border-color","blue");
-                        if(dpage<pages){
-                            let r=dpage+1
-                            let rs="#li"+r
-                            $(rs).css("border-left-color","blue");
-                        }else{
-                            $("#next").css("border-left-color","blue");
-                        }
-                    }
-                });
-            });
-        }
+        $('.box').show();
+        return false
     });
-</script>
+     // 操作中的报名键交互
+     $(document).on("click",".btn-primary",function() {
+        // 先给后端传id
+        let user_number = $(this).attr('id');
+        // 获取传递给后端的id
+        let acquire_user_id = acquire[user_number];
+        console.log("user_number=",user_number);
+        console.log("acquire_user_id=",acquire_user_id);
+         $.ajax({
+            type:'GET',
+            url:'./bmsystrain',
+            data:{'id':acquire_user_id},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(result){
+               console.log("result=",result);
+               display_alert(result.status);
+            }
+        })
+    });
+     function display_alert(status){
+        if(status==true){
+            msg="已成功报名！";
+        }else{
+            msg="报名失败！";
+        }
+        // 创建一个div，显示msg，显示后再移除该div
+        $(document).ready(function(){
+            setTimeout(function(){
+                alert(msg)
+            },1000)
+      });
+    }
+        $("#close_delete").click(function(){
+            $('.box').css('display','none');
+            // $('.box').hide();
+            return false;
+        });
+        $("#close_pass").click(function(){
+             $('.box').css('display','none');
+             $.ajax({
+                 type: 'GET',
+                 url: './bmsysactivity',
+                 data: {'id': pass},
+                 dataType: 'json',
+                 async: false,
+                 cache: false,
+                 contentType: 'application/json',
+                 success: function (result) {
+                     console.log("result=", result);
+                     display_alert(result.status);
+                 }
+         });
+       return false;
+    });
+
+});
+</script>-->
 </body>
 </html>

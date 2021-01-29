@@ -65,26 +65,26 @@ def olduserall():
                 s=train[0].name+"申请未通过"
                 message.append(s)
     #新活动发布
-    activitynew=Activity.query.filter(and_(Activity.typeuser=="系统",Activity.stoptime>datetime.datetime.now())).all()
+    activitynew=Activity.query.filter(and_(Activity.typeuser=="系统",Activity.stoptime>datetime.datetime.now(),Activity.status!=3)).all()
     for new in activitynew:
         ua=User.query.join(AU).join(Activity).filter(and_(Activity.id==new.id,User.id==userid)).count()
         if ua==0:
             s=new.name+"系统任务发布"
             message.append(s)
     #新培训发布
-    trainnew=Train.query.filter(Train.endtime>datetime.datetime.now()).all()
+    trainnew=Train.query.filter(and_(Train.endtime>datetime.datetime.now(),Train.status!=1)).all()
     for tn in trainnew:
         utt=UTrain.query.join(TUT).join(Train).filter(and_(Train.id==tn.id,UTrain.userid==userid)).count()
         if utt==0:
             s=tn.name+"新培训发布了"
             message.append(s)
     #活动报名截止
-    activityold=Activity.query.filter(and_(Activity.typeuser=="系统",Activity.stoptime<datetime.datetime.now())).all()
+    activityold=Activity.query.filter(and_(Activity.typeuser=="系统",Activity.stoptime<datetime.datetime.now(),Activity.status!=3)).all()
     for old in activityold:
         s=old.name+"系统任务报名截止了"
         message.append(s)
     #培训报名截止
-    trainold = Train.query.filter(Train.endtime < datetime.datetime.now()).all()
+    trainold = Train.query.filter(and_(Train.endtime < datetime.datetime.now(),Train.status!=1)).all()
     for to in trainold:
         s = to.name + "系统任务报名截止了"
         message.append(s)

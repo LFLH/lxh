@@ -19,13 +19,13 @@ def userlogin():
         username = request.args.get('username')
         password=request.args.get('password')
     else:
-        username = request.json.get('username')
-        password = request.json.get('password')
-        #username = request.form.get('username')
-        #password = request.form.get('password')
+        #username = request.json.get('username')
+        #password = request.json.get('password')
+        username = request.form.get('username')
+        password = request.form.get('password')
     user=User.query.filter(User.username==username,User.password==password).all()
     if len(user)>0:
-        session['user']={'username':user[0].username,'userid':user[0].id,'usertype':user[0].type,'checked':user[0].checked}
+        session['user']={'name':user[0].name,'username':user[0].username,'userid':user[0].id,'usertype':user[0].type,'checked':user[0].checked}
         #return jsonify([{'type': user[0].type, 'status': True}])
         if(user[0].type=='sysadmin'):#管理员登录
             return Response(json.dumps({'type': user[0].type, 'status': True,'checked':user[0].checked}), mimetype='application/json')

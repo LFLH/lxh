@@ -20,7 +20,8 @@ def signuserz():
     if request.method == "GET":
         activityid = request.args.get('activityid')#活动id
     else:
-        activityid = request.json.get('activityid')
+        #activityid = request.json.get('activityid')
+        activityid = request.form.get('activityid')
     # 获取系统活动的报名用户
     userz = User.query.join(AU).join(Activity).filter(Activity.id == activityid).all()
     user = []
@@ -35,8 +36,10 @@ def signuseractivity():
         activityid = request.args.get('activityid')#活动id
         userid=request.args.get('userid')#单位id
     else:
-        activityid = request.json.get('activityid')
-        userid = request.json.get('userid')
+        #activityid = request.json.get('activityid')
+        #userid = request.json.get('userid')
+        activityid = request.form.get('activityid')
+        userid = request.form.get('userid')
     #获取客户端ip地址
     ip=request.remote_addr
     #检查是否同一个ip签到两次

@@ -14,25 +14,35 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
-#列表显示报告
+#管理员列表显示报告
 @main.route('/searchrecord',methods=['GET', 'POST'])
 def searchrecord():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
     else:
-        page = request.json.get('page')
-        per_page = request.json.get('per_page')
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
     page = int(page)
     per_page = int(per_page)
-    record=Record.query.filter(Record.status!=3).order_by(-Record.id).paginate(page, per_page, error_out=False)
+    record=Record.query.order_by(-Record.id).paginate(page, per_page, error_out=False)
     items = record.items
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
-        user=User.query.filter(User.username==items[i].userid).all()[0]
+        # 用户报告状态
+        user = User.query.filter(User, id == items[i].userid).all()[0]
+        if user.checked==1:
+            if items[i].year==datetime.datetime.now().year:
+                status=items[i].status#1通过0未通过
+            else:
+                status = 10+items[i].status  # 过去报告1通过0未通过
+        else:
+            status = 20 + items[i].status  # 用户考核未过报告1通过0未通过
         itemss = {'number': count + i + 1, 'id': items[i].id, 'recordname': items[i].name,'year':items[i].year,'type':items[i].type,
-                  'username':user.username, 'status': items[i].status}
+                  'username':user.username, 'status': status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、活动集合
     data = {'zpage': record.pages, 'total': record.total, 'dpage': record.page, 'item': item}
@@ -45,7 +55,8 @@ def detailrecord():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        #id = request.json.get('id')
+        id = request.form.get('id')
     record =Record.query.filter(Record.id == id).all()[0]
     data=record.datas
     filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
@@ -64,7 +75,8 @@ def tgrecord():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        #id = request.json.get('id')
+        id = request.form.get('id')
     record = Record.query.filter(Record.id == id).all()[0]
     record.status = 2  # 状态，0创建，1驳回，2通过，3删除
     db.session.add(record)
@@ -78,12 +90,70 @@ def bhrecord():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        #id = request.json.get('id')
+        id = request.form.get('id')
     record = Record.query.filter(Record.id == id).all()[0]
     record.status = 1  # 状态，0创建，1驳回，2通过，3删除
     db.session.add(record)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
+
+#user列表显示报告
+@main.route('/showrecord',methods=['GET', 'POST'])
+def showrecord():
+    if request.method == "GET":
+        page = request.args.get('page')#当前页
+        per_page=request.args.get('per_page')#平均页数
+    else:
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        #page = request.json.get('page')
+        #per_page = request.json.get('per_page')
+    page = int(page)
+    per_page = int(per_page)
+    user=session.get('user')
+    userid=user['userid']
+    record = Record.query.filter(and_(Record.userid==userid,Record.status!=3)).order_by(-Record.id).paginate(page, per_page, error_out=False)
+    items = record.items
+    item = []
+    count = (int(page) - 1) * int(per_page)
+    for i in range(len(items)):
+        # 用户报告状态
+        user = User.query.filter(User, id == items[i].userid).all()[0]
+        if user.checked == 1:
+            if items[i].year == datetime.datetime.now().year:
+                status = items[i].status  # 1通过0未通过
+            else:
+                status = 10 + items[i].status  # 过去报告1通过0未通过
+        else:
+            status = 20 + items[i].status  # 用户考核未过报告1通过0未通过
+        itemss = {'number': count + i + 1, 'id': items[i].id, 'recordname': items[i].name, 'year': items[i].year,
+                  'type': items[i].type,
+                  'username': user.username, 'status': status}
+        item.append(itemss)
+    # 返回总页数、活动总数、当前页、活动集合
+    data = {'zpage': record.pages, 'total': record.total, 'dpage': record.page, 'item': item}
+    return Response(json.dumps(data), mimetype='application/json')
+
+#显示报告信息
+@main.route('/detailuserrecord',methods=['GET', 'POST'])
+def detailuserrecord():
+    # 根据报告id查找报告
+    if request.method == "GET":
+        id = request.args.get('id')
+    else:
+        #id = request.json.get('id')
+        id = request.form.get('id')
+    record = Record.query.filter(Record.id == id).all()[0]
+    data = record.datas
+    filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
+    for datai in data:
+        dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
+        filedata[datai.type].append(dataz)
+    # 返回报告名、报告类型、视频、图片、pdf、word
+    da = {'name': record.name, 'type': record.type, 'year': record.year,
+          'video': filedata['video'], 'image': filedata['image'], 'pdf': filedata['pdf'], 'word': filedata['word']}
+    return Response(json.dumps(da), mimetype='application/json')
 
 #删除报告
 @main.route('/deleterecord',methods=['GET', 'POST'])
@@ -92,7 +162,8 @@ def deleterecord():
     if request.method == "GET":
         id = request.args.get('id')
     else:
-        id = request.json.get('id')
+        #id = request.json.get('id')
+        id = request.form.get('id')
     record = Record.query.filter(Record.id == id).all()[0]
     record.status = 3  # 状态，0创建，1驳回，2通过，3删除
     db.session.add(record)
