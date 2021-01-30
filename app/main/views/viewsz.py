@@ -20,12 +20,7 @@ def useractivitysign(activityid):
         s='/useractivitysign/'+str(activityid)+'/fail'
         return redirect(s)
     else:
-        # 获取系统活动的报名用户
-        userz = User.query.join(AU).join(Activity).filter(Activity.id == id).all()
-        user = []
-        for users in userz:
-            user.append({"id":users.id,"username":users.username})
-        return render_template('useractivitysign.html',user=user)
+        return render_template('useractivitysign.html')
 
 #扫码过期
 @main.route('/useractivitysign/<string:activityid>/fail',methods=['GET','POST'])
@@ -61,7 +56,7 @@ def manage():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manage.html',username=user["username"])
+        return render_template('manage.html',name=user["name"],username=user["username"])
 
 #活动管理
 @main.route('/manageactivity',methods=['GET','POST'])
@@ -75,7 +70,7 @@ def manageactivity():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageactivity.html',username=user["username"])
+        return render_template('manageactivity.html',name=user["name"],username=user["username"])
 
 #申报用户管理
 @main.route('/managedeclareuser',methods=['GET','POST'])
@@ -89,7 +84,7 @@ def managedeclareuser():
         else:
             return redirect('/newuser')
     else:
-        return render_template('managedeclareuser.html',username=user["username"])
+        return render_template('managedeclareuser.html',name=user["name"],username=user["username"])
 
 #申报任务添加
 @main.route('/managedeclareadd',methods=['GET','POST'])
@@ -103,7 +98,12 @@ def managedeclareadd():
         else:
             return redirect('/newuser')
     else:
-        return render_template('managedeclareadd.html',username=user["username"])
+        return render_template('managedeclareadd.html',name=user["name"],username=user["username"])
+#跳转到能力提升培训任务添加的单独界面
+@main.route('/managedeclareadd_new',methods=['GET','POST'])
+def managedeclareadd_new():
+    user = session.get('user')
+    return render_template('managedeclareadd_new.html', name=user["name"],username=user["username"])
 
 #能力提升培训用户管理
 @main.route('/manageabilityuser',methods=['GET','POST'])
@@ -117,7 +117,7 @@ def manageabilityuser():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageabilityuser.html',username=user["username"])
+        return render_template('manageabilityuser.html',name=user["name"],username=user["username"])
 
 #能力提升培训任务添加
 @main.route('/manageabilityadd',methods=['GET','POST'])
@@ -131,7 +131,12 @@ def manageabilityadd():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageabilityadd.html',username=user["username"])
+        return render_template('manageabilityadd.html',name=user["name"],username=user["username"])
+#跳转到能力提升培训任务添加的单独界面
+@main.route('/manageabilityadd_new',methods=['GET','POST'])
+def manageabilityadd_new():
+    user = session.get('user')
+    return render_template('manageabilityadd_new.html', name=user["name"],username=user["username"])
 
 #考核管理
 @main.route('/manageexamine',methods=['GET','POST'])
@@ -145,7 +150,7 @@ def manageexamine():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageexamine.html',username=user["username"])
+        return render_template('manageexamine.html',name=user["name"],username=user["username"])
 
 #用户管理
 @main.route('/manageuser',methods=['GET','POST'])
@@ -159,7 +164,7 @@ def manageuser():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageuser.html',username=user["username"])
+        return render_template('manageuser.html',name=user["name"],username=user["username"])
 
 #系统设置
 @main.route('/managesystem',methods=['GET','POST'])
@@ -173,7 +178,7 @@ def managesystem():
         else:
             return redirect('/newuser')
     else:
-        return render_template('managesystem.html',username=user["username"])
+        return render_template('managesystem.html',name=user["name"],username=user["username"])
 
 #新用户界面
 @main.route('/newuser',methods=['GET','POST'])
@@ -187,8 +192,12 @@ def newuser():
     elif user['checked']==1:
         return redirect('/olduser')
     else:
-        return render_template('newuser.html',username=user["username"])
-
+        return render_template('newuser.html',name=user["name"],username=user["username"])
+#新用户申报
+@main.route('/newuser_declare', methods=['GET','POST'])
+def newuser_declare():
+    user = session.get('user')
+    return render_template('newuser_declare.html',name=user["name"],username=user["username"])
 #老用户界面
 @main.route('/olduser',methods=['GET','POST'])
 def olduser():
@@ -200,8 +209,12 @@ def olduser():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('olduser.html',username=user["username"])
-
+        return render_template('olduser.html',name=user["name"],username=user["username"])
+#老用户账户设置界面
+@main.route('/user_setting',methods=['GET','POST'])
+def user_setting():
+    user = session.get('user')
+    return render_template('user_setting.html',name=user["name"],username=user["username"])
 #用户已提交活动
 @main.route('/useractivity',methods=['GET','POST'])
 def useractivity():
@@ -213,7 +226,7 @@ def useractivity():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('useractivity.html',username=user["username"])
+        return render_template('useractivity.html',name=user["name"],username=user["username"])
 
 #自主活动提交
 @main.route('/userupdata',methods=['GET','POST'])
@@ -226,7 +239,7 @@ def userupdata():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('userupdata.html',username=user["username"])
+        return render_template('userupdata.html',name=user["name"],username=user["username"])
 
 #系统活动查看
 @main.route('/useractivityregister',methods=['GET','POST'])
@@ -239,7 +252,7 @@ def useractivityregister():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('useractivityregister.html',username=user["username"])
+        return render_template('useractivityregister.html',name=user["name"],username=user["username"])
 
 #系统培训查看
 @main.route('/usertrainregister',methods=['GET','POST'])
@@ -252,7 +265,7 @@ def usertrainregister():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('usertrainregister.html',username=user["username"])
+        return render_template('usertrainregister.html',name=user["name"],username=user["username"])
 
 #年度报告提交
 @main.route('/userndreport',methods=['GET','POST'])
@@ -265,7 +278,7 @@ def userndreport():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('userndreport.html',username=user["username"])
+        return render_template('userndreport.html',name=user["name"],username=user["username"])
 
 #科技周报告提交
 @main.route('/userkjzreport',methods=['GET','POST'])
@@ -278,10 +291,4 @@ def userkjzreport():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('userkjzreport.html',username=user["username"])
-
-#科技周报告提交
-@main.route('/test',methods=['GET','POST'])
-def test():
-    user = session.get('user')
-    return render_template('test.html',username=user["username"])
+        return render_template('userkjzreport.html',name=user["name"],username=user["username"])

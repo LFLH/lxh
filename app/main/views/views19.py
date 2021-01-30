@@ -14,15 +14,32 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#系统报名用户获取
+@main.route('/signuserz',methods=['GET','POST'])
+def signuserz():
+    if request.method == "GET":
+        activityid = request.args.get('activityid')#活动id
+    else:
+        #activityid = request.json.get('activityid')
+        activityid = request.form.get('activityid')
+    # 获取系统活动的报名用户
+    userz = User.query.join(AU).join(Activity).filter(Activity.id == activityid).all()
+    user = []
+    for users in userz:
+        user.append({"id": users.id, "username": users.username})
+    return Response(json.dumps({'userz':user}), mimetype='application/json')
+
 #系统活动签到
 @main.route('/signuseractivity',methods=['GET','POST'])
 def signuseractivity():
     if request.method == "GET":
-        activityid = request.args.get('activityid')#当前页
-        userid=request.args.get('userid')#平均页数
+        activityid = request.args.get('activityid')#活动id
+        userid=request.args.get('userid')#单位id
     else:
-        activityid = request.json.get('activityid')
-        userid = request.json.get('userid')
+        #activityid = request.json.get('activityid')
+        #userid = request.json.get('userid')
+        activityid = request.form.get('activityid')
+        userid = request.form.get('userid')
     #获取客户端ip地址
     ip=request.remote_addr
     #检查是否同一个ip签到两次

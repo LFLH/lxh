@@ -51,7 +51,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }} </a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -106,16 +106,28 @@
 {#                        <a class="collapsed card-link"  href="#">活动管理</a>#}
 {#                    </div>#}
 {#                </div>#}
+{#             <div class="card">#}
+{#                  <div class="card-header">#}
+{#                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>#}
+{#                  </div>#}
+{#                  <div id="collapseOne" class="collapse" data-parent="#accordion">#}
+{#                    <div class="card-body">#}
+{#                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>#}
+{#                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+
                 <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>
-                  </div>
-                  <div id="collapseOne" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>
-                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
                     </div>
-                  </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
+                    </div>
                 </div>
 
                 <div class="card">
@@ -125,7 +137,7 @@
                   <div id="collapseTwo" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                       <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="#">申报任务添加</a>
+                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
                     </div>
                   </div>
                 </div>
@@ -137,7 +149,7 @@
                   <div id="collapseThree" class="collapse" data-parent="#accordion">
                     <div class="card-body">
                           <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="#">能力提升培训添加</a>
+                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
                     </div>
                   </div>
                 </div>

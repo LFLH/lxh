@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>老用户查看系统活动</title>
+    <title>活动报名</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
@@ -48,7 +48,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }} </a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -80,13 +80,18 @@
             <div id="accordion">
                 <div class="card">
                     <div class="card-header">
-                        <a class="collapsed card-link"  href="#">已提交活动</a>
+                        <a class="collapsed card-link"  href="{{url_for('main.olduser')}}">首页</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.useractivity')}}">已提交活动</a>
                     </div>
                 </div>
 
                 <div class="card">
                   <div class="card-header">
-                    <a class="collapsed card-link" href="#">活动提交</a>
+                    <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
                   </div>
                 </div>
 
@@ -98,7 +103,7 @@
 
                 <div class="card">
                   <div class="card-header">
-                      <a class="collapsed card-link" href="#">培训报名</a>
+                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
                   </div>
                 </div>
 

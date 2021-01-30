@@ -9,12 +9,51 @@
 </head>
 <body>
 <div class="container" style="text-align: center">
-    <a href="#" class="list-group-item">基地1</a>
-    <a href="#" class="list-group-item">基地2</a>
-    <a href="#" class="list-group-item">基地3</a>
-    <a href="#" class="list-group-item">基地4</a>
-    <a href="#" class="list-group-item">基地5</a>
-
+    <ul id="listview" class="list-group">
+    </ul>
 </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var href=window.location.href
+        var s=href.split('/')
+        var activityid=s[s.length-1]
+        var user=[]
+        $.ajax({
+            type:'GET',
+            url:'../signuserz',
+            data:{'activityid':activityid},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(data){
+                let str=""
+                user=data.userz;
+                for(let index=0;index<data.userz.length;index++){
+                    str+='<li class="list-group-item" id="li'+index+'">'+data.userz[index].username+'</li>'
+                }
+                $("#listview").html(str);
+            }
+        });
+        for(let index=0;index<user.length;index++){
+            s='#li'+index;
+            $("#listview").on('click',s,function(){
+                let userid=user[index].id;
+                $.ajax({
+                    type:'GET',
+                    url:'../signuseractivity',
+                    data:{'activityid':activityid,'userid':userid},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        window.location.href=window.location.href+'/success';
+                    }
+                });
+            });
+        }
+    });
+</script>
 </body>
 </html>

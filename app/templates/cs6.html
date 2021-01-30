@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+	<button id='btn'>按钮</button>
+    <button id='btn1'>按钮</button>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#btn').click(function() {
+				let userz=[2,3]
+				let activityid=2
+				$.ajax({
+					type:'GET',
+	                url:'./websign',
+	                data:{"userz":userz,'activityid':activityid},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.status);
+	                }
+				});
+			});
+			$('#btn1').click(function(){
+			    let userz=[2,3]
+				let activityid=2
+				$.ajax({
+					type:'POST',
+	                url:'./websign',
+	                data:{"userz":userz,'activityid':activityid},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.status);
+	                }
+				});
+			});
+		});
+	</script>
+</body>
+</html>

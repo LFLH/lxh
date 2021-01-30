@@ -1,69 +1,71 @@
-<title>managedeclareadd</title>
+<title>申报任务添加</title>
 {% extends "base_Txx.html" %}
+
+{% block css %}
+    tbody {
+       counter-reset:sectioncounter;
+    }
+
+    .SortCLASS:before {
+       content:counter(sectioncounter);
+       counter-increment:sectioncounter;
+
+    }
+{% endblock %}
 
 {% block content %}
     <div class="container">
-        <h2>申报任务添加</h2>
-        <form>
-        <div class="form-group">
-          <label for="name" >申报任务名：</label>
-          <input type="text" class="form-control" id="name" name="name">
-        </div>
-        <div class="form-group">
-          <label for="startTime">申报开始时间：</label>
-          <input type="date" class="form-control" id="startTime" >
-        </div>
-        <div class="form-group">
-          <label for="stopTime">申报结束时间：</label>
-          <input type="date" class="form-control" id="stopTime" >
-        </div>
-        <div class="form-group">
-          <label for="content">申报内容：</label>
-          <input type="text" class="form-control" id="content" >
-        </div>
-        <div style="text-align:center">
-         <button id="cancel" type="button" style="margin:50px">取消</button>
-         <button id="submit" type="button" style="margin:50px">添加</button>
-       </div>
-      </form>
+        <h2 style="padding-top: 20px">申报任务记录</h2>
+        <br>
+            <button type="button"  class="btn btn-link" id="add" style="display: inline; margin-left: 26px; font-size: large">+&nbsp;添加申报任务</button>
+        <br>
+        <br>
+        <form id="ability" role="form">
+             <div class="form-group">
+                     <div class="input-group col-xs-12">
+                         <div class="input-group-btn">
+                            <select name="type" class="form-control" style="width: auto;">
+                                <option>申报任务名</option>
+                                <option>申报开始时间</option>
+                                <option>申报结束时间</option>
+                                <option>申报人账户</option>
+                                <option>申报人用户名</option>
+                                <option>申报状态</option>
+                            </select>
+                         </div>
+                            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" id="search" type="submit">搜索</button>
+                            </span>
+                        </div>
+             <br>
+             </div>
+            <div class="form-group">
+                    <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                        <thead style="text-align: center">
+                        <tr>
+                            <th style="width: 8%">序号</th>
+                            <th style="width: 14%">申报任务名</th>
+                            <th style="width: 14%">申报开始时间</th>
+                            <th style="width: 14%">申报结束时间</th>
+                            <th style="width: 14%">申报人账户</th>
+                            <th style="width: 14%">申报人用户名</th>
+                            <th style="width: 14%">申报状态</th>
+                            <th style="width: 8%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="demoList"></tbody>
+                    </table>
+            </div>
+        </form>
     </div>
 
 {% endblock %}
 
 {% block js %}
     $(function () {
-            $("#cancel").click(function () {
-                $("#name").val('');
-                $('#startTime').val('');
-                $('#stopTime').val('');
-                $('#content').val('');
-        });
-            $("#submit").click(function () {
-                var content = $("#content").val();
-                var startTime = $('#startTime').val();
-                var stopTime = $('#stopTime').val();
-                var name= $('#name').val();
-
-                 if(name == ''){
-                 alert('名字不能为空！');
-                 return
-                 }
-                 if(startTime == ''){
-                     alert('请选择开始时间！');
-                     return
-                 }
-                 if(stopTime != ''){
-                     if(startTime > stopTime){
-                         alert('结束时间不能早于开始时间！');
-                         return
-                     }
-                 }else {
-                     alert('请选择结束时间！');
-                     return
-                 }
-                if(content == '') {
-                    alert("内容不能为空！");
-                }
+        $("#add").on("click", function () {
+                 window.location.href = '/managedeclareadd_new'
         })
-        });
+    })
 {% endblock %}
