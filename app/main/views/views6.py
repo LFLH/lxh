@@ -36,7 +36,8 @@ def searchabilityuser():
         # 获取对应的培训任务
         train = Train.query.join(TUT).join(UTrain).filter(UTrain.id == items[i].id).all()[0]
         # 用户申请状态
-        user = User.query.filter(User, id == items[i].userid).all()[0]
+        # user = User.query.filter(User, id == items[i].userid).all()[0]
+        user = User.query.filter(User.id == items[i].userid).all()[0]
         if user.checked==1:
             if train.status==0:
                 if train.endtime > datetime.datetime.now():
