@@ -36,7 +36,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }} </a></li>
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -56,7 +56,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 sidebar">
 {#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
 {#                <li><a class="nav-link" href="#">已提交活动</a></li>#}
 {#                <li><a class="nav-link" href="#">活动提交</a></li>#}
@@ -108,7 +108,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10 col-md-offset-2 main ml-auto">
          <h2 class="sub-header" style="margin-top: 10px">科技周报告提交</h2>
 {# enctype='multipart/form-data：指表单数据bai有多部分构成，既有文本数据，又有文件等二进制数据#}
             <form id="update" enctype='multipart/form-data'>

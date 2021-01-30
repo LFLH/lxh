@@ -292,3 +292,30 @@ def userkjzreport():
         return redirect('/newuser')
     else:
         return render_template('userkjzreport.html',name=user["name"],username=user["username"])
+
+#年度报告及科技周报告管理
+@main.route('/managereportuser',methods=['GET','POST'])
+def managereportuser():
+    user = session.get('user')
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
+    else:
+        return render_template('managereportuser.html',username=user["username"])
+
+#用户已提交报告
+@main.route('/userreport',methods=['GET','POST'])
+def userreport():
+    user = session.get('user')
+    if user==None:
+        return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
+    else:
+        return render_template('userreport.html',username=user["username"])

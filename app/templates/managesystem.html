@@ -36,7 +36,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }} </a></li>
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -56,7 +56,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 sidebar">
 {#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
 {#                <li><a class="nav-link"#}
 {#                       href="{{url_for('main.manageuser')}}">用户管理</a></li>#}
@@ -152,6 +152,11 @@
                     <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
                   </div>
                 </div>
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.managereportuser')}}">报告管理</a>
+                  </div>
+                </div>
 
                 <div class="card">
                   <div class="card-header">
@@ -161,7 +166,7 @@
             </div>
         </div>
 
-        <div class="col-md-10" style="margin-top: 50px">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h1 >系统设置</h1>
             <form class="form-inline">
                 <lable style="font-size: 20px ;margin-top: 20px">每年举办的活动次数：</lable>
@@ -210,7 +215,7 @@ $(function () {
 
 {#    设置活动次数#}
 $(document).ready(function(){
-    let type = 'count';
+    let type = 1;
     $.ajax({
                 type:'GET',
                 url:'./showsystem',

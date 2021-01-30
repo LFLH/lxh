@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style type="text/css">
@@ -47,7 +48,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }} </a></li>
+                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -67,7 +68,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 sidebar">
 {#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
 {#                <li><a class="nav-link"#}
 {#                       href="{{url_for('main.manageuser')}}">用户管理</a></li>#}
@@ -99,12 +100,17 @@
 {#                <li><a class="nav-link" href="{{url_for('main.managesystem')}}">系统设置</a></li>#}
 {#            </ul>#}
           <div id="accordion">
-{#                <div class="card">#}
-{#                    <div class="card-header">#}
-{#                        <a class="collapsed card-link"  href="#">活动管理</a>#}
-{#                    </div>#}
-{#                </div>#}
-{#             <div class="card">#}
+              <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
+                    </div>
+              </div>
+              <div class="card">
+                    <div class="card-header">
+                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
+                    </div>
+              </div>
+{#              <div class="card">#}
 {#                  <div class="card-header">#}
 {#                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>#}
 {#                  </div>#}
@@ -115,18 +121,6 @@
 {#                    </div>#}
 {#                  </div>#}
 {#                </div>#}
-
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
-                    </div>
-                </div>
 
                 <div class="card">
                   <div class="card-header">
@@ -166,13 +160,19 @@
 
                 <div class="card">
                   <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.managereportuser')}}">报告管理</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
                     <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
                   </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-10" style="margin-top: 50px">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">能力提升培训申请列表</h2>
             <form action="" method="POST">
                 <div class="table-responsive">
@@ -232,12 +232,34 @@
                     <p id="train_image" style="display: inline;width: 450px"></p>
                     </div>
                 </div>
-                <div>
+                <div id="div_butt">
                 </div>
-                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px; margin-top: 140px">取消</button>
-                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px;margin-top: 140px">通过</button>
+{#                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px; margin-top: 140px">取消</button>#}
+{#                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px;margin-top: 140px" data-toggle="modal" data-target="#pass_modal_div">通过</button>#}
             </div>
-
+             {#modal模式框：当管理员点击通过按钮时再次确认#}
+            <div class="modal fade" id="pass_modal_list" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定通过？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="pass_modal_list_sure">确定</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal fade" id="pass_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定通过？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="pass_modal_div_sure" data-dismiss="modal">确定</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
         </div>
         </div>
 </div>
@@ -255,8 +277,18 @@ $(function () {
 
 var acquire=new Array(10);
 var pass;
+var new_ac_pass_id;
+var get_test1=0;
+var cookie_push = [];
+var get_cookie_push = [];
+var get_array=0;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
+        if($.cookie("cookie_push")!=undefined) {
+            get_cookie_push = $.cookie("cookie_push");
+            get_array = get_cookie_push.split(",")
+            console.log("get_array=",get_array)
+        }
     {#dpage：应该是表示第几页
         pages：应该是表示总共的页数
         d_per_page:总共有多少条数据
@@ -283,10 +315,14 @@ $(document).ready(function(){
                 d_per_page=data.item.length;
                 for (let index = 0; index < data.item.length; index++) {
                    idz[index]=data.item[index].id;
-                   {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                   {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
                    let acquire_number;
                    acquire_number = data.item[index].number;
-                   acquire[acquire_number]=data.item[index].id;
+                   acquire_number_look = 'look'+acquire_number;
+                   acquire[acquire_number_look]=data.item[index].id;
+                   {#通过按钮获取通过按钮的id#}
+                   let acquire_id;
+                   acquire_id=data.item[index].id;
                    str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].name +
@@ -295,10 +331,13 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].uptime +
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='look"+acquire_number+"' value=查看>"
+                             +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                 }
                 $("#tableText").html(str);
+                for(let i =0;i<get_array.length;i++) {
+                      $(get_array[i]).attr('disabled', "true")
+                }
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
                 strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>";
                 for(let index=2;index<=pages;index++){
@@ -317,8 +356,14 @@ $(document).ready(function(){
                 }
             }
         });
-        $("#prev").click(function(){
+
+        $('#page-li').on('click',"#prev",function(){
             $('.box').css('display','none');
+            if($.cookie("cookie_push")!=undefined) {
+                 get_cookie_push = $.cookie("cookie_push");
+                 get_array = get_cookie_push.split(",")
+                 console.log("get_array=",get_array)
+            }
             if(dpage==1){
                 alert("该页是第一页！");
             }else{
@@ -348,10 +393,14 @@ $(document).ready(function(){
                         d_per_page=data.item.length;
                         for (let index = 0; index < d_per_page; index++) {
                             idz[index]=data.item[index].id;
-                            {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                            {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
                             let acquire_number;
                             acquire_number = data.item[index].number;
-                            acquire[acquire_number]=data.item[index].id;
+                            acquire_number_look = 'look'+acquire_number;
+                            acquire[acquire_number_look]=data.item[index].id;
+                            {#通过按钮获取通过按钮的id#}
+                            let acquire_id;
+                            acquire_id=data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].name +
@@ -360,10 +409,13 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].uptime +
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='look"+acquire_number+"' value=查看>"
+                             +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
+                        for(let i =0;i<get_array.length;i++) {
+                             $(get_array[i]).attr('disabled', "true")
+                        }
                         let s="#li"+dpage;
                         $(s).css("border-color","blue");
                         if(dpage<pages){
@@ -377,8 +429,14 @@ $(document).ready(function(){
                 });
             }
         });
-        $("#next").click(function(){
+        {#$("#next").click(function(){#}
+        $('#page-li').on('click',"#next",function(){
             $('.box').css('display','none');
+            if($.cookie("cookie_push")!=undefined) {
+                 get_cookie_push = $.cookie("cookie_push");
+                 get_array = get_cookie_push.split(",")
+                 console.log("get_array=",get_array)
+            }
             if(dpage==pages){
                 alert("该页是最后一页！");
             }else{
@@ -408,10 +466,14 @@ $(document).ready(function(){
                         d_per_page=data.item.length;
                         for (let index = 0; index < d_per_page; index++) {
                             idz[index]=data.item[index].id;
-                            {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                            {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
                             let acquire_number;
                             acquire_number = data.item[index].number;
-                            acquire[acquire_number]=data.item[index].id;
+                            acquire_number_look = 'look'+acquire_number;
+                            acquire[acquire_number_look]=data.item[index].id;
+                            {#通过按钮获取通过按钮的id#}
+                            let acquire_id;
+                            acquire_id=data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].name +
@@ -420,10 +482,13 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].uptime +
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='look"+acquire_number+"' value=查看>"
+                             +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
+                        for(let i =0;i<get_array.length;i++) {
+                             $(get_array[i]).attr('disabled', "true")
+                        }
                         let s="#li"+dpage;
                         $(s).css("border-color","blue");
                         if(dpage<pages){
@@ -440,8 +505,14 @@ $(document).ready(function(){
         {#点击那一页就显示哪一页的数据#}
         for(let index=1;index<=pages;index++){
             let s="#li"+index;
-            $(s).click(function(){
+            {#$(s).click(function(){#}
+            $('#page-li').on('click',s,function(){
                 $('.box').css('display','none');
+                if($.cookie("cookie_push")!=undefined) {
+                      get_cookie_push = $.cookie("cookie_push");
+                      get_array = get_cookie_push.split(",")
+                      console.log("get_array=",get_array)
+                }
                 let s2="#li"+dpage;
                 $(s2).css("border-color","");
                 if(dpage<pages){
@@ -468,10 +539,14 @@ $(document).ready(function(){
                         d_per_page=data.item.length;
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id;
-                            {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                            {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
                             let acquire_number;
                             acquire_number = data.item[index].number;
-                            acquire[acquire_number]=data.item[index].id;
+                            acquire_number_look = 'look'+acquire_number;
+                            acquire[acquire_number_look]=data.item[index].id;
+                            {#通过按钮获取通过按钮的id#}
+                            let acquire_id;
+                            acquire_id=data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].name +
@@ -480,10 +555,13 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].uptime +
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm open' id='"+acquire_number+"' value=查看>"
-                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=通过>"+ "</tr>";
+                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm open' id='look"+acquire_number+"' value=查看>"
+                            +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
+                        for(let i =0;i<get_array.length;i++) {
+                             $(get_array[i]).attr('disabled', "true")
+                        }
                         let s="#li"+dpage;
                         $(s).css("border-color","blue");
                         if(dpage<pages){
@@ -499,18 +577,42 @@ $(document).ready(function(){
         }
     });
 
-var train_image;
+var train_pdf = "";
+var train_word = "";
+var train_image = "";
 {#操作中的查看详细信息弹窗#}
 $(document).ready(function(){
    $(document).on("click",".btn-danger",function() {
+        $("#train_pdf").html('');
+        $("#train_word").html('');
+        $("#train_image").html('');
         {#先给后端传id#}
         let user_number = $(this).attr('id');
         {#获取传递给后端的id#}
         let acquire_user_id = acquire[user_number];
         {#为了将查看中的id传递给悬浮框中的通过键#}
+        console.log("acquire_user_id=",acquire_user_id)
         pass = acquire_user_id;
-        console.log("user_number=",user_number);
-       console.log("acquire_user_id=",acquire_user_id);
+        {#给div悬浮框添加取消和通过按钮#}
+        let str_div = "";
+        str_div +="<button class='btn btn-outline-dark btn-lg delete' id='close_delete' style='margin-left: 200px; margin-top: 140px'>取消</button>"
+            +"<button type='submit' class='btn btn-outline-dark btn-lg pass' id='pass_two"+pass+"' style='margin-left: 80px;margin-top: 140px' data-toggle=\"modal\" data-target=\"#pass_modal_div\">通过</button>";
+        $('#div_butt').html(str_div);
+       {#判断div悬浮框中通过键是否应该是disabled状态#}
+        let pass_id = $(".pass").attr('id')
+        pass_id = '#'+pass_id
+        console.log("pass_id=",pass_id)
+        for(let i =0;i<get_array.length;i++) {
+            let get_array_sp = get_array[i].split('#');
+            get_array_sp = get_array_sp.pop();
+            let re_get_array_sp = get_array_sp.split("pass");
+            re_get_array_sp = re_get_array_sp.pop();
+            let pass_sp = parseInt(re_get_array_sp);
+            var pass_a = '#pass_two' + pass_sp;
+            if (pass_a == pass_id) {
+                $(pass_a).attr('disabled', "true")
+            }
+        }
          $.ajax({
             type:'GET',
             url:'./detailabilityuser',
@@ -524,16 +626,52 @@ $(document).ready(function(){
                 let train_main = data.main;
                 let user_name = data.username;
                 let train_uptime = data.uptime;
-                let train_pdf = data.pdf[0].newname;
-                let train_word = data.word[0].newname;
-                let train_image = data.image[0].newname;
+                let data_pdf = data.pdf;
+                let data_word = data.word;
+                let data_image = data.image;
+                {#let train_pdf = data.pdf[0].newname;#}
+                {#let train_word = data.word[0].newname;#}
+                {#let train_image = data.image[0].newname;#}
                 $("#train_name").text(train_name);
                 $("#train_main").text(train_main);
                 $("#user_name").text(user_name);
                 $("#train_uptime").text(train_uptime);
-                $("#train_pdf").html("<a href='/data/pdf/"+train_pdf+"'>点击查看pdf文件</a>");
-                $("#train_word").html("<a href='/data/word/"+train_word+"'>点击查看word文件</a>");
-                $("#train_image").html("<a href='/data/image/"+train_image+"'>点击查看图片</a>")
+                if (data_pdf.length == 0){
+                    $("#train_pdf").text("此用户没有上传pdf");
+                }
+                else{
+                    for(var i=0;i<data_pdf.length;i++){
+                        train_pdf = data_pdf[i].newname;
+                        $("#train_pdf").append("<a href='/data/pdf/"+train_pdf+"'>"+train_pdf+"</a>");
+                        {#$("#train_pdf").append("<br/>");#}
+                        $("#train_pdf").append("  ")
+                     }
+
+                }
+                if (data_word.length == 0){
+                    $("#train_word").text("此用户没有上传word");
+                }
+                else{
+                   for(var j=0;j<data_word.length;j++){
+                        train_word =  data_word[j].newname;
+                        $("#train_word").append("<a href='/data/word/"+train_word+"'>"+train_word+"</a>");
+                        $("#train_word").append("  ")
+                     }
+
+                }
+                if(data_image.length == 0 ){
+                    $("#train_image").text("此用户没有上传word");
+                }
+                else{
+                    for(var k=0;k<data_image.length;k++){
+                        train_image =  data_image[k].newname;
+                        $("#train_image").append("<a href='/data/image/"+train_image+"'>"+train_image+"</a>")
+                        $("#train_image").append("  ")
+                     }
+
+                }
+
+
             }
         });
          $('.box').show();
@@ -560,27 +698,48 @@ $(document).ready(function(){
 
 
     });
-     {#操作中的通过键交互#}
+     {#操作中的通过键的modal确认框#}
      $(document).on("click",".btn-primary",function() {
         {#先给后端传id#}
-        let user_number = $(this).attr('id');
-        {#获取传递给后端的id#}
-        let acquire_user_id = acquire[user_number];
-        console.log("user_number=",user_number);
-        console.log("acquire_user_id=",acquire_user_id);
-         $.ajax({
-            type:'GET',
-            url:'./tgabilityuser',
-            data:{'id':acquire_user_id},
-            dataType:'json',
+        let ac_pass_id = $(this).attr('id');
+        new_ac_pass_id = ac_pass_id.split("pass");
+        new_ac_pass_id = new_ac_pass_id.pop();
+        $("#pass_modal_list").modal("show");
+        return false
+    });
+     {#操作中的通过键交互#}
+     $(document).on("click","#pass_modal_list_sure",function() {
+        $("#pass_modal_list").modal("hide");
+        $.ajax({
+            type: 'GET',
+            url: './tgabilityuser',
+            data: {'id': new_ac_pass_id},
+            dataType: 'json',
             async: false,
             cache: false,
             contentType: 'application/json',
-            success:function(result){
-               console.log("result=",result);
-               display_alert(result.status);
+            success: function (result) {
+                console.log("result=", result);
+                display_alert(result.status);
             }
         })
+      {# 实现通过键的disabled#}
+        if($.cookie("cookie_push")!=undefined) {
+             let test_pass = $.cookie("cookie_push");
+             if(cookie_push.length == 0){
+                 cookie_push.push(test_pass)
+             }
+         }
+         let pass_t ="#pass"+new_ac_pass_id;
+         cookie_push.push(pass_t)
+         $(pass_t).attr('disabled',"true")
+
+         {#设置cookie来记住通过的id#}
+         $.cookie(
+            "cookie_push",
+             cookie_push,
+            { expires: 1});
+
     });
      function display_alert(status){
         if(status==true){
@@ -595,12 +754,15 @@ $(document).ready(function(){
             },1000)
       });
     }
-    $("#close_delete").click(function(){
+    {#实现查看按钮中的取消键#}
+    $(document).on("click","#close_delete",function() {
         $('.box').css('display','none');
         {#$('.box').hide();#}
         return false;
     });
-    $("#close_pass").click(function(){
+
+    {# 实现查看按钮中的通过键 #}
+    $(document).on("click","#pass_modal_div_sure",function() {
         $('.box').css('display','none');
          $.ajax({
              type: 'GET',
@@ -615,7 +777,27 @@ $(document).ready(function(){
                  display_alert(result.status);
              }
          });
-       return false;
+         {#点击查看按钮中的通过键实现div悬浮框和list列表中的通过键全部disabled，其实div悬浮框的disabled不用做，查看中就直接显示出来了#}
+        let pas_id = parseInt(pass)
+        let list_pass = "#pass" + pas_id;
+
+         if($.cookie("cookie_push")!=undefined) {
+             let pass_a = $.cookie("cookie_push");
+             if(cookie_push.length == 0){
+                 cookie_push.push(pass_a)
+             }
+         }
+         cookie_push.push(list_pass)
+         {#console.log("test1=",test1)#}
+         $(list_pass).attr('disabled',"true")
+
+         {#设置cookie来记住通过的id#}
+         $.cookie(
+            "cookie_push",
+             cookie_push,
+            { expires: 1});
+         {#console.log("cookietest2=",$.cookie("test1"))#}
+         return false;
     });
 
 });
