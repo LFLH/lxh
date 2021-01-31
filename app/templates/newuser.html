@@ -48,7 +48,7 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#1E9FFF">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%;">
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
@@ -100,7 +100,7 @@
                 <br>
                 <div style="height: 30px">
                     <label style="font-size: large; float: left; margin-right: 10px;">截止时间：</label>
-                    <label id="state" style="font-size:large; float: left; margin-right: 10px; font-weight: bold;"></label>
+                    <label id="endtime" style="font-size:large; float: left; margin-right: 10px; font-weight: bold;"></label>
                 </div>
                 <br>
                 <div style="height: 30px">
@@ -133,7 +133,20 @@
         layui.use('layer', function(){
           var layer = layui.layer;
           console.log($('p').text());
-          if ($('p').text() == '等待审核' || $('p').text() == '申报通过' || $('p').text() == '申报过期') {
+          $.ajax({
+              type: "GET",
+              url: "/newuserstatus",
+              data: {},
+              dataType: 'json',
+              async: false,
+              cache: false,
+              contentType: 'application/json',
+              success:function (endtime) {
+                  console.log(endtime);
+                  $('#endtime').text(endtime)
+              }
+          });
+          if ($('p').text() == '等待审核') {
              $("#declare").on("click", function (){
                  layer.msg("没有申报的权限！", {icon: 5});
                  return false

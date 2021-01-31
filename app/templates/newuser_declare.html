@@ -48,7 +48,7 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#1E9FFF">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%;">
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
@@ -142,7 +142,7 @@
         var demoListView = $('#demoList'),
             uploadListIns = upload.render({
                 elem: '#testList',
-                url: '',
+                url: '/adduserdeclare',
                 accept: 'file',
                 exts: 'doc|docx|pdf',
                 multiple: true,
@@ -171,29 +171,16 @@
 
                         demoListView.append(tr);
                     });
-                     $("#testListAction").on("click", function () {
-                         var formData = new FormData($("#newuser")[0]);
-                         $.ajax({
-                             url: '',
-                             type: "post",
-                             dataType: "json",
-                             async: false,
-                             contentType: 'application/json',
-                             processData: false,
-                             data: formData,
-                             success: function (result) {
-                                 console.log(result.status);
-                                 if (result.status == true) {
-                                     layer.msg("上传成功！", {icon: 6});
-                                 } else if (result.status == false) {
-                                     layer.msg(result.msg, {icon: 5});
-                                 }
-                             }
-                         })
-                     })
                 },
-            });
-        })
+                done: function (res, index, upload) {
+                     if (res.status == true) {
+                         layer.msg("上传成功！", {icon: 6});
+                     } else if (res.status == false) {
+                         layer.msg(result.msg, {icon: 5});
+                     }
+                 }
+             })
+        });
     })
 </script>
 {#<script>#}

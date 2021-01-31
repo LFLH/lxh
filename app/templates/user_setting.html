@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>用户首页</title>
+    <title>账户信息设置</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
@@ -44,7 +44,7 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#1E9FFF">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%;">
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
@@ -115,14 +115,14 @@
 
                 <div class="card">
                   <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.user_setting')}}">账户信息</a>
+                    <a class="collapsed card-link" href="{{ url_for('main.user_setting')}}">账户信息设置</a>
                   </div>
                 </div>
             </div>
         </div>
         <div class="col-md-10 offset-2" style="margin-top: 50px">
             <div class="container" >
-                <h2 style="padding-top: 20px">账户信息</h2>
+                <h2 style="padding-top: 20px">账户信息设置</h2>
                 <br>
                 <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed; border-collapse:separate; border-spacing:10px 30px;">
                     <tr >
@@ -132,17 +132,27 @@
 
                     <tr>
                         <td> <label style="font-size: large; margin-right: 10px;">密码：</label></td>
-                        <td> <input id="password" style="font-size:large;"></td>
+                        <td>
+                            <div class="password bgImg">
+                                <input type="password" id="password" style="font-size:large;">
+                                <button id="show">显示</button>
+                            </div>
+                        </td>
                     </tr>
 
                     <tr>
                         <td> <label style="font-size: large; margin-right: 10px;">电话：</label></td>
-                        <td> <input id="phone" style="font-size:large;"></td>
+                        <td> <input id="phone" style="font-size:large;">{{ phone }}</td>
                     </tr>
 
                     <tr>
                         <td> <label style="font-size: large; margin-right: 10px;">邮箱：</label></td>
                         <td> <input id="email" style="font-size:large;"></td>
+                    </tr>
+
+                    <tr>
+                        <td> <label style="font-size: large; margin-right: 10px;">地址：</label></td>
+                        <td> <input id="address" style="font-size:large;"></td>
                     </tr>
                 </table>
                 <br>
@@ -159,12 +169,65 @@
 
 <script>
       $(function () {
+          var xmlhttp=new XMLHttpRequest();
+          var url="/getuser";
+          var type="GET";//方法
+          xmlhttp.open(type,url,true);//方法，接口，异步
+          xmlhttp.send();//发送请求
+          xmlhttp.onreadystatechange=function(){
+              if(xmlhttp.status==200&&xmlhttp.readyState==4){
+                  var users = JSON.parse(xmlhttp.response); //获取到的json数据
+                  $("#name").val(users.name);
+                  $('#password').val(users.password);
+                  $('#phone').val(users.phone);
+                  $('#email').val(users.email);
+                  $('#address').val(users.address);
+              }
+          };
+          $("#show").click(function () {
+              let input = document.getElementById("password");
+              var btn = document.getElementById("show");
+              if(input.type=="password"){
+                  input.type = 'text';
+                  btn.innerHTML = '隐藏';
+              }else {
+                  input.type = 'password';
+                  btn.innerHTML = '显示';
+              }
+          });
+
           $("#cancel").click(function () {
               $("#name").val('');
               $('#password').val('');
               $('#phone').val('');
               $('#email').val('');
+              $('#address').val('');
+              window.location.reload();
           });
+          $('#change').click(function () {
+              var name = $("#name").val() ;
+              var password = $('#password').val();
+              var phone = $('#phone').val();
+              var email = $('#email').val();
+              var address = $('#address').val();
+              $.ajax({
+              type: "GET",
+              url: "/setuser",
+              data: {'name':name, 'password':password, 'phone':phone, 'email':email, 'address':address },
+              dataType: 'json',
+              async: false,
+              cache: false,
+              contentType: 'application/json',
+              success:function (re) {
+                  if(re.status==true){
+                      alert("修改成功！")
+                  }
+                  if(re.status==false){
+                      alert("修改失败！")
+                  }
+              }
+          });
+          })
       })
 </script>
 

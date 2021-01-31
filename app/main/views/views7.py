@@ -31,11 +31,16 @@ def searchtrain():
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
-        if train.status == 0:
-            if items[i].endtime>datetime.datetime.now():
-                status=1#培训未过期
+        # if items[i].endtime>datetime.datetime.now():
+        #     status=1#培训未过期
+        # else:
+        #     status=0#培训过期
+        # if train.status == 0:
+        if items[i].status == 0:
+            if items[i].endtime > datetime.datetime.now():
+                status=0#培训未过期
             else:
-                status=0#培训过期
+                status=1#培训过期
         else:
             status=2#未启用的培训，即被作废的培训
         # 返回用户id，用户名，密码，最后操作时间，状态
@@ -55,6 +60,7 @@ def detailtrain():
     else:
         #id = request.json.get('id')
         id = request.form.get('id')
+    print("id:",id)
     train = Train.query.filter(Train.id==id).all()[0]
     utrain=UTrain.query.join(TUT).join(Train).filter(Train.id==train.id).all()
     user=[]
@@ -82,12 +88,15 @@ def updatetrain():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    # begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    # endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     train = Train.query.filter(Train.id == id).all()[0]
-    chatime =datetime.datetime.now()-train.endtime
-    chatime=chatime.days
-    if chatime>1:
+    # chatime =datetime.datetime.now()-train.endtime
+    # chatime=chatime.days
+    # if chatime>0:
+    if datetime.datetime.now() > train.endtime:
+        return Response(json.dumps({'status': False}), mimetype='application/json')
+    if train.status != 0:
         return Response(json.dumps({'status': False}), mimetype='application/json')
     #修改培训信息
     else:
@@ -95,6 +104,7 @@ def updatetrain():
         train.begintime=begintime
         train.endtime=endtime
         train.main=main
+        print("train.main",train.main)
         db.session.add(train)
         db.session.commit()
         return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -107,9 +117,10 @@ def deletetrain():
     else:
         id = request.form.get('id')
     train = Train.query.filter(Train.id == id).all()[0]
-    chatime = datetime.datetime.now() - train.endtime
-    chatime = chatime.days
-    if chatime > 1:#过期申请
+    # chatime = datetime.datetime.now() - train.endtime
+    # chatime = chatime.days
+    # if chatime > 0:#过期申请
+    if datetime.datetime.now() > train.endtime:
         return Response(json.dumps({'status': False}), mimetype='application/json')
     else:
         utrain = UTrain.query.join(TUT).join(Train).filter(Train.id == train.id).count()
@@ -132,15 +143,17 @@ def addability():
         begintime = request.args.get('begintime')
         endtime = request.args.get('endtime')
         main = request.args.get('main')
+        createtime = request.args.get('createtime')
     else:
         name = request.form.get('name')
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
+        createtime = request.form.get('createtime')
     begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     #创建能力提升培训
-    train=Train(name=name,begintime=begintime,endtime=endtime,main=main)
+    train=Train(name=name,begintime=begintime,endtime=endtime,main=main,createtime=createtime)
     db.session.add(train)
     db.session.commit()
     return Response(json.dumps({'status':True}), mimetype='application/json')

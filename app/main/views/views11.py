@@ -14,6 +14,16 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#返回用户状态及申报截止时间
+@main.route('/newuserstatus',methods=['GET', 'POST'])
+def newuserstatus():
+    user=session.get('user')
+    userid=user['userid']
+    user=User.query.filter(User.id==userid).all()[0]
+    # 用户名,科普基地单位名称,邮箱,联系电话,地址,密码
+    endtime=str(user.endtime)
+    print(endtime)
+    return Response(json.dumps(endtime), mimetype='application/json')
 #判断上传文件类型
 def panduan(ext):
     word=['doc','docx']

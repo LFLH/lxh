@@ -99,11 +99,17 @@ def managedeclareadd():
             return redirect('/newuser')
     else:
         return render_template('managedeclareadd.html',name=user["name"],username=user["username"])
-#跳转到能力提升培训任务添加的单独界面
+#跳转到申报任务添加的单独界面
 @main.route('/managedeclareadd_new',methods=['GET','POST'])
 def managedeclareadd_new():
     user = session.get('user')
     return render_template('managedeclareadd_new.html', name=user["name"],username=user["username"])
+
+#单个申报任务详情界面
+@main.route('/declare_details/id=<id>',methods=['GET','POST'])
+def declare_details(id):
+    user = session.get('user')
+    return render_template('declare_details.html', name=user["name"],username=user["username"])
 
 #能力提升培训用户管理
 @main.route('/manageabilityuser',methods=['GET','POST'])
@@ -132,11 +138,18 @@ def manageabilityadd():
             return redirect('/newuser')
     else:
         return render_template('manageabilityadd.html',name=user["name"],username=user["username"])
+
 #跳转到能力提升培训任务添加的单独界面
 @main.route('/manageabilityadd_new',methods=['GET','POST'])
 def manageabilityadd_new():
     user = session.get('user')
     return render_template('manageabilityadd_new.html', name=user["name"],username=user["username"])
+
+#能力提升培训任务详情界面
+@main.route('/ability_details/id=<id>',methods=['GET','POST'])
+def ability_details(id):
+    user = session.get('user')
+    return render_template('ability_details.html', name=user["name"],username=user["username"])
 
 #考核管理
 @main.route('/manageexamine',methods=['GET','POST'])
