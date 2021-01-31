@@ -12,7 +12,7 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
-#列表显示申报任务
+#列表显示申请任务
 @main.route('/searchtrain',methods=['GET','POST'])
 def searchtrain():
     if request.method == "GET":
@@ -31,11 +31,11 @@ def searchtrain():
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
-        if train.status == 0:
+        if items[i].status == 0:
             if items[i].endtime>datetime.datetime.now():
-                status=1#培训未过期
+                status=0#培训未过期
             else:
-                status=0#培训过期
+                status=1#培训过期
         else:
             status=2#未启用的培训，即被作废的培训
         # 返回用户id，用户名，密码，最后操作时间，状态
@@ -85,9 +85,12 @@ def updatetrain():
     begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     train = Train.query.filter(Train.id == id).all()[0]
-    chatime =datetime.datetime.now()-train.endtime
-    chatime=chatime.days
-    if chatime>1:
+    # chatime =datetime.datetime.now()-train.endtime
+    # chatime=chatime.days
+    # if chatime>0:
+    if datetime.datetime.now() > train.endtime:
+        return Response(json.dumps({'status': False}), mimetype='application/json')
+    if train.status != 0:
         return Response(json.dumps({'status': False}), mimetype='application/json')
     #修改培训信息
     else:
@@ -107,9 +110,10 @@ def deletetrain():
     else:
         id = request.form.get('id')
     train = Train.query.filter(Train.id == id).all()[0]
-    chatime = datetime.datetime.now() - train.endtime
-    chatime = chatime.days
-    if chatime > 1:#过期申请
+     # chatime = datetime.datetime.now() - train.endtime
+    # chatime = chatime.days
+    # if chatime > 0:#过期申请
+    if datetime.datetime.now() > train.endtime:
         return Response(json.dumps({'status': False}), mimetype='application/json')
     else:
         utrain = UTrain.query.join(TUT).join(Train).filter(Train.id == train.id).count()

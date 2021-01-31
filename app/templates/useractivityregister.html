@@ -42,15 +42,15 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }} </a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
                             <li role="separator" class="divider"></li>
@@ -68,7 +68,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2 sidebar">
 {#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
 {#                <li><a class="nav-link" href="#">已提交活动</a></li>#}
 {#                <li><a class="nav-link" href="#">活动提交</a></li>#}
@@ -118,10 +118,15 @@
                     <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
                   </div>
                 </div>
+                <div class="card">
+                   <div class="card-header">
+                   <a class="collapsed card-link" href="{{ url_for('main.user_setting')}}">账户信息</a>
+                   </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-10" style="margin-top: 50px">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">林学会活动列表</h2>
             <form action="" method="POST">
                 <div class="table-responsive">
@@ -178,7 +183,30 @@
                 <div>
                 </div>
                 <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px;  margin-top: 140px">取消</button>
-                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px; margin-top: 140px">报名</button>
+                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px; margin-top: 140px" data-toggle="modal" data-target="#sign_modal_div">报名</button>
+            </div>
+             {#modal模式框：当管理员点击报名按钮时再次确认#}
+            <div class="modal fade" id="sign_modal_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定通过？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="sign_modal_list_sure" data-dismiss="modal">确定</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal fade" id="sign_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定通过？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="sign_modal_div_sure" data-dismiss="modal">确定</button>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
         </div>
@@ -229,7 +257,7 @@ $(document).ready(function(){
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
                              {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                           +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+                           +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                 }
                 $("#tableText").html(str);
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
@@ -250,7 +278,8 @@ $(document).ready(function(){
                 }
             }
         });
-        $("#prev").click(function(){
+        {#$("#prev").click(function(){#}
+        $('#page-li').on('click',"#prev",function(){
             $('.box').css('display','none');
             if(dpage==1){
                 alert("该页是第一页！");
@@ -293,7 +322,7 @@ $(document).ready(function(){
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
                              {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -309,7 +338,8 @@ $(document).ready(function(){
                 });
             }
         });
-        $("#next").click(function(){
+        {#$("#next").click(function(){#}
+        $('#page-li').on('click',"#next",function(){
             $('.box').css('display','none');
             if(dpage==pages){
                 alert("该页是最后一页！");
@@ -352,7 +382,7 @@ $(document).ready(function(){
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
                              {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -371,7 +401,8 @@ $(document).ready(function(){
         {#点击那一页就显示哪一页的数据#}
         for(let index=1;index<=pages;index++){
             let s="#li"+index;
-            $(s).click(function(){
+            {#$(s).click(function(){#}
+            $('#page-li').on('click',s,function(){
                 $('.box').css('display','none');
                 let s2="#li"+dpage;
                 $(s2).css("border-color","");
@@ -411,7 +442,7 @@ $(document).ready(function(){
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm open' id='"+acquire_number+"' value=查看>"
                              {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名>"+ "</tr>";
+                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -499,12 +530,16 @@ $(document).ready(function(){
             },1000)
       });
     }
-    $("#close_delete").click(function(){
+    {#查看按钮中的取消键#}
+    {#$("#close_delete").click(function(){#}
+    $(document).on("click","#close_delete",function() {
         $('.box').css('display','none');
         {#$('.box').hide();#}
         return false;
     });
-          $("#close_pass").click(function(){
+    {#查看按钮中的报名键#}
+    {#$("#close_pass").click(function(){#}
+    $(document).on("click","#sign_modal_div_sure",function() {
         $('.box').css('display','none');
          $.ajax({
              type: 'GET',
