@@ -8,6 +8,7 @@
     <link rel="icon" href="../../favicon.ico">
     <title>活动管理</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script type="text/javascript" src="//static.runoob.com/assets/qrcode/qrcode.min.js"></script>
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
@@ -28,15 +29,15 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎：{{ username }}</a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：管理员</a></li>
                             <li role="separator" class="divider"></li>
@@ -113,10 +114,17 @@
                 </div>
 
                 <div class="card">
+                   <div class="card-header">
+                     <a class="collapsed card-link" href="('main.managereportuser')}}">报告管理</a>
+                   </div>
+                </div>
+
+                <div class="card">
                   <div class="card-header">
                     <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
                   </div>
                 </div>
+
             </div>
         </div>
 
@@ -199,9 +207,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="deadline" class="control-label" style="display: inline">报名截止时间：</label>
+                    <label for="stoptime" class="control-label" style="display: inline">报名截止时间：</label>
                     <div class="col-md-8"  style="display: inline-block; width: 80%">
-                        <input type="date" class="form-control" id="deadline" required>
+                        <input type="date" class="form-control" id="stoptime" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -324,46 +332,107 @@
         </div>
         <div class="modal-body" id="showModal-body2">
                 <div class="form-group">
-                    <label for="name" class="col-sm-2 control-label">活动名称:</label>
+                    <label for="name2" class="col-sm-2 control-label">活动名称:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
                         <input class="form-control" id="name2" disabled>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="type" class="col-sm-2 control-label">活动类型:</label>
+                    <label for="showtype2" class="col-sm-2 control-label">活动类型:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
                         <input class="form-control" id="showtype2" disabled>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="starttime" class="col-sm-3 control-label">活动起始时间:</label>
+                    <label for="showstoptime" class="col-sm-3 control-label">报名截止时间:</label>
+                    <div class="col-md-4" style="padding-left: 20px;">
+                        <input class="form-control" id="showstoptime" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="showstarttime2" class="col-sm-3 control-label">活动起始时间:</label>
                     <div class="col-md-4" style="padding-left: 20px;">
                         <input class="form-control" id="showstarttime2" disabled>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="endtime" class="col-sm-3 control-label">活动结束时间:</label>
+                    <label for="showendtime2" class="col-sm-3 control-label">活动结束时间:</label>
                     <div class="col-md-4" style="padding-left: 20px;">
                         <input class="form-control" id="showendtime2" disabled>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="content" class="col-sm-3 control-label">活动具体内容:</label>
+                    <label for="showcontent2" class="col-sm-3 control-label">活动具体内容:</label>
                     <div class="col-md-7" style="padding: 3px 0 0 20px;">
                         <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="showcontent2" disabled></textarea>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="content" class="col-sm-3 control-label">参加用户:</label>
+                    <label for="attenduser" class="col-sm-3 control-label">参加用户:</label>
                     <div class="col-md-7" style="padding: 3px 0 0 20px;">
                         <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="attenduser" disabled></textarea>
                     </div>
                 </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" id="export-foot">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-success" data-dismiss="modal">导出报名表</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">生成二维码</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 修改系统活动模态框 #modifyModal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myeditModal2">活动详情</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body" id="modifyModal-body">
+            <form id="edit" enctype='multipart/form-data'>
+                <div class="form-group">
+                    <label for="editname" class="col-sm-2 control-label">活动名称:</label>
+                    <div class="col-sm-5" style="padding-left: 20px;">
+                        <input class="form-control" id="editname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edittype" class="col-sm-2 control-label">活动类型:</label>
+                    <div class="col-sm-5" style="padding-left: 20px;">
+                        <input class="form-control" id="edittype">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editstoptime" class="col-sm-3 control-label" style="display: inline">报名截止时间：</label>
+                    <div class="col-md-4"  style="padding-left: 20px;">
+                        <input type="date" class="form-control" id="editstoptime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editbegintime" class="col-sm-3 control-label">活动起始时间:</label>
+                    <div class="col-md-4" style="padding-left: 20px;">
+                        <input type="date" class="form-control" id="editbegintime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editendtime" class="col-sm-3 control-label">活动结束时间:</label>
+                    <div class="col-md-4" style="padding-left: 20px;">
+                        <input type="date" class="form-control" id="editendtime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editcontent" class="col-sm-3 control-label">活动具体内容:</label>
+                    <div class="col-md-7" style="padding: 3px 0 0 20px;">
+                        <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="editcontent"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer" id="edit-foot">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal" id="save">确认</button>
         </div>
       </div>
     </div>
@@ -404,20 +473,20 @@
       </div>
     </div>
   </div>
-  <!-- 删除模态框 #delModal -->
+  <!-- 取消模态框 #delModal -->
   <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="mydelModal">删除窗口</h4>
+          <h4 class="modal-title" id="mydelModal">取消窗口</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-          <h2>确认删除？</h2>
+          <h2>确认取消？</h2>
         </div>
         <div class="modal-footer" id="del-foot">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">删除</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
         </div>
       </div>
     </div>
@@ -453,30 +522,60 @@
     $(document).ready(function(){
         let dpage=1
         let pages=1
-        let per_page=4
+        let per_page=10
         let d_per_page=per_page
         let idz=new Array(per_page);
-        // function init(dpage,pages,per_page,d_per_page,idz){
+        init();
+        function init(){
             $.ajax({
-                        type:'GET',
-                        url:'./searchactivity',
-                        data:{'page':1,'per_page':per_page},
-                        dataType:'json',
-                        async: false,
-                        cache: false,
-                        contentType: 'application/json',
-                        success:function(data){
-                            pages = data.zpage;
-                            let total = data.total;
-                            dpage = data.dpage;
-                            let activity = data.item;
-                            let str=""
-                            d_per_page=data.item.length
-                            for (let index = 0; index < data.item.length; index++) {
-                            idz[index]=data.item[index].id
+                    type:'GET',
+                    url:'./searchactivity',
+                    data:{'page':dpage,'per_page':per_page},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        pages = data.zpage;
+                        let total = data.total;
+                        dpage = data.dpage;
+                        let activity = data.item;
+                        let str=""
+                        d_per_page=data.item.length
+                        for (let index = 0; index < data.item.length; index++) {
+                        idz[index]=data.item[index].id
+                        if(data.item[index].typeuser === '系统'){
+                            if (data.item[index].status==3){
+                                var sta = '取消';
+                                str += "<tr><td>" + data.item[index].number +
+                                    // "</td><td>" + data.item[index].username +
+                                    "</td><td>" + data.item[index].activityname +
+                                    "</td><td>" + data.item[index].typeuser +
+                                    "</td><td>" + data.item[index].type +
+                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + sta +
+                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                    "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                            }else {
+                                var sta = '通过';
+                                str += "<tr><td>" + data.item[index].number +
+                                    // "</td><td>" + data.item[index].username +
+                                    "</td><td>" + data.item[index].activityname +
+                                    "</td><td>" + data.item[index].typeuser +
+                                    "</td><td>" + data.item[index].type +
+                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + sta +
+                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                    "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                            }
+                        }else {
                             switch(data.item[index].status) {
                              case '0':
-                                var sta = '申请中';
+                                var sta = '审核中';
                                 break;
                              case '1':
                                 var sta = '驳回';
@@ -485,55 +584,42 @@
                                 var sta = '通过';
                                 break;
                              case '3':
-                                var sta = '删除';
+                                var sta = '取消';
                                 break;
                             }
-                            if(data.item[index].typeuser === '系统'){
-                                str += "<tr><td>" + data.item[index].number +
-                                        // "</td><td>" + data.item[index].username +
-                                        "</td><td>" + data.item[index].activityname +
-                                        "</td><td>" + data.item[index].typeuser +
-                                        "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
-                                        "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + '通过' +
-                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>删除</button>" +"</tr>";
-                            }else {
-                                str += "<tr><td>" + data.item[index].number +
-                                        // "</td><td>" + data.item[index].username +
-                                        "</td><td>" + data.item[index].activityname +
-                                        "</td><td>" + data.item[index].typeuser +
-                                        "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
-                                        "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + sta +
-                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='ref"+index+"' style='margin-left: 5px'>驳回</button>" +"</tr>";
-                            }
-                            } //for
-                            $("#tableText").html(str);
-                            let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
-                            strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>"
-                            for(let index=2;index<=pages;index++){
-                                strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
-                            }
-                            strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
-                            $("#page-li").html(strli);
-                            let s="#li"+dpage
-                            $(s).css("border-color","blue");
-                            if(dpage<pages){
-                                let r=dpage+1
-                                let rs="#li"+r
-                                $(rs).css("border-left-color","blue");
-                            }else{
-                                $("#next").css("border-left-color","blue");
-                            }
+                            str += "<tr><td>" + data.item[index].number +
+                                    // "</td><td>" + data.item[index].username +
+                                    "</td><td>" + data.item[index].activityname +
+                                    "</td><td>" + data.item[index].typeuser +
+                                    "</td><td>" + data.item[index].type +
+                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + sta +
+                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                    "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='ref"+index+"' style='margin-left: 5px'>驳回</button>" +"</tr>";
                         }
-                    });
-        // }
-        // init(dpage,pages,per_page,d_per_page,idz);
+                        } //for
+                        $("#tableText").html(str);
+                        let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
+                        strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link page-num'>"+1+"</a></li>"
+                        for(let index=2;index<=pages;index++){
+                            strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link page-num'>"+index+"</a></li>"
+                        }
+                        strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
+                        $("#page-li").html(strli);
+                        let s="#li"+dpage
+                        $(s).css("border-color","blue");
+                        if(dpage<pages){
+                            let r=dpage+1
+                            let rs="#li"+r
+                            $(rs).css("border-left-color","blue");
+                        }else{
+                            $("#next").css("border-left-color","blue");
+                        }
+                    }
+                });
+        }
         //确认添加按钮
         $('#add').click(function (){
             $.ajax({
@@ -543,75 +629,15 @@
                 data:{
                     name:document.getElementById("activityname").value,
                     type:document.getElementById("type").value,
-                    begintime:document.getElementById("deadline").value,
-                    endtime:document.getElementById("starttime").value,
-                    stoptime:document.getElementById("endtime").value,
+                    stoptime:document.getElementById("stoptime").value,
+                    begintime:document.getElementById("starttime").value,
+                    endtime:document.getElementById("endtime").value,
                     main:document.getElementById("content").value,
                 },
                 success:function(data){
                     console.log('data:',data,name,type);
                     $("#addModal").modal("hide")
-                    // init(dpage,pages,per_page,d_per_page,idz);
-                    $.ajax({
-                        type:'GET',
-                        url:'./searchactivity',
-                        data:{'page':1,'per_page':per_page},
-                        dataType:'json',
-                        async: false,
-                        cache: false,
-                        contentType: 'application/json',
-                        success:function(data){
-                            pages = data.zpage;
-                            let total = data.total;
-                            dpage = data.dpage;
-                            let activity = data.item;
-                            let str=""
-                            d_per_page=data.item.length
-                            for (let index = 0; index < data.item.length; index++) {
-                            idz[index]=data.item[index].id
-                            if(data.item[index].typeuser === '系统'){
-                                str += "<tr><td>" + data.item[index].number +
-                                        "</td><td>" + data.item[index].activityname +
-                                        "</td><td>" + data.item[index].typeuser +
-                                        "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
-                                        "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + '通过' +
-                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>删除</button>" +"</tr>";
-                            }else {
-                                str += "<tr><td>" + data.item[index].number +
-                                        "</td><td>" + data.item[index].activityname +
-                                        "</td><td>" + data.item[index].typeuser +
-                                        "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
-                                        "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + sta +
-                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='ref"+index+"' style='margin-left: 5px'>驳回</button>" +"</tr>";
-                            }
-                            }
-                            $("#tableText").html(str);
-                            let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
-                            strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>"
-                            for(let index=2;index<=pages;index++){
-                                strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
-                            }
-                            strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
-                            $("#page-li").html(strli);
-                            let s="#li"+dpage
-                            $(s).css("border-color","blue");
-                            if(dpage<pages){
-                                let r=dpage+1
-                                let rs="#li"+r
-                                $(rs).css("border-left-color","blue");
-                            }else{
-                                $("#next").css("border-left-color","blue");
-                            }
-                        }
-                    });
-                    // location.reload()
+                    init();
             }
             })
         })
@@ -627,7 +653,7 @@
                         cache: false,
                         contentType: 'application/json',
                         success:function(data){
-                            location.reload()
+                            init();
                             console.log('data',data)
                         }
                     });
@@ -645,12 +671,13 @@
                         contentType: 'application/json',
                         success:function(data){
                             console.log('data',data)
+                            init();
                             // $("#passModal").modal('hide');
-                            location.reload()
                             // display_alert(data.status);
                         }
                     });
         })
+
         /*function display_alert(status){
             if(status==true){
                 msg="已通过！";
@@ -661,160 +688,23 @@
                 alert(msg)
             },1000)
         }*/
-        //确认删除按钮
+        //确认取消按钮
         $("#del-foot").on('click', '.del', function () {
             var id = $(this).attr("id");
-            if (d_per_page != 1) {
-                $.ajax({
-                    type: 'GET',
-                    url: './deleteactivity',
-                    data: {'page': dpage, 'per_page': per_page, 'id': id},
-                    dataType: 'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success: function (data) {
-                        pages = data.zpage;
-                        let total = data.total;
-                        dpage = data.dpage;
-                        let activity = data.item;
-                        let str = ""
-                        d_per_page = data.item.length;
-                        for (let index = 0; index < data.item.length; index++) {
-                            idz[index] = data.item[index].id
-                            switch (data.item[index].status) {
-                                case '0':
-                                    var sta = '申请中';
-                                    break;
-                                case '1':
-                                    var sta = '驳回';
-                                    break;
-                                case '2':
-                                    var sta = '通过';
-                                    break;
-                                case '3':
-                                    var sta = '删除';
-                                    break;
-                            }
-                            if (data.item[index].typeuser === '系统') {
-                                str += "<tr><td>" + data.item[index].number +
-                                    // "</td><td>" + data.item[index].username +
-                                    "</td><td>" + data.item[index].activityname +
-                                    "</td><td>" + data.item[index].typeuser +
-                                    "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
-                                    "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + '通过' +
-                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                    "<button class='btn btn-danger btn-sm' id='del" + index + "' style='margin-left: 5px'>删除</button>" + "</tr>";
-                            } else {
-                                str += "<tr><td>" + data.item[index].number +
-                                    // "</td><td>" + data.item[index].username +
-                                    "</td><td>" + data.item[index].activityname +
-                                    "</td><td>" + data.item[index].typeuser +
-                                    "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
-                                    "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + sta +
-                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                    "<button class='btn btn-success btn-sm' id='pass" + index + "' style='margin-left: 5px'>通过</button>" +
-                                    "<button class='btn btn-danger btn-sm' id='ref" + index + "' style='margin-left: 5px'>驳回</button>" + "</tr>";
-                            }
-                        }
-                        $("#tableText").html(str);
-                        let strli = "<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
-                        for (let index = 1; index <= pages; index++) {
-                            strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link'>" + index + "</a></li>"
-                        }
-                        strli += "<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
-                        $("#page-li").html(strli);
-                        let s = "#li" + dpage
-                        $(s).css("border-color", "blue");
-                        if (dpage < pages) {
-                            let r = dpage + 1
-                            let rs = "#li" + r
-                            $(rs).css("border-left-color", "blue");
-                        } else {
-                            $("#next").css("border-left-color", "blue");
-                        }
-                    }
-                });
-            } else {
-                $.ajax({
-                    type: 'GET',
-                    url: './deleteactivity',
-                    data: {'page': 1, 'per_page': per_page, 'id': idz[index]},
-                    dataType: 'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success: function (data) {
-                        pages = data.zpage;
-                        let total = data.total;
-                        dpage = data.dpage;
-                        let activity = data.item;
-                        let str = ""
-                        data.item.length;
-                        for (let index = 0; index < data.item.length; index++) {
-                            idz[index] = data.item[index].id
-                            switch (data.item[index].status) {
-                                case '0':
-                                    var sta = '申请中';
-                                    break;
-                                case '1':
-                                    var sta = '驳回';
-                                    break;
-                                case '2':
-                                    var sta = '通过';
-                                    break;
-                                case '3':
-                                    var sta = '删除';
-                                    break;
-                            }
-                            if (data.item[index].typeuser === '系统') {
-                                str += "<tr><td>" + data.item[index].number +
-                                    // "</td><td>" + data.item[index].username +
-                                    "</td><td>" + data.item[index].activityname +
-                                    "</td><td>" + data.item[index].typeuser +
-                                    "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
-                                    "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + '通过' +
-                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                    "<button class='btn btn-danger btn-sm' id='del" + index + "' style='margin-left: 5px'>删除</button>" + "</tr>";
-                            } else {
-                                str += "<tr><td>" + data.item[index].number +
-                                    // "</td><td>" + data.item[index].username +
-                                    "</td><td>" + data.item[index].activityname +
-                                    "</td><td>" + data.item[index].typeuser +
-                                    "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
-                                    "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + sta +
-                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                    "<button class='btn btn-success btn-sm' id='pass" + index + "' style='margin-left: 5px'>通过</button>" +
-                                    "<button class='btn btn-danger btn-sm' id='ref" + index + "' style='margin-left: 5px'>驳回</button>" + "</tr>";
-                            }
-                        }
-                        $("#tableText").html(str);
-                        let strli = "<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
-                        for (let index = 1; index <= pages; index++) {
-                            strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link'>" + index + "</a></li>"
-                        }
-                        strli += "<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
-                        $("#page-li").html(strli);
-                        let s = "#li" + dpage
-                        $(s).css("border-color", "blue");
-                        if (dpage < pages) {
-                            let r = dpage + 1
-                            let rs = "#li" + r
-                            $(rs).css("border-left-color", "blue");
-                        } else {
-                            $("#next").css("border-left-color", "blue");
-                        }
-                    }
-                });
-            }
+            console.log('id',id)
+            $.ajax({
+                type: 'GET',
+                url: './deletesysactivity',
+                data: {'id': id},
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data)
+                    init();
+                }
+            });
         })
         $('#page-li').on('click',"#prev",function(){
             if(dpage==1){
@@ -846,22 +736,10 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                        switch(data.item[index].status) {
-                         case '0':
-                            var sta = '申请中';
-                            break;
-                         case '1':
-                            var sta = '驳回';
-                            break;
-                         case '2':
-                            var sta = '通过';
-                            break;
-                         case '3':
-                            var sta = '删除';
-                            break;
-                        }
                         if(data.item[index].typeuser === '系统'){
-                                str += "<tr><td>" + data.item[index].number +
+                                if (data.item[index].status==3){
+                                    var sta = '取消';
+                                    str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
@@ -869,8 +747,36 @@
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + '通过' +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>删除</button>" +"</tr>";
+                                        "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                }else {
+                                    var sta = '通过';
+                                    str += "<tr><td>" + data.item[index].number +
+                                        "</td><td>" + data.item[index].activityname +
+                                        "</td><td>" + data.item[index].typeuser +
+                                        "</td><td>" + data.item[index].type +
+                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].endtime +
+                                        "</td><td>" + '通过' +
+                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                        "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                }
                             }else {
+                               switch(data.item[index].status) {
+                                 case '0':
+                                    var sta = '审核中';
+                                    break;
+                                 case '1':
+                                    var sta = '驳回';
+                                    break;
+                                 case '2':
+                                    var sta = '通过';
+                                    break;
+                                 case '3':
+                                    var sta = '取消';
+                                    break;
+                                }
                                 str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
@@ -927,22 +833,10 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                        switch(data.item[index].status) {
-                         case '0':
-                            var sta = '申请中';
-                            break;
-                         case '1':
-                            var sta = '驳回';
-                            break;
-                         case '2':
-                            var sta = '通过';
-                            break;
-                         case '3':
-                            var sta = '删除';
-                            break;
-                        }
                         if(data.item[index].typeuser === '系统'){
-                                str += "<tr><td>" + data.item[index].number +
+                                if (data.item[index].status==3){
+                                        var sta = '取消';
+                                        str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
@@ -950,8 +844,36 @@
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + '通过' +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>删除</button>" +"</tr>";
+                                        "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                    }else {
+                                        var sta = '通过';
+                                        str += "<tr><td>" + data.item[index].number +
+                                        "</td><td>" + data.item[index].activityname +
+                                        "</td><td>" + data.item[index].typeuser +
+                                        "</td><td>" + data.item[index].type +
+                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].endtime +
+                                        "</td><td>" + '通过' +
+                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                        "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                }
                             }else {
+                                switch(data.item[index].status) {
+                                     case '0':
+                                        var sta = '审核中';
+                                        break;
+                                     case '1':
+                                        var sta = '驳回';
+                                        break;
+                                     case '2':
+                                        var sta = '通过';
+                                        break;
+                                     case '3':
+                                        var sta = '取消';
+                                        break;
+                                }
                                 str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
@@ -978,101 +900,107 @@
                 });
             }
         });
-        for(let index=1;index<=pages;index++){
-            let s="#li"+index;
-            $(s).click(function(){
-                let s2="#li"+dpage
-                $(s2).css("border-color","");
-                if(dpage<pages){
-                    let r2=dpage+1
-                    let rs2="#li"+r2
-                    $(rs2).css("border-left-color","");
-                }else{
-                    $("#next").css("border-left-color","");
-                }
-                $.ajax({
-                    type:'GET',
-                    url:'./searchactivity',
-                    data:{'page':index,'per_page':per_page},
-                    dataType:'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success:function(data){
-                        pages = data.zpage;
-                        let total = data.total;
-                        dpage = data.dpage;
-                        let activity = data.item;
-                        let str=""
-                        d_per_page=data.item.length
-                        for (let index = 0; index < data.item.length; index++) {
-                            idz[index]=data.item[index].id
-                        switch(data.item[index].status) {
-                         case '0':
-                            var sta = '申请中';
-                            break;
-                         case '1':
-                            var sta = '驳回';
-                            break;
-                         case '2':
-                            var sta = '通过';
-                            break;
-                         case '3':
-                            var sta = '删除';
-                            break;
-                        }
-                        if(data.item[index].typeuser === '系统'){
+        $("#page-li").on("click", ".page-num", function (){
+            var self = this
+            var pageNum = $(this).text();
+            $.ajax({
+                type:'GET',
+                url:'./searchactivity',
+                data:{'page':pageNum,'per_page':per_page},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str=""
+                    for (let index = 0; index < data.item.length; index++) {
+                    if(data.item[index].typeuser === '系统'){
+                            if (data.item[index].status==3){
+                                var sta = '取消';
                                 str += "<tr><td>" + data.item[index].number +
-                                        // "</td><td>" + data.item[index].username +
-                                        "</td><td>" + data.item[index].activityname +
-                                        "</td><td>" + data.item[index].typeuser +
-                                        "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
-                                        "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + '通过' +
-                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>删除</button>" +"</tr>";
+                                    // "</td><td>" + data.item[index].username +
+                                    "</td><td>" + data.item[index].activityname +
+                                    "</td><td>" + data.item[index].typeuser +
+                                    "</td><td>" + data.item[index].type +
+                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + '通过' +
+                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                    "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
                             }else {
+                                var sta = '通过';
                                 str += "<tr><td>" + data.item[index].number +
-                                        // "</td><td>" + data.item[index].username +
-                                        "</td><td>" + data.item[index].activityname +
-                                        "</td><td>" + data.item[index].typeuser +
-                                        "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
-                                        "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + sta +
-                                        "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                        "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='ref"+index+"' style='margin-left: 5px'>驳回</button>" +"</tr>";
-                        }
-                        }
-                        $("#tableText").html(str);
-                        let s="#li"+dpage
-                        $(s).css("border-color","blue");
-                        if(dpage<pages){
-                            let r=dpage+1
-                            let rs="#li"+r
-                            $(rs).css("border-left-color","blue");
-                        }else{
-                            $("#next").css("border-left-color","blue");
-                        }
+                                    // "</td><td>" + data.item[index].username +
+                                    "</td><td>" + data.item[index].activityname +
+                                    "</td><td>" + data.item[index].typeuser +
+                                    "</td><td>" + data.item[index].type +
+                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + '通过' +
+                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                    "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                            }
+                        }else {
+                            switch(data.item[index].status) {
+                             case '0':
+                                var sta = '审核中';
+                                break;
+                             case '1':
+                                var sta = '驳回';
+                                break;
+                             case '2':
+                                var sta = '通过';
+                                break;
+                             case '3':
+                                var sta = '取消';
+                                break;
+                            }
+                            str += "<tr><td>" + data.item[index].number +
+                                    // "</td><td>" + data.item[index].username +
+                                    "</td><td>" + data.item[index].activityname +
+                                    "</td><td>" + data.item[index].typeuser +
+                                    "</td><td>" + data.item[index].type +
+                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + sta +
+                                    "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                    "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='ref"+index+"' style='margin-left: 5px'>驳回</button>" +"</tr>";
                     }
-                });
+                    }
+                    $("#tableText").html(str);
+                    $(self).css("border-color", "blue").parent().siblings().children().css("border-color", "#dee2e6")
+                    /*let s="#li"+dpage
+                    $(s).css("border-color","blue");
+                    if(dpage<pages){
+                        let r=dpage+1
+                        let rs="#li"+r
+                        $(rs).css("border-left-color","blue");
+                    }else{
+                        $("#next").css("border-left-color","blue");
+                    }*/
+                }
             });
-        }
+        })
         for(let index=0;index<d_per_page;index++){
-            //删除
+            //取消
             let d="#del"+index
-            $(d).click(function(){
+            $('#tableText').on('click',d,function(){
                 $("#del-foot").empty();
                 var strdel = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'
-                    + '<button id='+ idz[index] +' type="button" class="btn btn-danger del" data-dismiss="modal">删除</button>'
+                    + '<button id='+ idz[index] +' type="button" class="btn btn-danger del" data-dismiss="modal">取消</button>'
                 $("#del-foot").html(strdel);
                 $("#delModal").modal('show');
             });
             //驳回
             let r="#ref"+index
-            $(r).click(function(){
+            $('#tableText').on('click',r,function(){
                 $("#refuse-foot").empty();
                 var strRefuse = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'
                     + '<button id='+ idz[index] +' type="button" class="btn btn-danger refuse" data-dismiss="modal">驳回</button>'
@@ -1081,7 +1009,7 @@
             });
             //通过
             var p="#pass"+index;
-            $(p).click(function(){
+            $('#tableText').on('click',p,function(){
                 console.log(1)
                 $("#pass-foot").empty();
                 var strPass = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'
@@ -1089,241 +1017,212 @@
                 $("#pass-foot").html(strPass);
                 $("#passModal").modal('show');
             });
-            //查看活动
-            // let v="#view"+index
-            /*$(v).click(function(){
-                $.ajax({
-                    type:'GET',
-                    url:'./detailsysactivity',
-                    data:{'id':idz[index]},
-                    dataType:'json',
-                    success:function(data){
-                        console.log('idz[index]',idz[index])
-                        console.log('data',data)
-                        if(data.typeuser === '系统'){
-                             var view='<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">\n' +
-                                 '    <div class="modal-dialog modal-lg" role="document">\n' +
-                                 '      <div class="modal-content">\n' +
-                                 '        <div class="modal-header">\n' +
-                                 '          <h4 class="modal-title" id="myshowModal">活动详情</h4>\n' +
-                                 '          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-                                 '        </div>\n' +
-                                 '        <div class="modal-body" id="showModal-body">\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="name" class="col-sm-2 control-label">活动名称:</label>\n' +
-                                 '                    <div class="col-sm-5" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="name" value="data.typeuser">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="type" class="col-sm-2 control-label">活动类型:</label>\n' +
-                                 '                    <div class="col-sm-5" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="showtype" value="data.type">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="starttime" class="col-sm-3 control-label">活动起始时间:</label>\n' +
-                                 '                    <div class="col-md-3" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="showstarttime" value="data.begintime">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="endtime" class="col-sm-3 control-label">活动结束时间:</label>\n' +
-                                 '                    <div class="col-md-3" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="showendtime" value="data.endtime">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="content" class="col-sm-3 control-label">活动具体内容:</label>\n' +
-                                 '                    <div class="col-md-7" style="padding: 3px 0 0 20px;">\n' +
-                                 '                        <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="showcontent"></textarea>\n' +
-                                 '                    value="data.main"</div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="exampleInputFileVedio" class="control-label">视频:</label>\n' +
-                                 '                    <div class="col-sm-10">\n' +
-                                 '\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="exampleInputFileAudio" class="control-label">音频:</label>\n' +
-                                 '                    <div class="col-sm-10">\n' +
-                                 '\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="exampleInputFileImage" class="control-label">图片:</label>\n' +
-                                 '                    <div class="col-sm-10">\n' +
-                                 '\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="exampleInputFileImage" class="control-label">PDF文件:</label>\n' +
-                                 '                    <div class="col-sm-10">\n' +
-                                 '\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="exampleInputFileImage" class="control-label">word文件:</label>\n' +
-                                 '                    <div class="col-sm-10">\n' +
-                                 '\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '        </div>\n' +
-                                 '        <div class="modal-footer">\n' +
-                                 '          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\n' +
-                                 '          <button type="button" class="btn btn-success" data-dismiss="modal">通过</button>\n' +
-                                 '          <button type="button" class="btn btn-danger" data-dismiss="modal" class="refuse">驳回</button>\n' +
-                                 '        </div>\n' +
-                                 '      </div>\n' +
-                                 '    </div>\n' +
-                                 '  </div>'
-                        } else {
-                                 var view='<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">\n' +
-                                 '    <div class="modal-dialog modal-lg" role="document">\n' +
-                                 '      <div class="modal-content">\n' +
-                                 '        <div class="modal-header">\n' +
-                                 '          <h4 class="modal-title" id="myshowModal">活动详情</h4>\n' +
-                                 '          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
-                                 '        </div>\n' +
-                                 '        <div class="modal-body" id="showModal-body">\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="name" class="col-sm-2 control-label">活动名称:</label>\n' +
-                                 '                    <div class="col-sm-5" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="name" value="data.typeuser">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="type" class="col-sm-2 control-label">活动类型:</label>\n' +
-                                 '                    <div class="col-sm-5" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="showtype" value="data.type">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="starttime" class="col-sm-3 control-label">活动起始时间:</label>\n' +
-                                 '                    <div class="col-md-3" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="showstarttime" value="data.begintime">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="endtime" class="col-sm-3 control-label">活动结束时间:</label>\n' +
-                                 '                    <div class="col-md-3" style="padding-left: 20px;">\n' +
-                                 '                        <input class="form-control" id="showendtime" value="data.endtime">\n' +
-                                 '                    </div>\n' +
-                                 '                </div>\n' +
-                                 '                <div class="form-group">\n' +
-                                 '                    <label for="content" class="col-sm-3 control-label">活动具体内容:</label>\n' +
-                                 '                    <div class="col-md-7" style="padding: 3px 0 0 20px;">\n' +
-                                 '                        <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="showcontent"></textarea>\n' +
-                                 '                    value="data.main"</div>\n' +
-                                 '                </div>\n' +
-                                 '        </div>\n' +
-                                 '        <div class="modal-footer">\n' +
-                                 '          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\n' +
-                                 '          <button type="button" class="btn btn-success" data-dismiss="modal">导出报名表</button>\n' +
-                                 '          <button type="button" class="btn btn-danger" data-dismiss="modal">生成二维码</button>\n' +
-                                 '        </div>\n' +
-                                 '      </div>\n' +
-                                 '    </div>\n' +
-                                 '  </div>'
-                        }
-                        $("#showModal").empty();
-                        var view2 = '<div class="form-group"><label for="type" class="col-sm-2 control-label">活动类型:</label> <div class="col-sm-5" style="padding-left: 20px;"> <input class="form-control" id="showtype" value="2"> </div> </div>'
-                        $("#showModal").html(view);
-                        $("#showModal").modal('show');
-                    }
-                });
-            });*/
         }
         // 查看活动
         $("#mytable").on("click", ".user-active-view", function () {
-                var type = $(this).parent().parent().find("td").eq(2).text()
-                console.log($(this).parent().parent().find("td").eq(2).text())
-                if(type === '自主'){
-                    var id = $(this).data('id')
-                    $.ajax({
-                        type:'GET',
-                        url:'./detailuseractivity',
-                        data:{'id':id},
-                        dataType:'json',
-                        async: false,
-                        cache: false,
-                        contentType: 'application/json',
-                        success:function(data){
-                            // console.log(1111)
-                            $("#showModal").find("#name").val(data.name)
-                            $("#showModal").find("#showtype").val(data.type)
-                            $("#showModal").find("#showstarttime").val(data.begintime)
-                            $("#showModal").find("#showendtime").val(data.endtime)
-                            $("#showModal").find("#showcontent").val(data.main)
-                            var videoStr = ''
-                            if(data.video.length >0){
-                                for(var i=0;i<data.video.length;i++){
-                                    videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
-                                }
-                                $("#showModal").find("#InputFileVedio").html(videoStr)
-                            }
-                            var audioStr = ''
-                            if(data.music.length >0){
-                                for(var i=0;i<data.music.length;i++){
-                                    audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
-                                }
-                                $("#showModal").find("#InputFileAudio").html(audioStr)
-                            }
-                            // $("#showModal").find("#InputFileAudio").text(data.music[0].name)
-                            // $("#showModal").find("#InputFileAudio").attr('href',data.music[0].path)
-                            var imageStr = ''
-                            if(data.music.length >0){
-                                for(var i=0;i<data.image.length;i++){
-                                    imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
-                                }
-                                $("#showModal").find("#InputFileImage").html(imageStr)
-                            }
-                            // $("#showModal").find("#InputFileImage").text(data.image[0].name)
-                            // $("#showModal").find("#InputFileImage").attr('href',data.image[0].path)
-                            var pdfStr = ''
-                            if(data.pdf.length >0){
-                                for(var i=0;i<data.pdf.length;i++){
-                                    pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
-                                }
-                                $("#showModal").find("#InputFilePDF").html(pdfStr)
-                            }
-                            // $("#showModal").find("#InputFilePDF").text(data.pdf[0].name)
-                            // $("#showModal").find("#InputFilePDF").attr('href',data.pdf[0].path)
-                            var wordStr = ''
-                            if(data.word.length >0){
-                                for(var i=0;i<data.pdf.length;i++){
-                                    wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
-                                }
-                                $("#showModal").find("#InputFileWord").html(wordStr)
-                            }
-                            // $("#showModal").find("#InputFileWord").text(data.word[0].name)
-                            // $("#showModal").find("#InputFileWord").attr('href',data.word[0].path)
-                            $("#showModal").modal('show')
-                        }
-                    });
-                }else {
-                    var id = $(this).data('id')
-                    $.ajax({
+            var type = $(this).parent().parent().find("td").eq(2).text()
+            console.log($(this).parent().parent().find("td").eq(2).text())
+            if(type === '自主'){
+                var id = $(this).data('id')
+                $.ajax({
                     type:'GET',
-                    url:'./detailsysactivity',
+                    url:'./detailuseractivity',
                     data:{'id':id},
                     dataType:'json',
                     async: false,
                     cache: false,
                     contentType: 'application/json',
                     success:function(data){
-                        $("#showModal2").find("#name2").val(data.name)
-                        $("#showModal2").find("#showtype2").val(data.type)
-                        $("#showModal2").find("#showstarttime2").val(data.begintime)
-                        $("#showModal2").find("#showendtime2").val(data.endtime)
-                        $("#showModal2").find("#showcontent2").val(data.main)
-                        $("#showModal2").find("#attenduser").val(data.user)
-                        $("#showModal2").modal('show')
+                        $("#showModal").find("#name").val(data.name)
+                        $("#showModal").find("#showtype").val(data.type)
+                        $("#showModal").find("#showstarttime").val(data.begintime)
+                        $("#showModal").find("#showendtime").val(data.endtime)
+                        $("#showModal").find("#showcontent").val(data.main)
+                        $("#showModal").find("#attenduser").val(data.user)
+                        var videoStr = ''
+                        if(data.video.length >0){
+                            for(var i=0;i<data.video.length;i++){
+                                videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
+                            }
+                            $("#showModal").find("#InputFileVedio").html(videoStr)
+                        }
+                        var audioStr = ''
+                        if(data.music.length >0){
+                            for(var i=0;i<data.music.length;i++){
+                                audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
+                            }
+                            $("#showModal").find("#InputFileAudio").html(audioStr)
+                        }
+                        // $("#showModal").find("#InputFileAudio").text(data.music[0].name)
+                        // $("#showModal").find("#InputFileAudio").attr('href',data.music[0].path)
+                        var imageStr = ''
+                        if(data.music.length >0){
+                            for(var i=0;i<data.image.length;i++){
+                                imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
+                            }
+                            $("#showModal").find("#InputFileImage").html(imageStr)
+                        }
+                        // $("#showModal").find("#InputFileImage").text(data.image[0].name)
+                        // $("#showModal").find("#InputFileImage").attr('href',data.image[0].path)
+                        var pdfStr = ''
+                        if(data.pdf.length >0){
+                            for(var i=0;i<data.pdf.length;i++){
+                                pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
+                            }
+                            $("#showModal").find("#InputFilePDF").html(pdfStr)
+                        }
+                        // $("#showModal").find("#InputFilePDF").text(data.pdf[0].name)
+                        // $("#showModal").find("#InputFilePDF").attr('href',data.pdf[0].path)
+                        var wordStr = ''
+                        if(data.word.length >0){
+                            for(var i=0;i<data.pdf.length;i++){
+                                wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
+                            }
+                            $("#showModal").find("#InputFileWord").html(wordStr)
+                        }
+                        // $("#showModal").find("#InputFileWord").text(data.word[0].name)
+                        // $("#showModal").find("#InputFileWord").attr('href',data.word[0].path)
+                        $("#showModal").modal('show')
                     }
                 });
+            }else {
+                var id = $(this).data('id')
+                $.ajax({
+                type:'GET',
+                url:'./detailsysactivity',
+                data:{'id':id},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    $("#showModal2").find("#name2").val(data.name)
+                    $("#showModal2").find("#showtype2").val(data.type)
+                    $("#showModal2").find("#showstoptime").val(data.stoptime)
+                    $("#showModal2").find("#showstarttime2").val(data.begintime)
+                    $("#showModal2").find("#showendtime2").val(data.endtime)
+                    $("#showModal2").find("#showcontent2").val(data.main)
+                    $("#showModal2").find("#attenduser").val(data.user)
+                    $("#export-foot").empty()
+                    var strPass = '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+                      +'<button type="button" class="btn btn-success exportExcel" data-dismiss="modal" data-id="' + id + '">导出报名表</button>'
+                      +'<button type="button" class="btn btn-danger code" data-dismiss="modal" data-id="' + id + '">生成二维码</button>'
+                    $("#export-foot").html(strPass);
+                    $("#showModal2").modal('show')
                 }
+            });
+            }
+        })
+        // 修改活动
+        $("#mytable").on("click", ".user-active-modify", function () {
+            $("#save").attr("data-id",$(this).data('id'));
+            $.ajax({
+                type:'GET',
+                url:'./detailsysactivity',
+                data:{'id':$(this).data('id')},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    console.log('detailactivity',data)
+                    $("#editModal").find("#editname").val(data.name)
+                    $("#editModal").find("#edittype").val(data.type)
+                    $("#editModal").find("#editstoptime").attr('value',data.stoptime.split(' ')[0])
+                    $("#editModal").find("#editbegintime").attr('value',data.begintime.split(' ')[0])
+                    $("#editModal").find("#editendtime").attr('value',data.endtime.split(' ')[0])
+                    $("#editModal").find("#editcontent").val(data.main)
+                    $("#editModal").modal('show')
+                }
+            });
+            $("#save").click(function() {
+                console.log(1111)
+                var id = $(this).data("id");
+                let name = $('#editname').val();
+                let stoptime = $('#editstoptime').val();
+                let begintime = $('#editbegintime').val();
+                let endtime = $('#editendtime').val();
+                let main = $('#editcontent').val();
+                let type = $('#edittype').val();
+                s='./updatesysactivity?id='+id+'&name='+name+'&type='+type+'&begintime='+begintime+'&endtime='+endtime+'&stoptime='+stoptime+'&main='+main
+                $.ajax({
+                    type: "POST",
+                    url: s,
+                    // data:{
+                    //     name:document.getElementById("editname").value,
+                    //     type:document.getElementById("edittype").value,
+                    //     stoptime:document.getElementById("editstoptime").value,
+                    //     begintime:document.getElementById("editbegintime").value,
+                    //     endtime:document.getElementById("editendtime").value,
+                    //     main:document.getElementById("editcontent").value,
+                    // },
+                    contentType: false,
+                    processData: false,
+                    success:function(re){
+                        Flush();
+                        Toast(re.status);
+                        init();
+                    }
+                });
             })
+            function Flush(){
+                $('#editname').val('');
+                $('#editstoptime').val('');
+                $('#editbegintime').val('');
+                $('#editendtime').val('');
+                $('#editcontent').val('');
+                $('#edittype').val('');
+            };
+            function Toast(status){
+            if(status==true){
+                msg="修改成功！";
+            }else{
+                msg="修改失败！";
+            }
+            var m = document.createElement('div');
+            m.innerHTML = msg;
+            m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";
+            document.body.appendChild(m);
+            setTimeout(function() {
+                var d = 0.5;
+                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                m.style.opacity = '0';
+                setTimeout(function() { document.body.removeChild(m) }, d * 1000);
+            });
+        };
+        })
+        // 导出报名表
+        $("#export-foot").on('click', '.exportExcel', function () {
+            var id = $(this).data('id')
+                $.ajax({
+                    type:'GET',
+                    url:'./xlsxsysactivity',
+                    data:{'id':id},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        console.log(data)
+                    }
+                });
+        })
+        // 生成二维码
+        $("#export-foot").on('click', '.code', function () {
+            var id = $(this).data('id')
+            $.ajax({
+                type:'GET',
+                url:'./ewmsysactivity',
+                data:{'id':id},
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    console.log(1234)
+                }
+            });
+        })
     });
 </script>
 </body>

@@ -29,15 +29,15 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：管理员</a></li>
                             <li role="separator" class="divider"></li>
@@ -52,7 +52,6 @@
         </div>
     </div>
 </nav>
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 sidebar">
@@ -114,6 +113,12 @@
                 </div>
 
                 <div class="card">
+                   <div class="card-header">
+                     <a class="collapsed card-link" href="('main.managereportuser')}}">报告管理</a>
+                   </div>
+                </div>
+
+                <div class="card">
                   <div class="card-header">
                     <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
                   </div>
@@ -133,6 +138,8 @@
                                         data-target="#addModal">添加</button>
                                 <button type="button" class="btn btn-outline-primary" data-toggle="modal"
                                         data-target="#addModal2" style="margin-left: 5px">批量导入</button>
+                                <button type="button" class="btn btn-outline-primary" id="userout"
+                                        style="margin-left: 5px">导出用户</button>
                             </form>
                         </nav>
                     </div>
@@ -167,8 +174,8 @@
                         <thead>
                             <tr>
                                 <th>序号</th>
-                                <th>单位名称</th>
-                                <th>密码</th>
+                                <th>用户名</th>
+                                <th>初始密码</th>
                                 <th>最后活动时间</th>
                                 <th>状态</th>
                                 <th>操作</th>
@@ -183,7 +190,6 @@
                                 <a href="#" class="page-link" tabindex="-1">前一页</a>
                             </li>
                             <li class="page-item"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item"><a href="#" class="page-link">2</a></li>
                             <li class="page-item"> <a href="#" class="page-link">下一页</a></li>
                         </ul>
                     </nav>
@@ -195,7 +201,7 @@
 
 <!-- 添加模态框 #addModal -->
 <form class="form-inline">
-    <div class="modal fade" id="addModal">
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -205,12 +211,33 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="username" class="control-label" style="display: inline"
-                               >单位名称：</label>
+                        <label for="name" class="control-label" style="display: inline"
+                               >单位:</label>
                         <div class="col-sm-9" style="display: inline-block; width: 100%">
-                            <i class="fa fa-user fa-lg"></i>
-                            <input type="text" class="form-control " style="width: calc(100% - 20px)" name="username"
-                                   id="username" placeholder="请设置账号">
+                            <i class="fa fa-user" style="font-size: large"></i>
+                            <input type="text" class="form-control " style="width: calc(100% - 30px)" name="name"
+                                   id="name" placeholder="请输入单位名称" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="email" class="control-label">邮箱:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            <input class="form-control" id="email" style="width: calc(100% - 30px)" placeholder="请输入邮箱">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="phone" class="control-label">电话: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <i class="fa fa-phone fa-lg" aria-hidden="true" style="font-size: large"></i>
+                            <input class="form-control" id="phone" style="width: calc(100% - 30px)" placeholder="请输入联系电话">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="address" class="control-label">地址: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <i class="fa fa-map-marker fa-lg" aria-hidden="true" style="font-size: x-large"></i>
+                            <input class="form-control" id="address" style="width: calc(100% - 30px)" placeholder="请输入地址">
                         </div>
                     </div>
                 </div>
@@ -228,10 +255,9 @@
     </div>
 </form>
 
-<!-- 添加模态框 #addModal2 -->
-<form class="form-inline">
+<!-- 批量添加模态框 #addModal2 -->
     <div class="modal fade" id="addModal2">
-        <div class="modal-dialog">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">批量添加用户</h4>
@@ -239,13 +265,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="add-modal" enctype='multipart/form-data'>
-                    <div class="form-group">
-                        <div class="col-sm-9" style="display: inline-block; width: 100%">
-<!--                            <i class="fa fa-user fa-lg"></i>-->
-                            <input type="file" class="form-control-file" id="excelFile">
+                    <form id="addexcel" enctype='multipart/form-data'>
+                        <div class="form-group">
+                            <label for="excelFile" class="control-label">导入excel文件:</label>
+                            <div class="col-sm-9" style="display: inline-block; width: 100%">
+    <!--                            <i class="fa fa-user fa-lg"></i>-->
+                                <input type="file" multiple="" name="excel" id="excelFile" accept="application/vnd.ms-excel">
+                            </div>
                         </div>
-                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -259,7 +286,6 @@
             </div>
         </div>
     </div>
-</form>
 
 <!-- 删除模态框 #delModal -->
 <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -284,7 +310,7 @@
     $(document).ready(function(){
         var dpage=1
         var pages=1
-        var per_page=10
+        var per_page=5
         var d_per_page=per_page
         var idz=new Array(per_page);
         $.ajax({
@@ -304,17 +330,33 @@
                 d_per_page=data.item.length
                 for (let index = 0; index < data.item.length; index++) {
                 idz[index]=data.item[index].id
-                if(data.item[index].status === 1){
-                    var sta = '正式用户';
+                switch (data.item[index].status)
+                {
+                    case 0:
+                        var sta = '新用户';
+                        break;
+                    case 1:
+                        var sta = '未激活';
+                        break;
+                    case 2:
+                        var sta = '正式用户';
+                        break;
+                    case 3:
+                        var sta = '考核未通过';
+                        break;
+                }
+                /*if(data.item[index].status === 0){
+                    var sta = '新用户';
                 }else {
                     var sta = '新用户';
-                }
+                }*/
                 str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
                 }
                 $("#tableText").html(str);
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -335,16 +377,16 @@
                 }
             }
         });
+        // 确认删除
         $("#del-foot").on('click', '.del', function () {
                 var id = $(this).attr("id");
-                //$("#table").find("tr").remove();
                 if(idz[0]==id){
                     dpage=dpage-1;
                 }
                 $.ajax({
                     type:'GET',
                     url:'./deleteuser',
-                    data:{'page':dpage,'per_page':per_page,'id':id},//
+                    data:{'page':dpage,'per_page':per_page,'id':id},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -359,17 +401,33 @@
                         d_per_page=data.item.length;
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                        if(data.item[index].status === 1){
+                            switch (data.item[index].status)
+                            {
+                                case 0:
+                                    var sta = '新用户';
+                                    break;
+                                case 1:
+                                    var sta = '未激活';
+                                    break;
+                                case 2:
+                                    var sta = '正式用户';
+                                    break;
+                                case 3:
+                                    var sta = '考核未通过';
+                                    break;
+                            }
+                        /*if(data.item[index].status === 1){
                             var sta = '正式用户';
                         }else {
                             var sta = '新用户';
-                        }
+                        }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -420,17 +478,33 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                        if(data.item[index].status === 1){
+                            switch (data.item[index].status)
+                            {
+                                case 0:
+                                    var sta = '新用户';
+                                    break;
+                                case 1:
+                                    var sta = '未激活';
+                                    break;
+                                case 2:
+                                    var sta = '正式用户';
+                                    break;
+                                case 3:
+                                    var sta = '考核未通过';
+                                    break;
+                            }
+                        /*if(data.item[index].status === 1){
                             var sta = '正式用户';
                         }else {
                             var sta = '新用户';
-                        }
+                        }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -476,17 +550,33 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                        if(data.item[index].status === 1){
+                            switch (data.item[index].status)
+                            {
+                                case 0:
+                                    var sta = '新用户';
+                                    break;
+                                case 1:
+                                    var sta = '未激活';
+                                    break;
+                                case 2:
+                                    var sta = '正式用户';
+                                    break;
+                                case 3:
+                                    var sta = '考核未通过';
+                                    break;
+                            }
+                        /*if(data.item[index].status === 1){
                             var sta = '正式用户';
                         }else {
                             var sta = '新用户';
-                        }
+                        }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta+
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -531,18 +621,33 @@
                         d_per_page=data.item.length
                         for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                            console.log(idz[index])
-                        if(data.item[index].status === 1){
+                            switch (data.item[index].status)
+                            {
+                                case 0:
+                                    var sta = '新用户';
+                                    break;
+                                case 1:
+                                    var sta = '未激活';
+                                    break;
+                                case 2:
+                                    var sta = '正式用户';
+                                    break;
+                                case 3:
+                                    var sta = '考核未通过';
+                                    break;
+                            }
+                      /*  if(data.item[index].status === 1){
                             var sta = '正式用户';
                         }else {
                             var sta = '新用户';
-                        }
+                        }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -568,18 +673,106 @@
                 $("#del-foot").html(strdel);
                 $("#delModal").modal('show');
             });
+            //重置密码
+            let s="#setPw"+index
+            $('#tableText').on('click',s,function(){
+                var id = idz[index];
+                console.log(id,11)
+                if (confirm('确定重置？')){
+                    $.ajax({
+                    url:'./setpassword',
+                    type:'get',
+                    data:{'page':dpage,'per_page':per_page,'id':id},
+                    success:function(data){
+                        console.log('data:',data,username);
+                        $.ajax({
+                            type:'GET',
+                            url:'./searchuser',
+                            data:{'page':dpage,'per_page':per_page},
+                            dataType:'json',
+                            async: false,
+                            cache: false,
+                            contentType: 'application/json',
+                            success:function(data){
+                                pages = data.zpage;
+                                let total = data.total;
+                                dpage = data.dpage;
+                                let activity = data.item;
+                                let str=""
+                                d_per_page=data.item.length
+                                for (let index = 0; index < data.item.length; index++) {
+                                idz[index]=data.item[index].id
+                                    switch (data.item[index].status)
+                                    {
+                                        case 0:
+                                            var sta = '新用户';
+                                            break;
+                                        case 1:
+                                            var sta = '未激活';
+                                            break;
+                                        case 2:
+                                            var sta = '正式用户';
+                                            break;
+                                        case 3:
+                                            var sta = '考核未通过';
+                                            break;
+                                    }
+                              /*  if(data.item[index].status === 1){
+                                    var sta = '正式用户';
+                                }else {
+                                    var sta = '新用户';
+                                }*/
+                                str += "<tr><td>" + data.item[index].number +
+                                            "</td><td>" + data.item[index].username +
+                                            "</td><td>" + data.item[index].password +
+                                            "</td><td>" + data.item[index].lasttime +
+                                            "</td><td>" + sta +
+                                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                                }
+                                $("#tableText").html(str);
+                                let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
+                                strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>"
+                                for(let index=2;index<=pages;index++){
+                                    strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
+                                }
+                                strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
+                                $("#page-li").html(strli);
+                                let s="#li"+dpage
+                                $(s).css("border-color","blue");
+                                if(dpage<pages){
+                                    let r=dpage+1
+                                    let rs="#li"+r
+                                    $(rs).css("border-left-color","blue");
+                                }else{
+                                    $("#next").css("border-left-color","blue");
+                                }
+                            }
+                        });
+            }
+            })
+                }
+                // $("#del-foot").empty();
+                // var strdel = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'
+                //     + '<button id='+ idz[index] +' type="button" class="btn btn-danger del" data-dismiss="modal">删除</button>'
+                // $("#del-foot").html(strdel);
+                // $("#delModal").modal('show');
+            });
         }
+        //添加用户
         $('#save').click(function (){
             $.ajax({
                 url:'./adduser',
                 type:'get',
-                // data:$("#addModal form").serialize(),
                 data:{
-                    username:document.getElementById("username").value
+                    name:document.getElementById("name").value,
+                    email:document.getElementById("email").value,
+                    phone:document.getElementById("phone").value,
+                    address:document.getElementById("address").value
                 },
                 success:function(data){
-                    console.log('data:',data,username);
-                    $("#addModal").modal("hide")
+                    console.log('data:',data,name);
+                    $("#addModal").modal("hide");
                     $.ajax({
                         type:'GET',
                         url:'./searchuser',
@@ -597,17 +790,33 @@
                             d_per_page=data.item.length
                             for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                            if(data.item[index].status === 1){
+                                switch (data.item[index].status)
+                                {
+                                    case 0:
+                                        var sta = '新用户';
+                                        break;
+                                    case 1:
+                                        var sta = '未激活';
+                                        break;
+                                    case 2:
+                                        var sta = '正式用户';
+                                        break;
+                                    case 3:
+                                        var sta = '考核未通过';
+                                        break;
+                                }
+                          /*  if(data.item[index].status === 1){
                                 var sta = '正式用户';
                             }else {
                                 var sta = '新用户';
-                            }
+                            }*/
                             str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].username +
                                         "</td><td>" + data.item[index].password +
                                         "</td><td>" + data.item[index].lasttime +
                                         "</td><td>" + sta +
-                                        "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                                        "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
                             }
                             $("#tableText").html(str);
                             let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -628,12 +837,13 @@
                             }
                         }
                     });
-                    location.reload()
             }
             })
         })
+        //批量导入
         $('#exceladduser').click(function (){
-            var formData = new FormData($("#add-modal")[0]);
+            var formData = new FormData($("#addexcel")[0]);
+            console.log(formData);
             $.ajax({
                 type:'POST',
                 data:formData,
@@ -641,13 +851,13 @@
                 contentType: false,
                 processData: false,
                 success:function(data){
-                    console.log(1111);
-                    console.log(formData);
-                    $("#addModal2").modal("hide")
+                    console.log(data);
+                    $("#addModal2").modal("hide");
+                    // alert('添加成功');
                     $.ajax({
                         type:'GET',
                         url:'./searchuser',
-                        data:{'page':1,'per_page':per_page},
+                        data:{'page':dpage,'per_page':per_page},
                         dataType:'json',
                         async: false,
                         cache: false,
@@ -661,17 +871,33 @@
                             d_per_page=data.item.length
                             for (let index = 0; index < data.item.length; index++) {
                             idz[index]=data.item[index].id
-                            if(data.item[index].status === 1){
+                                switch (data.item[index].status)
+                                {
+                                    case 0:
+                                        var sta = '新用户';
+                                        break;
+                                    case 1:
+                                        var sta = '未激活';
+                                        break;
+                                    case 2:
+                                        var sta = '正式用户';
+                                        break;
+                                    case 3:
+                                        var sta = '考核未通过';
+                                        break;
+                                }
+                           /* if(data.item[index].status === 1){
                                 var sta = '正式用户';
                             }else {
                                 var sta = '新用户';
-                            }
+                            }*/
                             str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].username +
                                         "</td><td>" + data.item[index].password +
                                         "</td><td>" + data.item[index].lasttime +
                                         "</td><td>" + sta +
-                                        "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button>" + "</tr>";
+                                        "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                                "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
                             }
                             $("#tableText").html(str);
                             let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -692,9 +918,21 @@
                             }
                         }
                     });
-                    // location.reload()
             }
             })
+        })
+        //导出用户
+        $("#userout").on('click', function () {
+                $.ajax({
+                    type:'GET',
+                    url:'./userout',
+                    // data:{'id':id},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                });
+                alert('导出成功')
         })
     });
 </script>
