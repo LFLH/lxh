@@ -32,11 +32,11 @@ def searchdeclare():
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
-        if declare.status == 0:
+        if items[i].status == 0:
             if items[i].endtime>datetime.datetime.now():
-                status=1#申报未过期
+                status=0#申报未过期
             else:
-                status=0#申报过期
+                status=1#申报过期
         else:
             status=2#未启用的申报，即被作废的申报
         # 返回用户id，用户名，密码，最后操作时间，状态
@@ -86,9 +86,12 @@ def updatedeclare():
     begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     declare = Declare.query.filter(Declare.id == id).all()[0]
-    chatime =datetime.datetime.now()-declare.endtime
-    chatime=chatime.days
-    if chatime>1:
+     # chatime =datetime.datetime.now()-declare.endtime
+    # chatime=chatime.days
+    # if chatime>1:
+    if datetime.datetime.now() > declare.endtime:
+        return Response(json.dumps({'status': False}), mimetype='application/json')
+    if declare.status != 0:
         return Response(json.dumps({'status': False}), mimetype='application/json')
     #修改申报信息
     else:
@@ -116,9 +119,10 @@ def deletedeclare():
     else:
         id = request.form.get('id')
     declare = Declare.query.filter(Declare.id == id).all()[0]
-    chatime = datetime.datetime.now() - declare.endtime
-    chatime = chatime.days
-    if chatime > 1:#过期申报
+     # chatime = datetime.datetime.now() - declare.endtime
+    # chatime = chatime.days
+    # if chatime > 1:#过期申报
+    if datetime.datetime.now() > declare.endtime:
         return Response(json.dumps({'status': False}), mimetype='application/json')
     else:
         udeclare = UDeclare.query.join(DUDC).join(Declare).filter(Declare.id == declare.id).count()

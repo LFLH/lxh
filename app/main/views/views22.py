@@ -28,11 +28,13 @@ def getuser():
 @main.route('/setuser',methods=['GET','POST'])
 def setuser():
     if request.method == "GET":
+        name = request.args.get('name')
         email = request.args.get('email')
         phone = request.args.get('phone')
         address = request.args.get('address')
         password = request.args.get('password')
     else:
+        name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
         address = request.form.get('address')
@@ -41,6 +43,7 @@ def setuser():
     userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]
     #修改用户信息
+    user.name=name
     user.email=email
     user.phone=phone
     user.address=address

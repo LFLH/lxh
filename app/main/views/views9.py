@@ -123,6 +123,17 @@ def exceladduser():
                     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
+#查看用户信息
+@main.route('/detailuser',methods=['GET', 'POST'])
+def detailuser():
+    if request.method == "GET":
+        id = request.args.get('id')
+    else:
+        id = request.form.get('id')
+    user=User.query.filter(User.id==id).all()[0]
+    users={'username':user.username,'name':user.name,'email':user.email,'phone':user.phone,'address':user.address,'password':user.password,'type':user.type,'status':user.checked}
+    return Response(json.dumps(users), mimetype='application/json')
+
 #删除用户
 @main.route('/deleteuser',methods=['GET', 'POST'])
 def deleteuser():

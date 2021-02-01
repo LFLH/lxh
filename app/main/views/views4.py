@@ -36,7 +36,6 @@ def searchdeclareuser():
         #获取对应的申报任务
         declare=Declare.query.join(DUDC).join(UDeclare).filter(UDeclare.id==items[i].id).all()[0]
         #用户申报状态
-        # user = User.query.filter(User, id == items[i].userid).all()[0]
         user = User.query.filter(User.id == items[i].userid).all()[0]
         if user.checked==2:
             if declare.status==0:

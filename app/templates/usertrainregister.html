@@ -39,17 +39,17 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
-        <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+        <div class="navbar-header" style="width: 100%;">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }}</a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎：{{ name }}</a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
-                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通</a></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
                             <li role="separator" class="divider"></li>
@@ -62,9 +62,7 @@
         </div>
     </div>
 </nav>
-<!--<script>
-    let username = '{{username}}';
-</script>-->
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 sidebar">
@@ -94,7 +92,7 @@
 
                 <div class="card">
                   <div class="card-header">
-                      <a class="collapsed card-link" href="#">培训报名</a>
+                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
                   </div>
                 </div>
 
@@ -107,6 +105,12 @@
                 <div class="card">
                   <div class="card-header">
                     <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.user_setting')}}">账户信息</a>
                   </div>
                 </div>
             </div>
@@ -226,7 +230,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="update" enctype='multipart/form-data'>
+                <form id="edit" enctype='multipart/form-data'>
                     <div class="form-group">
                         <label for="InputFilePDF" class="control-label">PDF文件:</label>
                         <div class="col-sm-10">
@@ -261,8 +265,8 @@
         var dpage = 1 //当前页
         var pages = 1 //总页数
         var per_page = 10 //每页显示
-        var d_per_page = 10
-        var idz = new Array(10);
+        var d_per_page = per_page
+        var idz = new Array(per_page);
         init();
         function init(){
             $.ajax({
@@ -286,6 +290,9 @@
                             var sta = '未报名';
                             break;
                          case 1:
+                            var sta = '已过期';
+                            break;
+                        case 2:
                             var sta = '已报名';
                             break;
                     }
@@ -294,7 +301,7 @@
                         "</td><td>" + data.item[index].begintime +
                         "</td><td>" + data.item[index].endtime +
                         "</td><td>" + sta +
-                        "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                        "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
                         "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
                 }
                 $("#tableText").html(str);
@@ -339,11 +346,15 @@
         })
         // 报名培训
         $("#mytable").on("click", ".user-active-apply", function () {
-            $("#apply-centain").attr("data-id",$(this).data('id'));
-            $("#applyModal").modal('show')
-        })
-        $("#mytable").on("click", ".user-active-apply", function () {
-            $("#apply-centain").click(function() {
+            var status = $(this).parent().parent().find("td").eq(4).text()
+            if (status=='已报名'){
+                alert('您已报名')
+            }else if (status=='已过期'){
+                alert('该培训已过期')
+            }else {
+                $("#apply-centain").attr("data-id",$(this).data('id'));
+                $("#applyModal").modal('show')
+                $("#apply-centain").click(function() {
                 var id = $(this).data("id");
                 s='./bmsystrain?id='+id
                 var formData = new FormData($("#edit")[0]);
@@ -361,35 +372,29 @@
                     }
                 });
             })
-            function Flush(){
-            $('#name').val('');
-            $('#starttime').val('');
-            $('#endtime').val('');
-            $('#content').val('');
-            $('#type').val('');
-            $('#exampleInputFileVedio').val('');
-            $('#exampleInputFileAudio').val('');
-            $('#exampleInputFileImage').val('');
-            $('#exampleInputFilePDF').val('');
-            $('#exampleInputFileWord').val('');
-        };
-            function Toast(status){
-            if(status==true){
-                msg="报名成功！";
-            }else{
-                msg="报名失败！";
+                function Flush(){
+                    $('#InputFilePDF').val('');
+                    $('#InputFileWord').val('');
+                    $('#InputFileImage').val('');
+                };
+                function Toast(status){
+                    if(status==true){
+                        msg="报名成功！";
+                    }else{
+                        msg="报名失败！";
+                    }
+                    var m = document.createElement('div');
+                    m.innerHTML = msg;
+                    m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";
+                    document.body.appendChild(m);
+                    setTimeout(function() {
+                        var d = 0.5;
+                        m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                        m.style.opacity = '0';
+                        setTimeout(function() { document.body.removeChild(m) }, d * 1000);
+                    });
+                };
             }
-            var m = document.createElement('div');
-            m.innerHTML = msg;
-            m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";
-            document.body.appendChild(m);
-            setTimeout(function() {
-                var d = 0.5;
-                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
-                m.style.opacity = '0';
-                setTimeout(function() { document.body.removeChild(m) }, d * 1000);
-            });
-        };
         })
 
         // 前一页
@@ -422,10 +427,13 @@
                         let str = ""
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
-                                 case 0:
+                                case 0:
                                     var sta = '未报名';
                                     break;
-                                 case 1:
+                                case 1:
+                                    var sta = '已过期';
+                                    break;
+                                case 2:
                                     var sta = '已报名';
                                     break;
                             }
@@ -434,7 +442,7 @@
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + sta +
-                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button>" +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button> " +
                                 "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
@@ -481,10 +489,13 @@
                         let str = ""
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
-                                 case 0:
+                                case 0:
                                     var sta = '未报名';
                                     break;
-                                 case 1:
+                                case 1:
+                                    var sta = '已过期';
+                                    break;
+                                case 2:
                                     var sta = '已报名';
                                     break;
                             }
@@ -493,7 +504,7 @@
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + sta +
-                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
                                 "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
@@ -529,10 +540,13 @@
                         let str = ""
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
-                                 case 0:
+                                case 0:
                                     var sta = '未报名';
                                     break;
-                                 case 1:
+                                case 1:
+                                    var sta = '已过期';
+                                    break;
+                                case 2:
                                     var sta = '已报名';
                                     break;
                             }
@@ -541,7 +555,7 @@
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + sta +
-                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button>" +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button> " +
                                 "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
