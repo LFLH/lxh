@@ -83,10 +83,10 @@ def updatedeclare():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    # begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    # endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     declare = Declare.query.filter(Declare.id == id).all()[0]
-    # chatime =datetime.datetime.now()-declare.endtime
+     # chatime =datetime.datetime.now()-declare.endtime
     # chatime=chatime.days
     # if chatime>1:
     if datetime.datetime.now() > declare.endtime:
@@ -119,7 +119,7 @@ def deletedeclare():
     else:
         id = request.form.get('id')
     declare = Declare.query.filter(Declare.id == id).all()[0]
-    # chatime = datetime.datetime.now() - declare.endtime
+     # chatime = datetime.datetime.now() - declare.endtime
     # chatime = chatime.days
     # if chatime > 1:#过期申报
     if datetime.datetime.now() > declare.endtime:
@@ -145,17 +145,15 @@ def adddeclare():
         begintime = request.args.get('begintime')
         endtime = request.args.get('endtime')
         main = request.args.get('main')
-        createtime = request.args.get('createtime')
     else:
         name = request.form.get('name')
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-        createtime = request.form.get('createtime')
     begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     #创建申报
-    declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main,createtime=createtime)
+    declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(declare)
     db.session.commit()
     #设置新用户提交时间

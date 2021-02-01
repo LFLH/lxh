@@ -12,7 +12,7 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
-#列表显示申报任务
+#列表显示申请任务
 @main.route('/searchtrain',methods=['GET','POST'])
 def searchtrain():
     if request.method == "GET":
@@ -31,13 +31,8 @@ def searchtrain():
     item = []
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
-        # if items[i].endtime>datetime.datetime.now():
-        #     status=1#培训未过期
-        # else:
-        #     status=0#培训过期
-        # if train.status == 0:
         if items[i].status == 0:
-            if items[i].endtime > datetime.datetime.now():
+            if items[i].endtime>datetime.datetime.now():
                 status=0#培训未过期
             else:
                 status=1#培训过期
@@ -60,7 +55,6 @@ def detailtrain():
     else:
         #id = request.json.get('id')
         id = request.form.get('id')
-    print("id:",id)
     train = Train.query.filter(Train.id==id).all()[0]
     utrain=UTrain.query.join(TUT).join(Train).filter(Train.id==train.id).all()
     user=[]
@@ -88,8 +82,8 @@ def updatetrain():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    # begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    # endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     train = Train.query.filter(Train.id == id).all()[0]
     # chatime =datetime.datetime.now()-train.endtime
     # chatime=chatime.days
@@ -104,7 +98,6 @@ def updatetrain():
         train.begintime=begintime
         train.endtime=endtime
         train.main=main
-        print("train.main",train.main)
         db.session.add(train)
         db.session.commit()
         return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -117,7 +110,7 @@ def deletetrain():
     else:
         id = request.form.get('id')
     train = Train.query.filter(Train.id == id).all()[0]
-    # chatime = datetime.datetime.now() - train.endtime
+     # chatime = datetime.datetime.now() - train.endtime
     # chatime = chatime.days
     # if chatime > 0:#过期申请
     if datetime.datetime.now() > train.endtime:
@@ -143,17 +136,15 @@ def addability():
         begintime = request.args.get('begintime')
         endtime = request.args.get('endtime')
         main = request.args.get('main')
-        createtime = request.args.get('createtime')
     else:
         name = request.form.get('name')
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-        createtime = request.form.get('createtime')
     begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     #创建能力提升培训
-    train=Train(name=name,begintime=begintime,endtime=endtime,main=main,createtime=createtime)
+    train=Train(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(train)
     db.session.commit()
     return Response(json.dumps({'status':True}), mimetype='application/json')
