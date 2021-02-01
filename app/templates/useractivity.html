@@ -33,29 +33,21 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation"
-     style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
-        <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+        <div class="navbar-header" style="width: 100%;">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ name }}</a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎：{{ name }}</a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span
-                                class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
-                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md"
-                                                                                      aria-hidden="true"></i>
-                                用户类型：普通</a></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user"
-                                                                                      aria-hidden="true"></i> 用户账号：{{
-                                username }}</a></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i
-                                    class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
+                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
                             <li role="separator" class="divider"></li>
                         </ul>
                     </li>
@@ -64,9 +56,7 @@
         </div>
     </div>
 </nav>
-<script>
-    let username = '{{username}}';
-</script>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 sidebar">
@@ -87,7 +77,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <a class="collapsed card-link" href="#">已提交活动</a>
+                        <a class="collapsed card-link" href="{{url_for('main.useractivity')}}">已提交活动</a>
                     </div>
                 </div>
 
@@ -119,6 +109,12 @@
                     <div class="card-header">
                         <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
                     </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="collapsed card-link" href="{{url_for('main.user_setting')}}">账户信息</a>
+                  </div>
                 </div>
             </div>
         </div>
@@ -262,68 +258,68 @@
                 <form id="edit" enctype='multipart/form-data'>
                     <!--<form method="POST" id="update" enctype='multipart/form-data'>-->
                     <div class="form-group">
-                        <label for="name" class="col-sm-2 control-label">活动名称:</label>
+                        <label for="editname" class="col-sm-2 control-label">活动名称:</label>
                         <div class="col-sm-5" style="padding-left: 20px;">
                             <input class="form-control" id="editname" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="type" class="col-sm-2 control-label">活动类型:</label>
+                        <label for="edittype" class="col-sm-2 control-label">活动类型:</label>
                         <div class="col-sm-5" style="padding-left: 20px;">
                             <input class="form-control" id="edittype" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="begintime" class="col-sm-3 control-label">活动起始时间:</label>
+                        <label for="editbegintime" class="col-sm-3 control-label">活动起始时间:</label>
                         <div class="col-md-4" style="padding-left: 20px;">
                             <input type="date" class="form-control" id="editbegintime" required value="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="endtime" class="col-sm-3 control-label">活动结束时间:</label>
+                        <label for="editendtime" class="col-sm-3 control-label">活动结束时间:</label>
                         <div class="col-md-4" style="padding-left: 20px;">
                             <input type="date" class="form-control" id="editendtime" required value="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="content" class="col-sm-3 control-label">活动具体内容:</label>
+                        <label for="editcontent" class="col-sm-3 control-label">活动具体内容:</label>
                         <div class="col-md-7" style="padding: 3px 0 0 20px;">
                             <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="editcontent"
                                       required></textarea>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="InputFileVedio" class="control-label">上传视频:</label>
-                        <div class="col-sm-10">
+                        <label for="editInputFileVedio" class="control-label">上传视频:</label>
+                        <div class="col-sm-10" >
                             <a id="FileVedio" href=""></a>
                             <input type="file" multiple="" name="video" id="editInputFileVedio" accept="video/*"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="InputFileAudio" class="control-label">上传音频:</label>
-                        <div class="col-sm-10" id="FileAudio">
-<!--                            <a href=""></a>-->
+                        <label for="editInputFileAudio" class="control-label">上传音频:</label>
+                        <div class="col-sm-10">
+                            <a id="FileAudio" href=""></a>
                             <input type="file" multiple="" name="music" id="editInputFileAudio" accept="audio/*"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="InputFileImage" class="control-label">上传图片:</label>
-                        <div class="col-sm-10" id="FileImage">
-<!--                            <a href=""></a>-->
+                        <label for="editInputFileImage" class="control-label">上传图片:</label>
+                        <div class="col-sm-10">
+                            <a id="FileImage" href=""></a>
                             <input type="file" multiple="" name="image" id="editInputFileImage" accept="image/*"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="InputFilePDF" class="control-label">上传PDF文件:</label>
-                        <div class="col-sm-10"  id="FilePDF">
-<!--                            <a href=""></a>-->
+                        <label for="editInputFilePDF" class="control-label">上传PDF文件:</label>
+                        <div class="col-sm-10">
+                            <a id="FilePDF" href=""></a>
                             <input type="file" multiple="" name="pdf" id="editInputFilePDF" accept="application/pdf"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="InputFileWord" class="control-label">上传word文件:</label>
-                        <div class="col-sm-10" id="FileWord">
-<!--                            <a href=""></a>-->
+                        <label for="editInputFileWord" class="control-label">上传word文件:</label>
+                        <div class="col-sm-10">
+                            <a id="FileWord" href=""></a>
                             <input type="file" multiple="" name="word" id="editInputFileWord"
                                    accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
                         </div>
@@ -366,11 +362,11 @@
     $(document).ready(function () {
         var dpage = 1 //当前页
         var pages = 1 //总页数
-        var per_page = 1 //每页显示
-        var d_per_page = 10
-        var idz = new Array(10);
+        var per_page = 10 //每页显示
+        var d_per_page = per_page
+        // var idz = new Array(10);
         init();
-        function init(){
+         function init(){
             $.ajax({
             type: 'GET',
             url: './showactivity',
@@ -389,7 +385,7 @@
                 for (let index = 0; index < data.item.length; index++) {
                     switch(data.item[index].status) {
                              case '0':
-                                var sta = '申请中';
+                                var sta = '审核中';
                                 break;
                              case '1':
                                 var sta = '驳回';
@@ -404,8 +400,8 @@
                         "</td><td>" + data.item[index].begintime +
                         "</td><td>" + data.item[index].endtime +
                         "</td><td>" + sta +
-                        "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                        "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button>" +
+                        "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
+                        "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button> " +
                         "<button data-toggle='modal' class='btn btn-danger btn-sm user-active-delete' data-id='" + data.item[index].id + "'>删除</button>" + "</tr>";
                 }
                 $("#tableText").html(str);
@@ -437,11 +433,12 @@
             }else{
                 $("#next").css("border-left-color","");
             }
-
+            var id = ''
+            id = $("#del-modal-centain").attr("data-id")
             $.ajax({
                 type:'GET',
                 url:'./deleteactivity',
-                data:{'page':pages,'per_page':per_page,'id':$(this).data('id')},
+                data:{'page':pages,'per_page':per_page,'id':id},
                 dataType:'json',
                 async: false,
                 cache: false,
@@ -453,7 +450,9 @@
             });
         })
         $("#mytable").on("click", ".user-active-delete", function () {
-            $("#del-modal-centain").attr("data-id",$(this).data('id'));
+            var id = ''
+            id = $(this).data('id')
+            $("#del-modal-centain").attr("data-id",id);
             $("#delModal").modal('show')
         })
         // 查看活动
@@ -480,12 +479,16 @@
                             videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
                         }
                         $("#showModal").find("#InputFileVedio").html(videoStr)
+                    }else {
+                        $("#showModal").find("#InputFileVedio").html(videoStr)
                     }
                     var audioStr = ''
                     if(data.music.length >0){
                         for(var i=0;i<data.music.length;i++){
                             audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
                         }
+                        $("#showModal").find("#InputFileAudio").html(audioStr)
+                    }else {
                         $("#showModal").find("#InputFileAudio").html(audioStr)
                     }
                     // $("#showModal").find("#InputFileAudio").text(data.music[0].name)
@@ -496,6 +499,8 @@
                             imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
                         }
                         $("#showModal").find("#InputFileImage").html(imageStr)
+                    }else {
+                        $("#showModal").find("#InputFileImage").html(imageStr)
                     }
                     // $("#showModal").find("#InputFileImage").text(data.image[0].name)
                     // $("#showModal").find("#InputFileImage").attr('href',data.image[0].path)
@@ -504,6 +509,8 @@
                         for(var i=0;i<data.pdf.length;i++){
                             pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
                         }
+                        $("#showModal").find("#InputFilePDF").html(pdfStr)
+                    }else {
                         $("#showModal").find("#InputFilePDF").html(pdfStr)
                     }
                     // $("#showModal").find("#InputFilePDF").text(data.pdf[0].name)
@@ -514,6 +521,8 @@
                             wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
                         }
                         $("#showModal").find("#InputFileWord").html(wordStr)
+                    }else {
+                        $("#showModal").find("#InputFileWord").html(wordStr)
                     }
                     // $("#showModal").find("#InputFileWord").text(data.word[0].name)
                     // $("#showModal").find("#InputFileWord").attr('href',data.word[0].path)
@@ -523,124 +532,141 @@
         })
         // 修改活动
         $("#mytable").on("click", ".user-active-modify", function () {
-            $("#save").attr("data-id",$(this).data('id'));
-            $.ajax({
-                type:'GET',
-                url:'./detailactivity',
-                data:{'id':$(this).data('id')},
-                dataType:'json',
-                async: false,
-                cache: false,
-                contentType: 'application/json',
-                success:function(data){
-                    console.log('detailactivity',data)
-                    $("#editModal").find("#editname").val(data.name)
-                    $("#editModal").find("#edittype").val(data.type)
-                    $("#editModal").find("#editbegintime").attr('value',data.begintime.split(' ')[0])
-                    $("#editModal").find("#editendtime").attr('value',data.endtime.split(' ')[0])
-                    $("#editModal").find("#editcontent").val(data.main)
-                    var videoStr = ''
-                    if(data.video.lengh >0){
-                        for(var i=0;i<data.video.length;i++){
-                            videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
-                        }
-                        $("#showModal").find("#FileVedio").prepend(videoStr)
-                    }
-                    var audioStr = ''
-                    if(data.music.length >0){
-                        for(var i=0;i<data.music.length;i++){
-                            audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
-                        }
-                        $("#showModal").find("#FileAudio").prepend(audioStr)
-                    }
-                    var imageStr = ''
-                    if(data.music.length >0){
-                        for(var i=0;i<data.image.length;i++){
-                            imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
-                        }
-                        $("#showModal").find("#FileImage").prepend(imageStr)
-                    }
-                    var pdfStr = ''
-                    if(data.pdf.length >0){
-                        for(var i=0;i<data.pdf.length;i++){
-                            pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
-                        }
-                        $("#showModal").find("#FilePDF").prepend(pdfStr)
-                    }
-                    var wordStr = ''
-                    if(data.word.length >0){
-                        for(var i=0;i<data.pdf.length;i++){
-                            wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
-                        }
-                        $("#showModal").find("#FileWord").prepend(wordStr)
-                    }
-                    // $("#editModal").find("#FileVedio").text(data.video[0].name)
-                    // $("#editModal").find("#FileVedio").attr('href',data.video[0].path)
-                    // $("#editModal").find("#FileAudio").text(data.music[0].name)
-                    // $("#editModal").find("#FileAudio").attr('href',data.music[0].path)
-                    // $("#editModal").find("#FileImage").text(data.image[0].name)
-                    // $("#editModal").find("#FileImage").attr('href',data.image[0].path)
-                    // $("#editModal").find("#FilePDF").text(data.pdf[0].name)
-                    // $("#editModal").find("#FilePDF").attr('href',data.pdf[0].path)
-                    // $("#editModal").find("#FileWord").text(data.word[0].name)
-                    // $("#editModal").find("#FileWord").attr('href',data.word[0].path)
-                    // $("#editModal").find("#editInputFileWord").val(data.word)
-                    $("#editModal").modal('show')
-                }
-            });
-            $("#save").click(function() {
-                console.log(1111)
-                var id = $(this).data("id");
-                let name = $('#editname').val();
-                let begintime = $('#editbegintime').val();
-                let endtime = $('#editendtime').val();
-                let main = $('#editcontent').val();
-                let type = $('#edittype').val();
-                s='./updateactivity?id='+id+'&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
-                var formData = new FormData($("#edit")[0]);
+            var status = $(this).parent().parent().find("td").eq(5).text()
+            if (status=='审核中'){
+                alert('该活动已在审核中')
+            }else {
+                $("#save").attr("data-id",$(this).data('id'));
                 $.ajax({
-                        type: "POST",
-                        data: formData,
-                        url: s,
-                        contentType: false,
-                        processData: false,
-                        success:function(re){
-                            console.log(2222),
-                            Flush();
-                            Toast(re.status);
-                            init();
+                    type:'GET',
+                    url:'./detailactivity',
+                    data:{'id':$(this).data('id')},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        console.log('detailactivity',data)
+                        $("#editModal").find("#editname").val(data.name)
+                        $("#editModal").find("#edittype").val(data.type)
+                        $("#editModal").find("#editbegintime").attr('value',data.begintime.split(' ')[0])
+                        $("#editModal").find("#editendtime").attr('value',data.endtime.split(' ')[0])
+                        $("#editModal").find("#editcontent").val(data.main)
+                        var videoStr = ''
+                        if(data.video.length >0){
+                            for(var i=0;i<data.video.length;i++){
+                                videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
+                            }
+                            $("#editModal").find("#FileVedio").html(videoStr)
+                        }else {
+                            $("#editModal").find("#FileVedio").html(videoStr)
                         }
-                    });
-            })
-            function Flush(){
-            $('#name').val('');
-            $('#starttime').val('');
-            $('#endtime').val('');
-            $('#content').val('');
-            $('#type').val('');
-            $('#exampleInputFileVedio').val('');
-            $('#exampleInputFileAudio').val('');
-            $('#exampleInputFileImage').val('');
-            $('#exampleInputFilePDF').val('');
-            $('#exampleInputFileWord').val('');
-        };
-            function Toast(status){
-            if(status==true){
-                msg="修改成功！";
-            }else{
-                msg="修改失败！";
+                        var audioStr = ''
+                        if(data.music.length >0){
+                            for(var i=0;i<data.music.length;i++){
+                                audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
+                            }
+                            $("#editModal").find("#FileAudio").html(audioStr)
+                        }else {
+                            $("#editModal").find("#FileAudio").html(audioStr)
+                        }
+                        var imageStr = ''
+                        if(data.music.length >0){
+                            for(var i=0;i<data.image.length;i++){
+                                imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
+                            }
+                            $("#editModal").find("#FileImage").html(imageStr)
+                        }else {
+                            $("#editModal").find("#FileImage").html(imageStr)
+                        }
+                        var pdfStr = ''
+                        if(data.pdf.length >0){
+                            for(var i=0;i<data.pdf.length;i++){
+                                pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
+                            }
+                            $("#editModal").find("#FilePDF").html(pdfStr)
+                        }else {
+                            $("#editModal").find("#FilePDF").html(pdfStr)
+                        }
+                        var wordStr = ''
+                        if(data.word.length >0){
+                            for(var i=0;i<data.pdf.length;i++){
+                                wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
+                            }
+                            $("#editModal").find("#FileWord").html(wordStr)
+                            // $("#editModal").find("#FileWord").prepend(wordStr)
+                        }else {
+                            $("#editModal").find("#FileWord").html(wordStr)
+                        }
+                        // $("#editModal").find("#FileVedio").text(data.video[0].name)
+                        // $("#editModal").find("#FileVedio").attr('href',data.video[0].path)
+                        // $("#editModal").find("#FileAudio").text(data.music[0].name)
+                        // $("#editModal").find("#FileAudio").attr('href',data.music[0].path)
+                        // $("#editModal").find("#FileImage").text(data.image[0].name)
+                        // $("#editModal").find("#FileImage").attr('href',data.image[0].path)
+                        // $("#editModal").find("#FilePDF").text(data.pdf[0].name)
+                        // $("#editModal").find("#FilePDF").attr('href',data.pdf[0].path)
+                        // $("#editModal").find("#FileWord").text(data.word[0].name)
+                        // $("#editModal").find("#FileWord").attr('href',data.word[0].path)
+                        // $("#editModal").find("#editInputFileWord").val(data.word)
+                        $("#editModal").modal('show')
+                    }
+                });
+                $("#save").click(function() {
+                    console.log(1111)
+                    var id = $(this).data("id");
+                    let name = $('#editname').val();
+                    let begintime = $('#editbegintime').val();
+                    let endtime = $('#editendtime').val();
+                    let main = $('#editcontent').val();
+                    let type = $('#edittype').val();
+                    s='./updateactivity?id='+id+'&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
+                    var formData = new FormData($("#edit")[0]);
+                    $.ajax({
+                            type: "POST",
+                            data: formData,
+                            url: s,
+                            contentType: false,
+                            processData: false,
+                            success:function(re){
+                                console.log(2222),
+                                Flush();
+                                Toast(re.status);
+                                init();
+                            }
+                        });
+                })
+                function Flush(){
+                    $('#editname').val('');
+                    $('#editbegintime').val('');
+                    $('#editendtime').val('');
+                    $('#editcontent').val('');
+                    $('#edittype').val('');
+                    $('#editInputFileVedio').val('');
+                    $('#editInputFileAudio').val('');
+                    $('#editInputFileImage').val('');
+                    $('#editInputFilePDF').val('');
+                    $('#editInputFileWord').val('');
+                };
+                function Toast(status){
+                if(status==true){
+                    msg="修改成功！";
+                }else{
+                    msg="修改失败！";
+                }
+                var m = document.createElement('div');
+                m.innerHTML = msg;
+                m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";
+                document.body.appendChild(m);
+                setTimeout(function() {
+                    var d = 0.5;
+                    m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+                    m.style.opacity = '0';
+                    setTimeout(function() { document.body.removeChild(m) }, d * 1000);
+                });
+            };
             }
-            var m = document.createElement('div');
-            m.innerHTML = msg;
-            m.style.cssText="width: 60%;min-width: 150px;opacity: 0.7;height: 30px;color: rgb(255, 255, 255);line-height: 30px;text-align: center;border-radius: 5px;position: fixed;top: 40%;left: 20%;z-index: 999999;background: rgb(0, 0, 0);font-size: 12px;";
-            document.body.appendChild(m);
-            setTimeout(function() {
-                var d = 0.5;
-                m.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
-                m.style.opacity = '0';
-                setTimeout(function() { document.body.removeChild(m) }, d * 1000);
-            });
-        };
+
             // $.ajax({
             //     type:'GET',
             //     url:'./updateactivity',
@@ -684,7 +710,7 @@
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
                              case '0':
-                                var sta = '申请中';
+                                var sta = '审核中';
                                 break;
                              case '1':
                                 var sta = '驳回';
@@ -699,8 +725,8 @@
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + sta +
-                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button>" +
-                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button>" +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm  user-active-view'  data-id='" + data.item[index].id + "'>查看</button> " +
+                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button> " +
                                 "<button data-toggle='modal' class='btn btn-danger btn-sm user-active-delete' data-id='" + data.item[index].id + "'>删除</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
@@ -747,7 +773,7 @@
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
                              case '0':
-                                var sta = '申请中';
+                                var sta = '审核中';
                                 break;
                              case '1':
                                 var sta = '驳回';
@@ -762,8 +788,8 @@
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + sta +
-                                "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button>" +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
+                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button> " +
                                 "<button data-toggle='modal' class='btn btn-danger btn-sm user-active-delete' data-id='" + data.item[index].id + "'>删除</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
@@ -800,7 +826,7 @@
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
                              case '0':
-                                var sta = '申请中';
+                                var sta = '审核中';
                                 break;
                              case '1':
                                 var sta = '驳回';
@@ -815,8 +841,8 @@
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + sta +
-                                "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
-                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button>" +
+                                "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
+                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button> " +
                                 "<button data-toggle='modal' class='btn btn-danger btn-sm user-active-delete' data-id='" + data.item[index].id + "'>删除</button>" + "</tr>";
                         }
                         $("#tableText").html(str);

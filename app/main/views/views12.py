@@ -33,7 +33,7 @@ def olduserall():
     userid=user['userid']
     year = str(datetime.datetime.now()).split('-')[0]
     jyear = year + '-01-01 00:00:00'
-    acount=Activity.query.filter(and_(Activity.userid==userid,Activity.updatetime>jyear)).count()
+    acount=Activity.query.filter(and_(Activity.userid==userid,Activity.updatetime>jyear,Activity.status!=3)).count()
     # 转保留一位小数的百分比
     ya, wa = zbfb(acount, count)
     a={"ya":ya,"wa":wa}
@@ -48,7 +48,7 @@ def olduserall():
     activitycount = []
     for i in range(12):
         # 按月查询
-        activity = Activity.query.filter(and_(Activity.updatetime >= month[i], Activity.updatetime < month[i + 1],Activity.userid==userid)).count()
+        activity = Activity.query.filter(and_(Activity.updatetime >= month[i], Activity.updatetime < month[i + 1],Activity.userid==userid,Activity.status!=3)).count()
         activitycount.append(activity)
     message=[]
     #被驳回的活动信息
@@ -59,7 +59,7 @@ def olduserall():
     #培训申请状态
     utrain=UTrain.query.filter(and_(UTrain.userid==userid,UTrain.type==0)).all()
     for ut in utrain:
-        train=Train.query.join(TUT).join(UTrain).filter(UTrain.id==ut.id).all()
+        train=Train.query.join(TUT).join(UTrain).filter(and_(UTrain.id==ut.id,Train.status==0)).all()
         if len(train)>0:
             if train[0].endtime>datetime.datetime.now():
                 s=train[0].name+"申请未通过"

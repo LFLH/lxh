@@ -147,9 +147,10 @@ def detailsysactivity():
     for users in userz:
         user.append(users.username)
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、用户组
-    da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user}
+    da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'stoptime':str(activity.stoptime),'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user}
     return Response(json.dumps(da), mimetype='application/json')
 
+#更新系统活动信息
 @main.route('/updatesysactivity',methods=['GET','POST'])
 def updatesysactivity():
     # 获取系统活动的活动名、活动类型、开始时间、结束时间、报名截止时间、活动内容
