@@ -120,7 +120,8 @@ def showrecord():
     count = (int(page) - 1) * int(per_page)
     for i in range(len(items)):
         # 用户报告状态
-        user = User.query.filter(User, id == items[i].userid).all()[0]
+        # user = User.query.filter(User, id == items[i].userid).all()[0]
+        user = User.query.filter(User.id == items[i].userid).all()[0]
         if user.checked == 1:
             if items[i].year == datetime.datetime.now().year:
                 status = items[i].status  # 1通过0未通过
