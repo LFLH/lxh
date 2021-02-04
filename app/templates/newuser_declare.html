@@ -54,7 +54,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎：{{ name }}</a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -75,14 +75,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-            <div class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
-                <div id="accordion" style="padding-left: 20px; padding-right: 20px">
-                    <div class="card">
-                        <div class="card-header">
-                            <a class="collapsed card-link" data-toggle="collapse" href="{{url_for('main.newuser')}}">新用户申报</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              新用户申报
+                            </a>
+                        </li>
+                    </ul>
+               </div>
              </div>
         </div>
         <div class="col-md-10" style="margin-top: 50px">
@@ -90,7 +93,7 @@
                 <h2 style="padding-top: 20px">新用户申报</h2>
                 <br>
                 <br>
-                <form id="newuser">
+                <form id="newuser" name="newuser">
                     <div class="form-group">
                         <div class="layui-upload">
                             <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 30px" id="testList">选择文件</button>
@@ -120,6 +123,7 @@
 </div>
 <script>
     $(function () {
+        var form = new FormData();
         //获取当前时间
         function fileTime(){
             function getNow(s) {
@@ -142,15 +146,16 @@
         var demoListView = $('#demoList'),
             uploadListIns = upload.render({
                 elem: '#testList',
-                url: '/adduserdeclare',
+                {#url: '/adduserdeclare',#}
                 accept: 'file',
                 exts: 'doc|docx|pdf',
                 multiple: true,
                 auto: false,
-                bindAction: '#testListAction',
+                {#bindAction: '#testListAction',#}
                 choose: function (obj) {
                     var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                    var file_time = fileTime();
+                    form.append("files", files);//保存每一个文件
+                    var file_time = fileTime();//获取上传文件的时间
                     //读取本地文件
                     obj.preview(function (index, file, result) {
                         var tr = $(['<tr id="upload-' + index + '">'
@@ -170,19 +175,49 @@
                         });
 
                         demoListView.append(tr);
+
                     });
                 },
-                done: function (res, index, upload) {
-                     if (res.status == true) {
-                         layer.msg("上传成功！", {icon: 6});
-                     } else if (res.status == false) {
-                         layer.msg(result.msg, {icon: 5});
-                     }
-                 }
              })
+        });
+        //文件上传
+        $("#testListAction").on("click", function () {
+            {#console.log(form);#}
+            var len = 0;
+            form.forEach((value, key) => {
+             console.log("key %s: value %s", key, value);
+             len = key.length;
+            });
+            console.log(len);
+            if(len==0){
+                layer.msg("未选择文件！", {icon: 5});
+            }else{
+                layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+                $.ajax({
+                    url: '/adduserdeclare',
+                    type: "POST",
+                    data: form,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        console.log(result);
+                        if (result.code == 200) {
+                            layer.msg("上传成功！", {icon: 6});
+                        } else if (result.code == 500) {
+                            layer.msg(result.msg, {icon: 5});
+                        }
+                    }
+                })
+            }
         });
     })
 </script>
+
+</body>
+</html>
+
+
+
 {#<script>#}
 {#    $(function () {#}
 {#        console.log("$('p').text():", $('p').text());#}
@@ -298,5 +333,3 @@
 {#    })#}
 {#</script>#}
 
-</body>
-</html>

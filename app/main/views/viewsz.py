@@ -93,7 +93,7 @@ def managedeclareuser():
         else:
             return redirect('/newuser')
     else:
-        return render_template('managedeclareuser.html', username=user["username"])
+        return render_template('managedeclareuser.html',username=user["username"])
 
 
 # 申报任务添加
@@ -108,7 +108,7 @@ def managedeclareadd():
         else:
             return redirect('/newuser')
     else:
-        return render_template('managedeclareadd.html', username=user["username"])
+        return render_template('managedeclareadd.html', name=user["name"], username=user["username"])
 
 
 # 跳转到申报任务添加的单独界面
@@ -123,7 +123,7 @@ def managedeclareadd_new():
         else:
             return redirect('/newuser')
     else:
-        return render_template('managedeclareadd_new.html', username=user["username"])
+        return render_template('managedeclareadd_new.html', name=user["name"], username=user["username"])
 
 
 # 单个申报任务详情界面
@@ -153,7 +153,7 @@ def manageabilityuser():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageabilityuser.html', username=user["username"])
+        return render_template('manageabilityuser.html', name=user["name"], username=user["username"])
 
 
 # 能力提升培训任务添加
@@ -168,7 +168,7 @@ def manageabilityadd():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageabilityadd.html', username=user["username"])
+        return render_template('manageabilityadd.html', name=user["name"], username=user["username"])
 
 
 # 跳转到能力提升培训任务添加的单独界面
@@ -183,7 +183,7 @@ def manageabilityadd_new():
         else:
             return redirect('/newuser')
     else:
-        return render_template('manageabilityadd_new.html', username=user["username"])
+        return render_template('manageabilityadd_new.html', name=user["name"], username=user["username"])
 
 
 # 能力提升培训任务详情界面
@@ -257,7 +257,7 @@ def newuser():
     elif user['checked'] == 1:
         return redirect('/olduser')
     else:
-        return render_template('newuser.html', username=user["username"])
+        return render_template('newuser.html',  name=user["name"],username=user["username"])
 
 
 # 新用户申报
@@ -271,7 +271,7 @@ def newuser_declare():
     elif user['checked'] == 1:
         return redirect('/olduser')
     else:
-        return render_template('newuser_declare.html', username=user["username"])
+        return render_template('newuser_declare.html',  name=user["name"], username=user["username"])
 
 
 # 老用户界面
@@ -412,4 +412,4 @@ def user_setting():
     elif user['checked'] == 0:
         return redirect('/newuser')
     else:
-        return render_template('user_setting.html', username=user["username"])
+        return render_template('user_setting.html', name=user["name"], username=user["username"])

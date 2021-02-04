@@ -22,7 +22,7 @@ def getnewuserdeclare():
     user=User.query.filter(User.id==userid).all()[0]
     # 用户名,科普基地单位名称,邮箱,联系电话,地址,密码
     endtime=str(user.endtime)
-    status=str(user.status)
+    # status=str(user.status)
     print(endtime)
     return Response(json.dumps(endtime), mimetype='application/json')
 

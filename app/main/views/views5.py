@@ -83,8 +83,8 @@ def updatedeclare():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    # begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    # endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     declare = Declare.query.filter(Declare.id == id).all()[0]
      # chatime =datetime.datetime.now()-declare.endtime
     # chatime=chatime.days
