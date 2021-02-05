@@ -157,7 +157,7 @@
                 <div id="container-bar" class="col-4" style="float:left;height: 400px;width: 300px"></div>
                 <div class="col-4 container3" style="float:right;" id="message">
                     <h3 align="center">系统消息</h3>
-                    <textarea readonly name="msg" id="msg" cols="35" rows="20" style="margin: 15px 0 0 70px;"></textarea>
+                    <div readonly name="msg" id="msg" cols="35" rows="20" style="margin: 15px 0 0 70px;"></div>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
             tooltip: {
                 trigger: 'item'
             },
-            color:['grey','#01AAED'],
+            color:['#01AAED','grey'],
             legend: {
                 orient: 'vertical',
                 left: 'left',
@@ -215,7 +215,7 @@
             tooltip: {
                 trigger: 'item'
             },
-            color:['grey','#01AAED'],
+            color:['#01AAED','grey'],
             xAxis: {
                 title: {
                     text:'fd '
@@ -271,7 +271,7 @@
 
                for(var i=0;i<result.message.length;i++) {
                    var msg = result.message[i]
-                   $("#message").find("#msg").append(msg+"\n"+"\n")
+                   $("#message").find("#msg").append("<div><i class=\"fa fa-volume-up\" style='margin-top: 10px' aria-hidden=\"true\"></i>"+' '+msg+"</div>"+"\n")
                }
            }
        });
