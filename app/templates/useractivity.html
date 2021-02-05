@@ -11,6 +11,8 @@
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.bundle.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     {#
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.css" rel="stylesheet">
@@ -39,7 +41,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: whitesmoke">欢迎：{{ name }}</a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -59,66 +61,64 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-            <!--        <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
-                        <li class="active"><a class="nav-link active" href="#">已提交活动</a></li>
-                        <li><a class="nav-link"
-                                href="{{url_for('main.userupdata')}}">添加新活动</a></li>
-                        <li><a class="nav-link" href="#">活动报名</a></li>
-                        <li><a class="nav-link" href="{{url_for('main.usertrainregister')}}">培训报名</a></li>
-                        <li><a class="nav-link" href="#">年度总结提交</a></li>
-                        <li><a class="nav-link" href="#">科技周报告提交</a></li>
-                    </ul>-->
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" href="{{url_for('main.olduser')}}">首页</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" href="#">已提交活动</a>
-                    </div>
-                </div>
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.olduser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              活动报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.usertrainregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              培训报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交活动
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userupdata')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userndreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              年度总结提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userkjzreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              科技周报提交
+                            </a>
+                        </li>
 
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" href="{{ url_for('main.useractivityregister') }}">活动报名</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" href="{{ url_for('main.userndreport')}}">年度总结提交</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.user_setting')}}">账户信息设置</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.user_setting')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             账户信息设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
-        <div class="col-md-10 col-md-offset-2 main ml-auto">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">自主活动列表</h2>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="mytable">
@@ -163,7 +163,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myshowModal">活动详情</h4>
+                <h3 class="modal-title" id="myshowModal">活动详情</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -250,7 +250,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myeditModal">修改活动</h4>
+                <h3 class="modal-title" id="myeditModal">修改活动</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -384,13 +384,13 @@
                 let str = ""
                 for (let index = 0; index < data.item.length; index++) {
                     switch(data.item[index].status) {
-                             case '0':
+                             case 0:
                                 var sta = '审核中';
                                 break;
-                             case '1':
+                             case 1:
                                 var sta = '驳回';
                                 break;
-                             case '2':
+                             case 2:
                                 var sta = '通过';
                                 break;
                             }
@@ -709,13 +709,13 @@
                         let str = ""
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
-                             case '0':
+                             case 0:
                                 var sta = '审核中';
                                 break;
-                             case '1':
+                             case 1:
                                 var sta = '驳回';
                                 break;
-                             case '2':
+                             case 2:
                                 var sta = '通过';
                                 break;
                             }
@@ -772,13 +772,13 @@
                         let str = ""
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
-                             case '0':
+                             case 0:
                                 var sta = '审核中';
                                 break;
-                             case '1':
+                             case 1:
                                 var sta = '驳回';
                                 break;
-                             case '2':
+                             case 2:
                                 var sta = '通过';
                                 break;
                             }
@@ -825,13 +825,13 @@
                         let str = ""
                         for (let index = 0; index < data.item.length; index++) {
                             switch(data.item[index].status) {
-                             case '0':
+                             case 0:
                                 var sta = '审核中';
                                 break;
-                             case '1':
+                             case 1:
                                 var sta = '驳回';
                                 break;
-                             case '2':
+                             case 2:
                                 var sta = '通过';
                                 break;
                             }

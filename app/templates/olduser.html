@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>首页</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/jquery-3.5.1.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/echarts.min.js"></script>
+    <link href="../static/css/dashboard.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
+
+    <style type="text/css">
+        .table>tbody>tr>td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table>thead>tr>th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .dropdown-menu li{
+            text-align: left;
+            padding-left: 10px;
+        }
+        .operation{
+
+        }
+        .operation button{
+            background-color: #D3D3D3;
+            border-radius: 3px;
+            width: 40px;
+            height:25px;
+            font-size: 10px;
+            margin:5px;
+        }
+
+    </style>
+</head>
+<body>
+<!--<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+    <div class="container-fluid" style="">
+        <div class="navbar-header" style="width: 100%">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <div class="dropdown" style="float: right">
+                <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
+                    <li><a href="#" style="color: #9d9d9d">欢迎：{{ username }}</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>-->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
+    <div class="container-fluid" style="">
+        <div class="navbar-header" style="width: 100%;">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
+            <div class="dropdown" style="float: right">
+                <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
+                    <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{url_for('main.login')}}" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出</a></li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.olduser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              活动报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.usertrainregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              培训报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交活动
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userupdata')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userndreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              年度总结提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userkjzreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              科技周报提交
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.user_setting')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             账户信息设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
+            </div>
+        </div>
+        <div class="col-md-10 offset-2" style="margin-top: 100px">
+            <div class="row">
+                <div id="container-pie" class="col-4" style="float:left;height: 400px;width: 300px"></div>
+                <div id="container-bar" class="col-4" style="float:left;height: 400px;width: 300px"></div>
+                <div class="col-4 container3" style="float:right;" id="message">
+                    <h3 align="center">系统消息</h3>
+                    <textarea readonly name="msg" id="msg" cols="35" rows="20" style="margin: 15px 0 0 70px;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //饼状图
+
+    $(document).ready(function() {
+        var pieOption = {
+            title: {
+                text: '已提交与总任务占比情况',
+                // subtext: '纯属虚构',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            color:['grey','#01AAED'],
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+            },
+            series: [
+                {
+                    // name: '访问来源',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        var containerPieChart = echarts.init(document.getElementById('container-pie'));
+        pieOption.series[0].data = [
+                        // {value: 1048, name: '已提交'},
+                        // {value: 735, name: '未提交'}
+                    ]
+        containerPieChart.setOption(pieOption);
+
+        //柱状图
+        var barOption = {
+            title: {
+                text: '各月活动提交情况',
+                // subtext: '纯属虚构',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            color:['grey','#01AAED'],
+            xAxis: {
+                title: {
+                    text:'fd '
+                },
+                type: 'category',
+                data: []
+            },
+            yAxis: {
+                name: '数量',
+                type: 'value'
+            },
+            series: [{
+                data: [],
+                type: 'bar'
+            }]
+        };
+        var containerBarChart = echarts.init(document.getElementById('container-bar'));
+        barOption.xAxis.data = ['1', '2', '3', '4', '5', '6', '7','8','9','10','11','12']
+        // barOption.series[0].data = [120, 200, 150, 80, 70, 110, 180,43,67,78]
+        containerBarChart.setOption(barOption);
+
+        $.ajax({
+           type: 'post',
+           url: './olduserall',
+           dataType: 'json',
+           async: false,
+           cache: false,
+           contentType: 'application/json',
+           success: function (result) {
+               console.log('result',result)
+               // 饼状图
+               var containerPieChart = echarts.init(document.getElementById('container-pie'));
+                    pieOption.series[0].data = [
+                        {value: result.a.ya, name: '已提交'},
+                        {value: result.a.wa, name: '未提交'}
+                    ]
+               containerPieChart.setOption(pieOption);
+               // 柱状图
+               var containerBarChart = echarts.init(document.getElementById('container-bar'));
+               barOption.xAxis.data = ['1', '2', '3', '4', '5', '6', '7','8','9','10','11','12']
+               var source = []
+               result.activitycount.forEach(function(currentValue){
+                   var obj = {
+                            value: currentValue,
+                            itemStyle: {
+                                color: '#01AAED'
+                            }
+                       }
+                   source.push(obj)
+               })
+               barOption.series[0].data = source
+               containerBarChart.setOption(barOption);
+
+               for(var i=0;i<result.message.length;i++) {
+                   var msg = result.message[i]
+                   $("#message").find("#msg").append(msg+"\n"+"\n")
+               }
+           }
+       });
+    });
+</script>
+</body>
+</html>
