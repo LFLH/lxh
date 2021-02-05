@@ -13,6 +13,8 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -54,78 +56,76 @@
 </nav>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-            <!--<ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
-                <li><a class="nav-link"
-                        href="{{url_for('main.manageactivity')}}">活动管理</a></li>
-                <li><a class="nav-link" href="{{url_for('main.managedeclareuser')}}">申报管理</a></li>
-                <li><a class="nav-link" href="{{url_for('main.manageabilityuser')}}">能力提升管理</a></li>
-                <li><a class="nav-link" href="#">考核管理</a></li>
-                <li class="active"><a class="nav-link" href="#">用户管理</a></li>
-                <li><a class="nav-link" href="#">系统设置</a></li>
-            </ul>-->
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
-                    </div>
-                </div>
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.manage')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              申报任务用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              申报任务添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              能力提升培训用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              能力提升培训添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             用户管理
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                   <div class="card-header">
-                     <a class="collapsed card-link" href="('main.managereportuser')}}">报告管理</a>
-                   </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageexamine')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             考核管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managereportuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             报告管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managesystem')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             系统设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
-        <div class="col-md-10 col-md-offset-2 main ml-auto">
+        <div class="col-md-10 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">用户列表</h2>
             <nav class="navbar navbar-expand navbar-light bg-light">
                 <div class="container-fluid">
@@ -177,7 +177,7 @@
                                 <th>用户名</th>
                                 <th>初始密码</th>
                                 <th>最后活动时间</th>
-                                <th>状态</th>
+                                <th>用户类型</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -205,7 +205,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">添加用户</h4>
+                    <h3 class="modal-title">添加用户</h3>
                     <button type="button" class="close" data-dismiss="modal">&times;
                     </button>
                 </div>
@@ -250,6 +250,147 @@
                     </button>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- 查看模态框 #addModal -->
+<form class="form-inline">
+    <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">用户信息</h3>
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="showusername" class="control-label" style="display: inline"
+                               >用户名:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%">
+                            <input type="text" class="form-control " style="width: calc(100% - 30px)" name="name"
+                                   id="showusername">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showpassword" class="control-label" style="display: inline"
+                               >密码:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%">
+                            <input type="text" class="form-control " style="width: calc(100% - 30px);margin-left: 14px" name="name"
+                                   id="showpassword">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showname" class="control-label" style="display: inline"
+                               >单位:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%">
+                            <input type="text" class="form-control " style="width: calc(100% - 30px);margin-left: 14px" name="name"
+                                   id="showname">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showemail" class="control-label">邮箱:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showemail" style="width: calc(100% - 30px);margin-left: 14px">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showphone" class="control-label">电话: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showphone" style="width: calc(100% - 30px);margin-left: 14px">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showaddress" class="control-label">地址: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showaddress" style="width: calc(100% - 30px);margin-left: 14px">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showstatus" class="control-label">类型: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showstatus" style="width: calc(100% - 30px);margin-left: 14px">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- 文档模态框 #addModal -->
+<form class="form-inline">
+    <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">用户文档</h3>
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <!--<div class="modal-body">
+                   &lt;!&ndash; <div class="form-group">
+                        <label for="showusername" class="control-label" style="display: inline"
+                               >用户名:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%">
+                            <input type="text" class="form-control " style="width: calc(100% - 30px)" name="name"
+                                   id="showusername">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showpassword" class="control-label" style="display: inline"
+                               >密码:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%">
+                            <input type="text" class="form-control " style="width: calc(100% - 30px)" name="name"
+                                   id="showpassword">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showname" class="control-label" style="display: inline"
+                               >单位:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%">
+                            <input type="text" class="form-control " style="width: calc(100% - 30px)" name="name"
+                                   id="showname">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showemail" class="control-label">邮箱:</label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showemail" style="width: calc(100% - 30px)">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showphone" class="control-label">电话: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showphone" style="width: calc(100% - 30px)">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showaddress" class="control-label">地址: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showaddress" style="width: calc(100% - 30px)">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 5px">
+                        <label for="showstatus" class="control-label">类型: </label>
+                        <div class="col-sm-9" style="display: inline-block; width: 100%;">
+                            <input class="form-control" id="showstatus" style="width: calc(100% - 30px)">
+                        </div>
+                    </div>&ndash;&gt;
+                </div>-->
+                <div class="modal-footer" id="file-foot">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-group" data-dismiss="modal">一键导出</button>
+                </div>
             </div>
         </div>
     </div>
@@ -313,7 +454,9 @@
         var per_page=5
         var d_per_page=per_page
         var idz=new Array(per_page);
-        $.ajax({
+        init ();
+        function init (){
+            $.ajax({
             type:'GET',
             url:'./searchuser',
             data:{'page':1,'per_page':per_page},
@@ -355,8 +498,10 @@
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                 }
                 $("#tableText").html(str);
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -376,6 +521,18 @@
                     $("#next").css("border-left-color","blue");
                 }
             }
+        });
+        }
+        // 确认导出文档
+        $("#file-foot").on('click', '.file', function(){
+            var id = $(this).attr("id");
+            console.log(id)
+            window.open("./useroutdata?id="+id);
+            // var $eleForm = $("<form method='get'></form>");
+            // $eleForm.attr("action","./useroutdata?id="+id);
+            // $(document.body).append($eleForm);
+            // //提交表单，实现下载
+            // $eleForm.submit();
         });
         // 确认删除
         $("#del-foot").on('click', '.del', function () {
@@ -426,8 +583,10 @@
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                         }
                         $("#tableText").html(str);
                         let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -503,8 +662,10 @@
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -575,8 +736,10 @@
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta+
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -646,8 +809,10 @@
                             "</td><td>" + data.item[index].password +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -664,6 +829,46 @@
             });
         }
         for(let index=0;index<d_per_page;index++){
+            // 查看用户
+            let v="#view"+index
+            $('#tableText').on('click',v,function(){
+                var id = idz[index];
+                console.log(id)
+                $.ajax({
+                    type:'GET',
+                    url:'./detailuser',
+                    data:{'id':id},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(data){
+                        switch (data.status)
+                            {
+                                case 0:
+                                    var sta = '新用户';
+                                    break;
+                                case 1:
+                                    var sta = '未激活';
+                                    break;
+                                case 2:
+                                    var sta = '正式用户';
+                                    break;
+                                case 3:
+                                    var sta = '考核未通过';
+                                    break;
+                            }
+                        $("#showModal").find("#showusername").val(data.username)
+                        $("#showModal").find("#showpassword").val(data.password)
+                        $("#showModal").find("#showname").val(data.name)
+                        $("#showModal").find("#showemail").val(data.email)
+                        $("#showModal").find("#showphone").val(data.phone)
+                        $("#showModal").find("#showaddress").val(data.address)
+                        $("#showModal").find("#showstatus").val(sta)
+                        $("#showModal").modal('show')
+                }
+            });
+            });
             // 删除用户
             let d="#del"+index
             $('#tableText').on('click',d,function(){
@@ -726,8 +931,10 @@
                                             "</td><td>" + data.item[index].password +
                                             "</td><td>" + data.item[index].lasttime +
                                             "</td><td>" + sta +
-                                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                                            "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                                            "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                                 }
                                 $("#tableText").html(str);
                                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -751,11 +958,15 @@
             }
             })
                 }
-                // $("#del-foot").empty();
-                // var strdel = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'
-                //     + '<button id='+ idz[index] +' type="button" class="btn btn-danger del" data-dismiss="modal">删除</button>'
-                // $("#del-foot").html(strdel);
-                // $("#delModal").modal('show');
+            });
+            // 文件导出
+            let f="#file"+index
+            $('#tableText').on('click',f,function(){
+                $("#file-foot").empty();
+                var strdel = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>'
+                    + '<button id='+ idz[index] +' type="button" class="btn btn-primary file" data-dismiss="modal">一键导出</button>'
+                $("#file-foot").html(strdel);
+                $("#fileModal").modal('show');
             });
         }
         //添加用户
@@ -814,8 +1025,10 @@
                                         "</td><td>" + data.item[index].password +
                                         "</td><td>" + data.item[index].lasttime +
                                         "</td><td>" + sta +
-                                        "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                                        "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                                        "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                             }
                             $("#tableText").html(str);
                             let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -844,13 +1057,13 @@
             var formData = new FormData($("#addexcel")[0]);
             console.log(formData);
             $.ajax({
-                type:'POST',
+                type:'post',
                 data:formData,
                 url:'./exceladduser',
                 contentType: false,
                 processData: false,
                 success:function(data){
-                    console.log(data);
+                    console.log(11);
                     $("#addModal2").modal("hide");
                     // alert('添加成功');
                     $.ajax({
@@ -895,8 +1108,10 @@
                                         "</td><td>" + data.item[index].password +
                                         "</td><td>" + data.item[index].lasttime +
                                         "</td><td>" + sta +
-                                        "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                                "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button>" + "</tr>";
+                                        "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
+                                        "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                             }
                             $("#tableText").html(str);
                             let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -917,21 +1132,18 @@
                             }
                         }
                     });
-            }
+                },
+                fucnction:init ()
             })
         })
         //导出用户
         $("#userout").on('click', function () {
-                $.ajax({
-                    type:'GET',
-                    url:'./userout',
-                    // data:{'id':id},
-                    dataType:'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                });
-                alert('导出成功')
+            // window.open("./userout");
+            var $eleForm = $("<form method='get'></form>");
+            $eleForm.attr("action","./userout");
+            $(document.body).append($eleForm);
+            //提交表单，实现下载
+            $eleForm.submit();
         })
     });
 </script>

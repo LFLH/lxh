@@ -7,16 +7,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>年度报告提交</title>
+    <title>title</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
     <script src="http://code.highcharts.com/highcharts.js"></script>
+
     <link rel="stylesheet" href="../static/layui/css/layui.css" />
     <script type="text/javascript" src="../static/layui/layui.js"></script>
+
+
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -30,17 +32,29 @@
             text-align: left;
             padding-left: 10px;
         }
-    </style>
-</head>
+        .operation{
 
+        }
+        .operation button{
+            background-color: #D3D3D3;
+            border-radius: 3px;
+            width: 40px;
+            height:25px;
+            font-size: 10px;
+            margin:5px;
+        }
+    </style>
+    {% block css %}
+    {% endblock %}
+</head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background: #01AAED">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
-        <div class="navbar-header" style="width: 100%">
+        <div class="navbar-header" style="width: 100%;">
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }}</a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -124,156 +138,23 @@
             </div>
         </div>
 
-        <div class="col-md-10 col-md-offset-2 main ml-auto">
-            {#实现多文件上传#}
-            <h2 class="sub-header" style="margin-top: 50px">年度总结提交</h2>
-            <form id="update" enctype='multipart/form-data'>
-                <div class="form-group">
-                    <br>
-                    <label for="name" class="col-sm-2 control-label" style="font-size: 20px">报告名:</label>
-                    <div class="col-sm-5" style="padding-left: 20px;">
-                        <input class="form-control" id="name" placeholder="请输入名称" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="layui-upload">
-                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInputFilePDF">选择PDF文件、Word文件、图片</button>
-                          <button id="submit" type="submit" class="layui-btn layui-btn-normal" style="margin-left: 15px">文件上传</button>
-                          <br>
-                          <br>
-                    </div>
-                    <div class="layui-upload-list col-md-12">
-                        <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
-                            <thead style="text-align: center">
-                            <tr>
-                                <th style="width: 45%">文件名</th>
-                                <th style="width: 15%">大小</th>
-                                 <th style="width: 25%">时间</th>
-                                <th style="width: 15%">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="VIEWList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </form>
-
-            {#显示最后上传信息是否成功的div提示框#}
-            <div id="show_msg_div">
+        <div class="col-md-10" style="margin-top: 50px">
+            <div class="row">
+                {% block content %}
+                {% endblock %}
             </div>
-      </div>
+        </div>
     </div>
 </div>
 
 <script>
-//获取当前时间
-function fileTime(){
-    function getNow(s) {
-        return s < 10 ? '0' + s : s;
-    }
-    var myDate = new Date;
-    var year = myDate.getFullYear(); //获取当前年
-    var mon = myDate.getMonth() + 1; //获取当前月
-    var date = myDate.getDate(); //获取当前日
-    var h = myDate.getHours();//获取当前小时数(0-23)
-    var m = myDate.getMinutes();//获取当前分钟数(0-59)
-    var s = myDate.getSeconds();//获取当前秒
-    var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "&nbsp;" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
-    return res
-}
-{#选择多个文件#}
-layui.use('upload', function () {
-        var $ = layui.jquery;
-        var upload = layui.upload;
-        let name = $('#name').val();
-        str_url='./addndreport?name='+name;
-        //多文件选择
-        var Viewlist = $('#VIEWList'),
-        uploadIns = upload.render({
-            elem: '#exampleInputFilePDF',
-            url: 'str_url',
-            accept: 'file,images',
-            exts: 'doc|docx|pdf|jpg|png',
-            multiple: true,
-            auto: false,
-            bindAction: '#submit',
-            choose: function (obj) {
-                var files = obj.pushFile(); //选择文件赋给files
-                var file_time = fileTime();
-                //读取本地文件
-                obj.preview(function (index, file, result) {
-                    var tr = $(['<tr id="upload-' + index + '">'
-                        , '<td>' + file.name + '</td>'
-                        , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
-                        , '<td>' + file_time + '</td>'
-                        , '<td>'
-                        , '<button class="layui-btn layui-btn-xs layui-btn-danger file_delete">删除</button>'
-                        , '</td>'
-                        , '</tr>'].join(''));
-                    Viewlist.append(tr);
-                    //删除文件按钮
-                    tr.find('.file_delete').on('click', function () {
-                        console.log("走到这里了")
-                        delete files[index]; //删除对应的文件
-                        tr.remove();
-                        uploadIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                    })
-
-                });
-                 {#$("#testListAction").on("click", function () {#}
-                 {#    var formData = new FormData($("#newuser")[0]);#}
-                 {#    $.ajax({#}
-                 {#        url: '',#}
-                 {#        type: "post",#}
-                 {#        dataType: "json",#}
-                 {#        async: false,#}
-                 {#        contentType: 'application/json',#}
-                 {#        processData: false,#}
-                 {#        data: formData,#}
-                 {#        success: function (result) {#}
-                 {#            console.log(result.status);#}
-                 {#            if (result.status == true) {#}
-                 {#                layer.msg("上传成功！", {icon: 6});#}
-                 {#            } else if (result.status == false) {#}
-                 {#                layer.msg(result.msg, {icon: 5});#}
-                 {#            }#}
-                 {#        }#}
-                 {#    })#}
-
-            },
-            done: function(res, index, upload){
-                console.log("res=",res)
-            }
-        });
-        })
-
-
-{# 将文字和文件上传到后端 #}
-{#$(document).ready(function(){#}
-{#    $("#update").submit(function(){#}
-{#        console.log("可以进入提交文件")#}
-{#        let name = $('#name').val();#}
-{#        str_url='./addndreport?name='+name;#}
-        {#str_url='./bmsystrain?id='+3;#}
-        {#定义一个formData对象，FormData类中上传表单#}
-{#        var formData = new FormData($("#update")[0]);#}
-{#        $.ajax({#}
-{#            type: "POST",#}
-{#            data: formData,#}
-{#            url: str_url,#}
-{#            contentType: false,#}
-{#            processData: false,#}
-{#            success: function (result) {#}
-{#                console.log("result=", result);#}
-                {#Flush();#}
-                {#Toast(result.status);#}
-{#            }#}
-{#        })#}
-{#        return false;#}
-{#    });#}
-
-
+    {% block js %}
+    {% endblock %}
 </script>
+
 </body>
+</html>
+
+
+
+

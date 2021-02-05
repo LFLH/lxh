@@ -15,13 +15,16 @@ def after_request(response):
 
 #计算百分比保留一位小数
 def zbfb(a,b):
-    m=a/b*1000
-    mi=int(m)
-    km=m-mi
-    if km>0.5:
-        mi=mi+1
-    k=mi/10
-    return k,100-k
+    if b!=0:
+        m=a/b*1000
+        mi=int(m)
+        km=m-mi
+        if km>0.5:
+            mi=mi+1
+        k=mi/10
+        return k,100-k
+    else:
+        return 0.0,100.0
 
 #获取申报和参与申报的用户数、各月提交数、活动报名人数
 @main.route('/manageall',methods=['GET','POST'])
@@ -30,14 +33,14 @@ def manageall():
     declare=Declare.query.filter(and_(Declare.status==0,Declare.endtime>datetime.datetime.now())).order_by(-Declare.id).all()
     if len(declare)>0:
         declare=declare[0]
-        usercount=User.query.filter(and_(User.checked==0,User.type=='user',User.endtime==declare.endtime)).count()
+        usercount=len(declare.users)
         #已申报人数
         udeclarecount=UDeclare.query.join(DUDC).join(Declare).join(User).filter(Declare.id==declare.id).count()
         #转保留一位小数的百分比
         yd,wd=zbfb(udeclarecount,usercount)
     else:
         yd=0.0
-        wd=0.0
+        wd=100.0
     d={"yd":yd,"wd":wd}
     #各月活动提交情况
     year=str(datetime.datetime.now()).split('-')[0]
@@ -63,7 +66,7 @@ def manageall():
         yt,wt = zbfb(utraincount, usercount2)
     else:
         yt=0.0
-        wt=0.0
+        wt=1.0
     t={"yt":yt,"wt":wt}
     #返回申报百分比，各月提交情况，新培训报名
     return Response(json.dumps({"d":d,"activitycount":activitycount,"t":t}), mimetype='application/json')

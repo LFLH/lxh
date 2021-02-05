@@ -91,6 +91,8 @@ class UDeclare(db.Model):
 #表 9用户申报记录表(申报任务编号,用户申报编号)
 DUDC=db.Table('dudc',db.Column('declareid',db.Integer, db.ForeignKey('declare.id')),db.Column('udcid',db.Integer, db.ForeignKey('udeclare.id')))
 
+DU=db.Table('du',db.Column('declareid',db.Integer, db.ForeignKey('declare.id')),db.Column('userid',db.Integer, db.ForeignKey('user.id')))
+
 #表 6申报任务表
 class Declare(db.Model):
     __tablename__='declare'
@@ -102,6 +104,7 @@ class Declare(db.Model):
     main = db.Column(db.Text)  # 申报内容
     status=db.Column(db.Integer,default=0)#申报状态
     udeclares=db.relationship('UDeclare', secondary=DUDC, backref=db.backref('udcs', lazy='dynamic'))
+    users=db.relationship('User',secondary=DU,backref=db.backref('user',lazy='dynamic'))
 
     def __repr__(self):
         return self

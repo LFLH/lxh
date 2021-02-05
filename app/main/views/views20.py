@@ -14,20 +14,62 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#管理员条件检索
+def tsmrecord(username,recordname,year,type,status,page,per_page):
+    if username!=None:
+        s1=(User.username==username)
+    else:
+        s1=True
+    if recordname!=None:
+        s2=(Record.name==recordname)
+    else:
+        s2=True
+    if year!=None:
+        s3=(Record.year==year)
+    else:
+        s3=True
+    if type!=None:
+        s4=(Record.type==type)
+    else:
+        s4=True
+    if status is None:
+        s5=True
+    else:
+        status=int(status)
+        if status<10:
+            s5=and_(User.checked==1,Record.year==datetime.datetime.now().year,Record.status==status)
+        elif status<20:
+            s5=and_(User.checked==1,Record.year!=datetime.datetime.now().year,Record.status==status-10)
+        elif status>=20:
+            s5=and_(User.checked!=1,Record.status==status-20)
+    record=Record.query.join(User).filter(and_(s1,s2,s3,s4,s5)).order_by(-Record.id).paginate(page, per_page, error_out=False)
+    return record
+
 #管理员列表显示报告
 @main.route('/searchrecord',methods=['GET', 'POST'])
 def searchrecord():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        username=request.args.get('username')#用户名
+        recordname=request.args.get('recordname')#报告名称
+        year=request.args.get('year')#年份
+        type=request.args.get('type')#报告类型
+        status=request.args.get('status')#报告状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        username = request.form.get('username')  # 用户名
+        recordname = request.form.get('recordname')  # 报告名称
+        year = request.form.get('year')  # 年份
+        type = request.form.get('type')  # 报告类型
+        status = request.form.get('status')  # 报告状态
     page = int(page)
     per_page = int(per_page)
-    record=Record.query.order_by(-Record.id).paginate(page, per_page, error_out=False)
+    #record=Record.query.order_by(-Record.id).paginate(page, per_page, error_out=False)
+    record=tsmrecord(username,recordname,year,type,status,page,per_page)
     items = record.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -98,22 +140,58 @@ def bhrecord():
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
+#条件检索
+def tsrecord(recordname,year,type,status,page,per_page,userid):
+    if recordname!=None:
+        s1=(Record.name==recordname)
+    else:
+        s1=True
+    if year!=None:
+        s2=(Record.year==year)
+    else:
+        s2=True
+    if type!=None:
+        s3=(Record.type==type)
+    else:
+        s3=True
+    if status is None:
+        s4=True
+    else:
+        status=int(status)
+        if status<10:
+            s4=and_(User.checked==1,Record.year==datetime.datetime.now().year,Record.status==status)
+        elif status<20:
+            s4=and_(User.checked==1,Record.year!=datetime.datetime.now().year,Record.status==status-10)
+        elif status>=20:
+            s4=and_(User.checked!=1,Record.status==status-20)
+    record=Record.query.join(User).filter(and_(s1,s2,s3,s4,User.id==userid,Record.status!=3)).order_by(-Record.id).paginate(page, per_page, error_out=False)
+    return record
+
 #user列表显示报告
 @main.route('/showrecord',methods=['GET', 'POST'])
 def showrecord():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        recordname=request.args.get('recordname')#报告名称
+        year=request.args.get('year')#年份
+        type=request.args.get('type')#报告类型
+        status=request.args.get('status')#报告状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        recordname = request.form.get('recordname')  # 报告名称
+        year = request.form.get('year')  # 年份
+        type = request.form.get('type')  # 报告类型
+        status = request.form.get('status')  # 报告状态
     page = int(page)
     per_page = int(per_page)
     user=session.get('user')
     userid=user['userid']
-    record = Record.query.filter(and_(Record.userid==userid,Record.status!=3)).order_by(-Record.id).paginate(page, per_page, error_out=False)
+    #record = Record.query.filter(and_(Record.userid==userid,Record.status!=3)).order_by(-Record.id).paginate(page, per_page, error_out=False)
+    record=tsrecord(recordname,year,type,status,page,per_page,userid)
     items = record.items
     item = []
     count = (int(page) - 1) * int(per_page)

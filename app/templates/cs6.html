@@ -7,8 +7,9 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-	<button id='btn'>按钮</button>
-    <button id='btn1'>按钮</button>
+	<button id='btn'>按钮1</button>
+    <button id='btn1'>按钮2</button>
+    <button id='btn2'>按钮3</button>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#btn').click(function() {
@@ -35,6 +36,23 @@
 					type:'POST',
 	                url:'./websign',
 	                data:{"userz":userz,'activityid':activityid},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.status);
+	                }
+				});
+			});
+			$('#btn2').click(function() {
+				let userz=[4,5,6,7,8,9,10,12]
+				let id=5
+				$.ajax({
+					type:'GET',
+	                url:'./addnewuser',
+	                data:{"userz":userz,'id':id},
 	                dataType:'json',
 	                async: false,
 	                cache: false,

@@ -14,6 +14,10 @@
     <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -34,8 +38,8 @@
             position: absolute;
             background: #FFF;
             display: none;
-            top: 20%;
-            left:30%;
+            top: 15%;
+            left:20%;
             overflow:scroll;
         }
     </style>
@@ -68,124 +72,111 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-{#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
-{#                <li><a class="nav-link"#}
-{#                       href="{{url_for('main.manageuser')}}">用户管理</a></li>#}
-{#                <li><a class="nav-link" href="{{url_for('main.manageactivity')}}">用户活动管理</a></li>#}
-{##}
-{##}
-{#                <li><a class="nav-link" data-toggle="dropdown" href="{{url_for('main.managedeclareuser')}} ">申报管理</a></li>#}
-{#                <li class="nav-item dropdown">#}
-{#                    <a class="nav-link dropdown-toggle open" href="#" data-toggle="dropdown">申报管理</a>#}
-{#                        <div class="dropdown-menu ">#}
-{#                            <a class="dropdown-item" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>#}
-{#                            <a class="dropdown-item" href="#">申报任务添加</a>#}
-{#                        </div>#}
-{#                </li>#}
-{##}
-{##}
-{#                <li><a class="nav-link" href="#">能力提升管理</a></li>#}
-{#                <li class="nav-item dropdown">#}
-{#                    <a class="nav-link dropdown-toggle open" href="#" data-toggle="dropdown">能力提升管理</a>#}
-{#                        <div class="dropdown-menu ">#}
-{#                            <a class="dropdown-item" href="{{url_for('main.manageabilityuser')}}">已申报培训用户</a>#}
-{#                            <a class="dropdown-item" href="#">能力提升培训添加</a>#}
-{#                        </div>#}
-{#                </li>#}
-{##}
-{##}
-{##}
-{#                <li><a class="nav-link" href="{{url_for('main.manageexamine')}}">考核管理</a></li>#}
-{#                <li><a class="nav-link" href="{{url_for('main.managesystem')}}">系统设置</a></li>#}
-{#            </ul>#}
-          <div id="accordion">
-              <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
-                    </div>
-              </div>
-              <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
-                    </div>
-              </div>
-{#              <div class="card">#}
-{#                  <div class="card-header">#}
-{#                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>#}
-{#                  </div>#}
-{#                  <div id="collapseOne" class="collapse" data-parent="#accordion">#}
-{#                    <div class="card-body">#}
-{#                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>#}
-{#                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.manage')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              申报任务用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              申报任务添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              能力提升培训用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              能力提升培训添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             用户管理
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managereportuser')}}">报告管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageexamine')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             考核管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managereportuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             报告管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managesystem')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             系统设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
 
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">能力提升培训申请列表</h2>
+            <br>
             <form action="" method="POST">
+                {#添加搜索栏#}
+                <div class="form-group">
+                     <div class="input-group col-xs-12">
+                         <div class="input-group-btn">
+                            <select name="type" class="form-control" style="width: auto;">
+                                <option>用户名</option>
+                                <option>培训任务名</option>
+                                <option>提交时间</option>
+                                <option>状态</option>
+                            </select>
+                         </div>
+                            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                            <span class="input-group-btn">
+                                <button class="btn btn-dark" id="search" type="submit">搜索</button>
+                            </span>
+                        </div>
+                   <br>
+                </div>
+
                 <div class="table-responsive">
                     <form action="/"></form>
                     <table class="table table-bordered table-hover" id="table">
                         <thead>
-                            <tr>
+                            <tr class="table-info">
                                 <th>序号</th>
                                 <th>用户名</th>
                                 <th>培训任务名</th>
                                 <th>报名开始时间</th>
                                 <th>报名截止时间</th>
                                 <th>提交时间</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -199,43 +190,88 @@
                 </div>
             </form>
 
-            <div class="box" >
-{#            后端返回的具体详细信息在view4中#}
-                <h2 style="margin-top: 5px;text-align: center">能力提升培训详情</h2>
-                <div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">培训名：</label>
-                    <p id="train_name" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">培训内容：</label>
-                    <p id="train_main" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">用户：</label>
-                    <p id="user_name" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">提交时间：</label>
-                    <p id="train_uptime" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">PDF文件：</label>
-                    <p id="train_pdf" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">word文件：</label>
-                    <p id="train_word" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">图片：</label>
-                    <p id="train_image" style="display: inline;width: 450px"></p>
+            <!-- 查看模态框 #lookModal -->
+            <div class="modal fade" id="look_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="text-align: center;font-size: 30px">能力提升培训详情</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="show" enctype='multipart/form-data'>
+                                <div class="form-group">
+                                    <label for="content" class="col-sm-2 control-label">培训名:</label>
+                                    <div class="col-sm-5" style="padding-left: 20px;">
+                                        <p id="train_name" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="begintime" class="col-sm-3 control-label">培训内容:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="train_main" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">用户:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="user_name" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">提交时间:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="train_uptime" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">PDF文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="train_pdf" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">word文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="train_word" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">图片:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="train_image" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="div_butt">
+{#                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>#}
+                        </div>
                     </div>
                 </div>
-                <div id="div_butt">
-                </div>
-{#                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px; margin-top: 140px">取消</button>#}
-{#                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px;margin-top: 140px" data-toggle="modal" data-target="#pass_modal_div">通过</button>#}
+            </div>
+
+            {#modal模式框：当管理员点击驳回按钮时再次确认#}
+            <div class="modal fade" id="reject_modal_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定驳回？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="reject_modal_list_sure" data-dismiss="modal">确定</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal fade" id="reject_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定驳回？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="reject_modal_div_sure" data-dismiss="modal">确定</button>
+                            </div>
+                        </div>
+                    </div>
             </div>
              {#modal模式框：当管理员点击通过按钮时再次确认#}
             <div class="modal fade" id="pass_modal_list" >
@@ -266,17 +302,10 @@
 
 <script>
 
-{#管理员申报管理的下拉菜单#}
-$(function () {
-    var openddt = $(".open");
-{#　　　　openddt.attr('data-toggle', '');#}
-    openddt.click(function () {
-        $(this).siblings(".dropdown-menu").toggle();
-    });
-});
 
 var acquire=new Array(10);
 var pass;
+var reject;
 var new_ac_pass_id;
 var get_test1=0;
 var cookie_push = [];
@@ -320,6 +349,9 @@ $(document).ready(function(){
                    acquire_number = data.item[index].number;
                    acquire_number_look = 'look'+acquire_number;
                    acquire[acquire_number_look]=data.item[index].id;
+                   {#驳回按钮：获取id#}
+                   let reject_id;
+                   reject_id = data.item[index].id;
                    {#通过按钮获取通过按钮的id#}
                    let acquire_id;
                    acquire_id=data.item[index].id;
@@ -329,10 +361,10 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
                             "</td><td>" + data.item[index].uptime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='look"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
+                             + "<!--<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>-->"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                 }
                 $("#tableText").html(str);
                 for(let i =0;i<get_array.length;i++) {
@@ -358,7 +390,6 @@ $(document).ready(function(){
         });
 
         $('#page-li').on('click',"#prev",function(){
-            $('.box').css('display','none');
             if($.cookie("cookie_push")!=undefined) {
                  get_cookie_push = $.cookie("cookie_push");
                  get_array = get_cookie_push.split(",")
@@ -398,6 +429,9 @@ $(document).ready(function(){
                             acquire_number = data.item[index].number;
                             acquire_number_look = 'look'+acquire_number;
                             acquire[acquire_number_look]=data.item[index].id;
+                            {#驳回按钮：获取id#}
+                            let reject_id;
+                            reject_id = data.item[index].id;
                             {#通过按钮获取通过按钮的id#}
                             let acquire_id;
                             acquire_id=data.item[index].id;
@@ -407,10 +441,10 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
                             "</td><td>" + data.item[index].uptime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='look"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
+                             + "<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         for(let i =0;i<get_array.length;i++) {
@@ -429,9 +463,8 @@ $(document).ready(function(){
                 });
             }
         });
-        {#$("#next").click(function(){#}
+
         $('#page-li').on('click',"#next",function(){
-            $('.box').css('display','none');
             if($.cookie("cookie_push")!=undefined) {
                  get_cookie_push = $.cookie("cookie_push");
                  get_array = get_cookie_push.split(",")
@@ -471,6 +504,9 @@ $(document).ready(function(){
                             acquire_number = data.item[index].number;
                             acquire_number_look = 'look'+acquire_number;
                             acquire[acquire_number_look]=data.item[index].id;
+                            {#驳回按钮：获取id#}
+                            let reject_id;
+                            reject_id = data.item[index].id;
                             {#通过按钮获取通过按钮的id#}
                             let acquire_id;
                             acquire_id=data.item[index].id;
@@ -480,10 +516,10 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
                             "</td><td>" + data.item[index].uptime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='look"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
+                             + "<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         for(let i =0;i<get_array.length;i++) {
@@ -505,9 +541,7 @@ $(document).ready(function(){
         {#点击那一页就显示哪一页的数据#}
         for(let index=1;index<=pages;index++){
             let s="#li"+index;
-            {#$(s).click(function(){#}
             $('#page-li').on('click',s,function(){
-                $('.box').css('display','none');
                 if($.cookie("cookie_push")!=undefined) {
                       get_cookie_push = $.cookie("cookie_push");
                       get_array = get_cookie_push.split(",")
@@ -544,6 +578,9 @@ $(document).ready(function(){
                             acquire_number = data.item[index].number;
                             acquire_number_look = 'look'+acquire_number;
                             acquire[acquire_number_look]=data.item[index].id;
+                            {#驳回按钮：获取id#}
+                            let reject_id;
+                            reject_id = data.item[index].id;
                             {#通过按钮获取通过按钮的id#}
                             let acquire_id;
                             acquire_id=data.item[index].id;
@@ -553,10 +590,10 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
                             "</td><td>" + data.item[index].uptime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm open' id='look"+acquire_number+"' value=查看>"
-                            +"<input type='button' class='btn btn-primary btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm open' id='look"+acquire_number+"' value=查看>"
+                            + "<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>"
+                            +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         for(let i =0;i<get_array.length;i++) {
@@ -582,7 +619,7 @@ var train_word = "";
 var train_image = "";
 {#操作中的查看详细信息弹窗#}
 $(document).ready(function(){
-   $(document).on("click",".btn-danger",function() {
+   $(document).on("click",".btn-primary",function() {
         $("#train_pdf").html('');
         $("#train_word").html('');
         $("#train_image").html('');
@@ -590,17 +627,22 @@ $(document).ready(function(){
         let user_number = $(this).attr('id');
         {#获取传递给后端的id#}
         let acquire_user_id = acquire[user_number];
-        {#为了将查看中的id传递给悬浮框中的通过键#}
+        {#将查看的id传递给悬浮框的驳回键#}
+        reject = acquire_user_id;
+        {#将查看中的id传递给悬浮框中的通过键#}
         console.log("acquire_user_id=",acquire_user_id)
         pass = acquire_user_id;
         {#给div悬浮框添加取消和通过按钮#}
         let str_div = "";
-        str_div +="<button class='btn btn-outline-dark btn-lg delete' id='close_delete' style='margin-left: 200px; margin-top: 140px'>取消</button>"
-            +"<button type='submit' class='btn btn-outline-dark btn-lg pass' id='pass_two"+pass+"' style='margin-left: 80px;margin-top: 140px' data-toggle=\"modal\" data-target=\"#pass_modal_div\">通过</button>";
+        str_div +="<button class='btn btn-default btn-lg delete' id='close_delete' style='margin-left: 80px'>取消</button>"
+                +"<button type='submit' class='btn btn-default btn-lg open_reject' id='reject_two"+reject+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#reject_modal_div\">驳回</button>"
+            +"<button type='submit' class='btn btn-default btn-lg pass' id='pass_two"+pass+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#pass_modal_div\">通过</button>";
         $('#div_butt').html(str_div);
        {#判断div悬浮框中通过键是否应该是disabled状态#}
         let pass_id = $(".pass").attr('id')
         pass_id = '#'+pass_id
+        let reject_id = $(".open_reject").attr('id')
+        reject_id = '#'+reject_id
         console.log("pass_id=",pass_id)
         for(let i =0;i<get_array.length;i++) {
             let get_array_sp = get_array[i].split('#');
@@ -609,8 +651,12 @@ $(document).ready(function(){
             re_get_array_sp = re_get_array_sp.pop();
             let pass_sp = parseInt(re_get_array_sp);
             var pass_a = '#pass_two' + pass_sp;
+            var reject_a = '#reject_two' + pass_sp;
             if (pass_a == pass_id) {
                 $(pass_a).attr('disabled', "true")
+            }
+            if(reject_a == reject_id){
+                $(reject_a).attr('disabled', "true")
             }
         }
          $.ajax({
@@ -629,9 +675,6 @@ $(document).ready(function(){
                 let data_pdf = data.pdf;
                 let data_word = data.word;
                 let data_image = data.image;
-                {#let train_pdf = data.pdf[0].newname;#}
-                {#let train_word = data.word[0].newname;#}
-                {#let train_image = data.image[0].newname;#}
                 $("#train_name").text(train_name);
                 $("#train_main").text(train_main);
                 $("#user_name").text(user_name);
@@ -674,32 +717,48 @@ $(document).ready(function(){
 
             }
         });
-         $('.box').show();
+         $("#look_modal_div").modal('show')
          return false;
-         {#$.ajax({#}
-         {#           type:'GET',#}
-         {#           url:'/data/image/'+train_image+'',#}
-         {#           data:{},#}
-         {#           dataType:'json',#}
-         {#           async: false,#}
-         {#           cache: false,#}
-         {#           contentType: 'application/json',#}
-         {#           success:function(response){#}
-         {#               console.log("你好呀");#}
-         {#               console.log("response=",response)#}
-         {#           },#}
-         {#           error:function(XMLHttpRequest, textStatus){#}
-         {#               console.log("出错了");#}
-         {#               console.log(XMLHttpRequest.status);#}
-	     {#       	    console.log(XMLHttpRequest.readyState);#}
-	     {#       	    console.log(textStatus);#}
-         {#           }#}
-         {#    });#}
-
-
     });
+     {#操作中的驳回键的modal确认框#}
+     $(document).on("click",".btn-info",function () {
+         let reject_id = $(this).attr("id")
+         reject_id = reject_id.split("reject")
+         reject_id = reject_id.pop()
+         $("#reject_modal_list_sure").attr("data-id",reject_id)
+         $("#reject_modal_list").modal('show')
+     });
+     {#操作中的驳回键交互#}
+     $(document).on("click","#reject_modal_list_sure",function () {
+        let reject_id = $(this).attr("data-id")
+        $.ajax({
+            type: 'GET',
+            url: './bhabilityuser',
+            data: {'id': reject_id},
+            dataType: 'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success: function (result) {
+                console.log('result', result)
+                display_reject(result.status);
+            }
+        })
+     });
+     function display_reject(status){
+        if(status==true){
+            msg="驳回操作成功！";
+        }else{
+            msg="驳回操作失败！";
+        }
+        $(document).ready(function(){
+            setTimeout(function(){
+                alert(msg)
+            },1000)
+      });
+    }
      {#操作中的通过键的modal确认框#}
-     $(document).on("click",".btn-primary",function() {
+     $(document).on("click",".btn-success",function() {
         {#先给后端传id#}
         let ac_pass_id = $(this).attr('id');
         new_ac_pass_id = ac_pass_id.split("pass");
@@ -731,9 +790,11 @@ $(document).ready(function(){
              }
          }
          let pass_t ="#pass"+new_ac_pass_id;
+         let reject_t = "#reject"+new_ac_pass_id;
          cookie_push.push(pass_t)
+         cookie_push.push(reject_t)
          $(pass_t).attr('disabled',"true")
-
+         $(reject_t).attr('disabled',"true")
          {#设置cookie来记住通过的id#}
          $.cookie(
             "cookie_push",
@@ -756,14 +817,29 @@ $(document).ready(function(){
     }
     {#实现查看按钮中的取消键#}
     $(document).on("click","#close_delete",function() {
-        $('.box').css('display','none');
-        {#$('.box').hide();#}
+        $("#look_modal_div").modal('hide')
         return false;
     });
-
+    {#实现查看按钮中的驳回键#}
+    $(document).on("click","#reject_modal_div_sure",function () {
+        $("#look_modal_div").modal('hide')
+         $.ajax({
+            type: 'GET',
+            url: './bhabilityuser',
+            data: {'id': reject},
+            dataType: 'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success: function (result) {
+                console.log('result', result)
+                display_reject(result.status);
+            }
+        })
+    });
     {# 实现查看按钮中的通过键 #}
     $(document).on("click","#pass_modal_div_sure",function() {
-        $('.box').css('display','none');
+        $("#look_modal_div").modal('hide')
          $.ajax({
              type: 'GET',
              url: './tgabilityuser',
@@ -780,6 +856,8 @@ $(document).ready(function(){
          {#点击查看按钮中的通过键实现div悬浮框和list列表中的通过键全部disabled，其实div悬浮框的disabled不用做，查看中就直接显示出来了#}
         let pas_id = parseInt(pass)
         let list_pass = "#pass" + pas_id;
+        let rej_id = parseInt(reject)
+        let list_reject = "#reject"+rej_id;
 
          if($.cookie("cookie_push")!=undefined) {
              let pass_a = $.cookie("cookie_push");
@@ -788,15 +866,15 @@ $(document).ready(function(){
              }
          }
          cookie_push.push(list_pass)
+         cookie_push.push(list_reject)
          {#console.log("test1=",test1)#}
          $(list_pass).attr('disabled',"true")
-
+         $(list_reject).attr('disabled',"true")
          {#设置cookie来记住通过的id#}
          $.cookie(
             "cookie_push",
              cookie_push,
             { expires: 1});
-         {#console.log("cookietest2=",$.cookie("test1"))#}
          return false;
     });
 
