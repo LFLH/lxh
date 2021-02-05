@@ -13,6 +13,10 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -33,8 +37,8 @@
             position: absolute;
             background: #FFF;
             display: none;
-            top: 20%;
-            left:30%;
+            top: 15%;
+            left:20%;
             overflow:scroll;
 
         }
@@ -68,84 +72,102 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-{#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
-{#                <li><a class="nav-link" href="#">已提交活动</a></li>#}
-{#                <li><a class="nav-link" href="#">活动提交</a></li>#}
-{#                <li><a class="nav-link" href="{{ url_for('main.useractivityregister') }}">活动报名</a></li>#}
-{#                <li><a class="nav-link" href="#">培训报名</a></li>#}
-{#                <li><a class="nav-link" href="{{ url_for('main.userndreport') }}">年度总结提交</a></li>#}
-{#                <li><a class="nav-link" href="#">科技周报告提交</a></li>#}
-{#            </ul>#}
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.olduser')}}">首页</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.useractivity')}}">已提交活动</a>
-                    </div>
-                </div>
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.olduser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              活动报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.usertrainregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              培训报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交活动
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userupdata')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交报告
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userndreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              年度总结提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userkjzreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              科技周报提交
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link"  href="{{ url_for('main.useractivityregister') }}">活动报名</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.userndreport')}}">年度总结提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.userreport')}}">已提交报告</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                   <div class="card-header">
-                   <a class="collapsed card-link" href="#">账户信息设置</a>
-                   </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.user_setting')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             账户信息设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
 
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">林学会活动列表</h2>
+            <br>
             <form action="" method="POST">
+                {#添加搜索栏#}
+                <div class="form-group">
+                     <div class="input-group col-xs-12">
+                         <div class="input-group-btn">
+                            <select name="type" class="form-control" style="width: auto;">
+                                <option>活动名</option>
+                                <option>状态</option>
+                            </select>
+                         </div>
+                            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                            <span class="input-group-btn">
+                                <button class="btn btn-dark" id="search" type="submit">搜索</button>
+                            </span>
+                        </div>
+                   <br>
+                </div>
+
                 <div class="table-responsive">
                     <form action="/"></form>
                     <table class="table table-bordered table-hover" id="table">
                         <thead>
-                            <tr>
+                            <tr class="table-info">
                                 <th>序号</th>
                                 <th>活动名</th>
                                 <th>活动类型</th>
                                 <th>活动开始时间</th>
                                 <th>活动结束时间</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -159,44 +181,67 @@
                 </div>
             </form>
 
-             <div class="box" >
-                <h2 style="margin-top: 5px;text-align: center">林学会活动详情</h2>
-                <div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">活动名：</label>
-                    <p id="activity_name" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">活动类型：</label>
-                    <p id="activity_type" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">活动内容：</label>
-                    <p id="activity_main" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">活动报名截止时间：</label>
-                    <p id="activity_stoptime" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">活动开始时间：</label>
-                    <p id="activity_begintime" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">活动结束时间：</label>
-                    <p id="activity_endtime" style="display: inline;width: 450px"></p>
+            <!-- 查看模态框 #lookModal -->
+            <div class="modal fade" id="look_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="text-align: center;font-size: 30px">林学会活动详情</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="show" enctype='multipart/form-data'>
+                                <div class="form-group">
+                                    <label for="content" class="col-sm-2 control-label">活动名:</label>
+                                    <div class="col-sm-5" style="padding-left: 20px;">
+                                        <p id="activity_name" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="begintime" class="col-sm-3 control-label">活动类型:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="activity_type" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">活动内容:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="activity_main" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">活动报名截止时间:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="activity_stoptime" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">活动开始时间:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="activity_begintime" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">活动结束时间:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="activity_endtime" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="div_butt">
+{#                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>#}
+                            <button id="close_delete" class="btn btn-default btn-lg " style="margin-left: 80px">取消</button>
+                            <button id="close_pass" type="submit" class="btn btn-default btn-lg" style="margin-left: 80px" data-toggle="modal" data-target="#sign_modal_div">报名</button>
+                        </div>
                     </div>
                 </div>
-                <div>
-                </div>
-                <button id="close_delete" class="btn btn-outline-dark btn-lg " style="margin-left: 200px;  margin-top: 140px">取消</button>
-                <button id="close_pass" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 80px; margin-top: 140px" data-toggle="modal" data-target="#sign_modal_div">报名</button>
             </div>
+
              {#modal模式框：当管理员点击报名按钮时再次确认#}
             <div class="modal fade" id="sign_modal_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div class="modal-body">确定通过？</div>
+                            <div class="modal-body">确定报名？</div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                                 <button type="button" class="btn btn-default" id="sign_modal_list_sure" data-dismiss="modal">确定</button>
@@ -207,7 +252,7 @@
             <div class="modal fade" id="sign_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div class="modal-body">确定通过？</div>
+                            <div class="modal-body">确定报名？</div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                                 <button type="button" class="btn btn-default" id="sign_modal_div_sure" data-dismiss="modal">确定</button>
@@ -261,10 +306,9 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
-                             {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                           +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=查看>"
+                           +"<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                 }
                 $("#tableText").html(str);
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
@@ -285,9 +329,8 @@ $(document).ready(function(){
                 }
             }
         });
-        {#$("#prev").click(function(){#}
+
         $('#page-li').on('click',"#prev",function(){
-            $('.box').css('display','none');
             if(dpage==1){
                 alert("该页是第一页！");
             }else{
@@ -326,10 +369,9 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
-                             {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=查看>"
+                            +"<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -345,9 +387,8 @@ $(document).ready(function(){
                 });
             }
         });
-        {#$("#next").click(function(){#}
+
         $('#page-li').on('click',"#next",function(){
-            $('.box').css('display','none');
             if(dpage==pages){
                 alert("该页是最后一页！");
             }else{
@@ -386,10 +427,9 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm' id='"+acquire_number+"' value=查看>"
-                             {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=查看>"
+                            +"<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -408,9 +448,7 @@ $(document).ready(function(){
         {#点击那一页就显示哪一页的数据#}
         for(let index=1;index<=pages;index++){
             let s="#li"+index;
-            {#$(s).click(function(){#}
             $('#page-li').on('click',s,function(){
-                $('.box').css('display','none');
                 let s2="#li"+dpage;
                 $(s2).css("border-color","");
                 if(dpage<pages){
@@ -446,10 +484,9 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
-                            {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
-                            "</td><td>"+ "<input type='button' class='btn btn-danger btn-sm open' id='"+acquire_number+"' value=查看>"
-                             {#+"<button class='btn btn-primary btn-sm' id='del"+index+"'>报名</button>"+ "</tr>";#}
-                            +"<input type='button' class='btn btn-primary btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm open' id='"+acquire_number+"' value=查看>"
+                            +"<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=报名 >"+ "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -469,13 +506,14 @@ $(document).ready(function(){
 
 {#操作中的查看详细信息弹窗#}
 $(document).ready(function(){
-   $(document).on("click",".btn-danger",function() {
+   $(document).on("click",".btn-primary",function() {
         {#先给后端传id#}
         let user_number = $(this).attr('id');
         {#获取传递给后端的id#}
         let acquire_user_id = acquire[user_number];
-         {#为了将查看中的id传递给悬浮框中的通过键#}
+         {#为了将查看中的id传递给悬浮框中的报名键#}
         pass = acquire_user_id;
+        console.log("acquire_user_id=",acquire_user_id)
          $.ajax({
             type:'GET',
             url:'./detailsysactivitytouser',
@@ -499,31 +537,36 @@ $(document).ready(function(){
                 $("#activity_main").text(activity_main);
             }
         });
-        $('.box').show();
+        $("#look_modal_div").modal('show')
         return false
     });
-     {#操作中的报名键交互#}
-     $(document).on("click",".btn-primary",function() {
-        {#先给后端传id#}
+     {#操作中报名键的modal模式框#}
+     $(document).on("click",".btn-success",function () {
+         {#先给后端传id#}
         let user_number = $(this).attr('id');
         {#获取传递给后端的id#}
         let acquire_user_id = acquire[user_number];
-        console.log("user_number=",user_number);
-        console.log("acquire_user_id=",acquire_user_id);
+        $("#sign_modal_list_sure").attr("data-id",acquire_user_id)
+        $("#sign_modal_list").modal('show')
+     });
+     {#操作中的报名键交互#}
+     $(document).on("click","#sign_modal_list_sure",function() {
+         {#先给后端传id#}
+         let acquire_user_id = $(this).attr("data-id")
          $.ajax({
-            type:'GET',
-            url:'./bmsysactivity',
-            data:{'id':acquire_user_id},
-            dataType:'json',
-            async: false,
-            cache: false,
-            contentType: 'application/json',
-            success:function(result){
-               console.log("result=",result);
-               display_alert(result.status);
-            }
-        })
-    });
+             type: 'GET',
+             url: './bmsysactivity',
+             data: {'id': acquire_user_id},
+             dataType: 'json',
+             async: false,
+             cache: false,
+             contentType: 'application/json',
+             success: function (result) {
+                 console.log("result=", result);
+                 display_alert(result.status);
+             }
+         })
+     });
      function display_alert(status){
         if(status==true){
             msg="已成功报名！";
@@ -538,16 +581,13 @@ $(document).ready(function(){
       });
     }
     {#查看按钮中的取消键#}
-    {#$("#close_delete").click(function(){#}
     $(document).on("click","#close_delete",function() {
-        $('.box').css('display','none');
-        {#$('.box').hide();#}
+        $("#look_modal_div").modal('hide')
         return false;
     });
     {#查看按钮中的报名键#}
-    {#$("#close_pass").click(function(){#}
     $(document).on("click","#sign_modal_div_sure",function() {
-        $('.box').css('display','none');
+        $("#look_modal_div").modal('hide')
          $.ajax({
              type: 'GET',
              url: './bmsysactivity',
@@ -560,7 +600,7 @@ $(document).ready(function(){
                  console.log("result=", result);
                  display_alert(result.status);
              }
-         });
+         })
        return false;
     });
 

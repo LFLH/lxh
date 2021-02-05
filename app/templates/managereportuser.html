@@ -14,6 +14,10 @@
     <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -69,77 +73,105 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-          <div id="accordion">
-              <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
-                    </div>
-                </div>
-              <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
-                    </div>
-              </div>
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.manage')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              申报任务用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              申报任务添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              能力提升培训用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              能力提升培训添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             用户管理
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managereportuser')}}">报告管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageexamine')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             考核管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managereportuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             报告管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managesystem')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             系统设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
 
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">提交报告列表</h2>
+            <br>
             <form action="" method="POST">
+                {#添加搜索栏#}
+                <div class="form-group">
+                     <div class="input-group col-xs-12">
+                         <div class="input-group-btn">
+                            <select name="type" class="form-control" style="width: auto;">
+                                <option>用户名</option>
+                                <option>报告名称</option>
+                                <option>年份</option>
+                                <option>报告类型</option>
+                                <option>报告状态</option>
+                            </select>
+                         </div>
+                            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                            <span class="input-group-btn">
+                                <button class="btn btn-dark" id="search" type="submit">搜索</button>
+                            </span>
+                        </div>
+                   <br>
+                </div>
+
                 <div class="table-responsive">
                     <form action="/"></form>
                     <table class="table table-bordered table-hover" id="table">
                         <thead>
-                            <tr>
+                            <tr class="table-info">
                                 <th>序号</th>
                                 <th>用户名</th>
                                 <th>报告名称</th>
@@ -158,42 +190,66 @@
                     </nav>
                 </div>
             </form>
-           {#查看按钮的div悬浮框#}
-            <div class="box">
-                <h2 style="margin-top: 5px;text-align: center">报告详情</h2>
-                <div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">报告名：</label>
-                    <p id="report_name" style="display: inline;width: 450px"></p>
+            <!-- 查看模态框 #lookModal -->
+            <div class="modal fade" id="look_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="text-align: center;font-size: 30px">报告详情</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="show" enctype='multipart/form-data'>
+                                <div class="form-group">
+                                    <label for="content" class="col-sm-2 control-label">报告名:</label>
+                                    <div class="col-sm-5" style="padding-left: 20px;">
+                                        <p id="report_name" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="begintime" class="col-sm-3 control-label">报告类型:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="report_type" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">报告年份:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="report_year" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">PDF文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_pdf" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">word文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_word" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">video文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_video" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">image文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_image" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="div_butt">
+{#                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>#}
+                        </div>
                     </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">报告类型：</label>
-                    <p id="report_type" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">报告年份：</label>
-                    <p id="report_year" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">PDF文件：</label>
-                    <p id="report_pdf" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">word文件：</label>
-                    <p id="report_word" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">video文件：</label>
-                    <p id="report_video" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">image文件：</label>
-                    <p id="report_image" style="display: inline;width: 450px"></p>
-                    </div>
-                </div>
-                <div id="div_butt">
                 </div>
             </div>
+
          {#modal模式框：当管理员点击驳回按钮时再次确认#}
             <div class="modal fade" id="reject_modal_list" >
                     <div class="modal-dialog">
@@ -332,7 +388,6 @@ $(document).ready(function(){
             }
         });
         $('#page-li').on('click',"#prev",function(){
-            $('.box').css('display','none');
             if($.cookie("cookie_report")!=undefined) {
                  get_cookie_report = $.cookie("cookie_report");
                  get_array_report = get_cookie_report.split(",")
@@ -406,7 +461,6 @@ $(document).ready(function(){
             }
         });
         $('#page-li').on('click',"#next",function(){
-            $('.box').css('display','none');
             if($.cookie("cookie_report")!=undefined) {
                  get_cookie_report = $.cookie("cookie_report");
                  get_array_report = get_cookie_report.split(",")
@@ -483,7 +537,6 @@ $(document).ready(function(){
         for(let index=1;index<=pages;index++){
             let s="#li"+index;
             $('#page-li').on('click',s,function(){
-                $('.box').css('display','none');
                 if($.cookie("cookie_report")!=undefined) {
                      get_cookie_report = $.cookie("cookie_report");
                      get_array_report = get_cookie_report.split(",")
@@ -580,9 +633,9 @@ $(document).ready(function () {
         console.log("pass=",pass)
          {#给div悬浮框添加取消和通过按钮#}
         let str_div = "";
-        str_div +="<button class='btn btn-outline-dark btn-lg delete_win' id='close_delete' style='margin-left: 100px; margin-top: 140px'>取消</button>"
-            +"<button type='submit' class='btn btn-outline-dark btn-lg reject_win' id='reject_two"+reject+"' style='margin-left: 100px;margin-top: 140px' data-toggle=\"modal\" data-target=\"#reject_modal_div\">驳回</button>"
-            +"<button type='submit' class='btn btn-outline-dark btn-lg pass_win' id='pass_two"+pass+"' style='margin-left: 100px;margin-top: 140px' data-toggle=\"modal\" data-target=\"#pass_modal_div\">通过</button>";
+        str_div +="<button class='btn btn-default btn-lg delete_win' id='close_delete' style='margin-left: 80px'>取消</button>"
+            +"<button type='submit' class='btn btn-default btn-lg reject_win' id='reject_two"+reject+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#reject_modal_div\">驳回</button>"
+            +"<button type='submit' class='btn btn-default btn-lg pass_win' id='pass_two"+pass+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#pass_modal_div\">通过</button>";
         $('#div_butt').html(str_div);
        {#判断div悬浮框中通过键和驳回键是否应该是disabled状态#}
         let pass_two_id = $(".pass_win").attr('id')
@@ -670,17 +723,17 @@ $(document).ready(function () {
                 }
             }
         });
-        $('.box').show();
+        $("#look_modal_div").modal('show')
         return false;
     });
    {#查看按钮div悬浮框的取消按钮#}
    $(document).on("click","#close_delete",function() {
-        $('.box').css('display','none');
+        $("#look_modal_div").modal('hide')
         return false;
     });
   {# 查看按钮div悬浮框的驳回按钮#}
   $(document).on("click","#reject_modal_div_sure",function () {
-       $('.box').css('display','none');
+       $("#look_modal_div").modal('hide')
        $.ajax({
             type:'GET',
             url:'./bhrecord',
@@ -698,7 +751,7 @@ $(document).ready(function () {
   });
   {#  查看按钮div悬浮框的通过按钮#}
     $(document).on("click","#pass_modal_div_sure",function () {
-       $('.box').css('display','none');
+       $("#look_modal_div").modal('hide')
        $.ajax({
             type:'GET',
             url:'./tgrecord',
@@ -726,7 +779,6 @@ $(document).ready(function () {
          }
          cookie_report.push(list_pass)
          cookie_report.push(list_reject)
-         {#console.log("test1=",test1)#}
          $(list_pass).attr('disabled',"true")
          $(list_reject).attr('disabled',"true")
 
@@ -784,7 +836,6 @@ $(document).ready(function () {
         let ac_pass_id = $(this).attr('id');
         new_ac_pass_id = ac_pass_id.split("pass");
         new_ac_pass_id = new_ac_pass_id.pop();
-        {#console.log("acquire_pass_id=", acquire_pass_id)#}
         $("#pass_modal_list").modal("show");
         return false
     });
@@ -815,7 +866,6 @@ $(document).ready(function () {
          let reject_t = "#reject"+new_ac_pass_id;
          cookie_report.push(pass_t)
          cookie_report.push(reject_t)
-         {#console.log("test1=",test1)#}
          $(pass_t).attr('disabled',"true")
          $(reject_t).attr('disabled',"true")
          {#设置cookie来记住通过的id#}
@@ -836,8 +886,6 @@ $(document).ready(function () {
             },1000)
       });
     }
-
-
 
 })
 </script>

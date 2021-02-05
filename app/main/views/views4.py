@@ -113,3 +113,17 @@ def tgdeclareuser():
     db.session.add(user)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
+
+#驳回用户申报
+@main.route('/bhdeclareuser',methods=['GET','POST'])
+def bhdeclareuser():
+    if request.method == 'GET':
+        id = request.args.get('id')
+    else:
+        id = request.form.get('id')
+    # 修改申请状态
+    udeclare = UDeclare.query.filter_by(id=id).first()
+    udeclare.type = 3
+    db.session.add(udeclare)
+    db.session.commit()
+    return Response(json.dumps({'status':True}),mimetype='application/json')

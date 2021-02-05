@@ -109,3 +109,17 @@ def tgabilityuser():
     db.session.add(utrain)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
+
+# 驳回用户申请培训
+@main.route('/bhabilityuser',methods=['GET','POST'])
+def bhabilityuser():
+    if request.method == 'GET':
+        id = request.args.get('id')
+    else:
+        id = request.form.get('id')
+    # 修改申请状态
+    utrain = UTrain.query.filter_by(id=id).first()
+    utrain.type=3
+    db.session.add(utrain)
+    db.session.commit()
+    return Response(json.dumps({'status':True}),mimetype='application/json')
