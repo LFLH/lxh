@@ -4,6 +4,7 @@ from app.main import main
 from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,TUT
 from app import db
 import json,datetime
+from sqlalchemy import or_,and_
 
 @main.after_app_request
 def after_request(response):
@@ -12,21 +13,70 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#条件检索
+def tsutrain(username,name,uptime,status,page,per_page):
+    if username!=None:
+        s1=(User.username==username)
+    else:
+        s1=True
+    if name!=None:
+        s2=(Train.name==name)
+    else:
+        s2=True
+    if uptime!=None:
+        s3=(UTrain.uptime==uptime)
+    else:
+        s3=True
+    if status is None:
+        s4=True
+    else:
+        status=int(status)
+        if status==0:# 用户申请未通过
+            s4=and_(User.checked==1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==0)
+        elif status==1:#用户申请通过
+            s4=and_(User.checked==1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==1)
+        elif status==10:#用户申请未通过但系统发布申请培训过期
+            s4=and_(User.checked==1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==0)
+        elif status==11:#用户申请通过但系统发布申请培训过期
+            s4=and_(User.checked==1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==1)
+        elif status==20:# 用户被删除但用户申请未通过
+            s4=and_(User.checked!=1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==0)
+        elif status==21:# 用户被删除但用户申请通过
+            s4=and_(User.checked!=1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==1)
+        elif status==30:#用户被删除但用户申请未通过但系统发布申请培训过期
+            s4=and_(User.checked!=1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==0)
+        elif status==31:#用户被删除但用户申请通过但系统发布申请培训过期
+            s4=and_(User.checked!=1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==1)
+        elif status==2:#未启用的培训，即被作废的培训
+            s4=and_(Train.status==1)
+    utrain=UTrain.query.join(TUT).join(Train).join(User).filter(and_(s1,s2,s3,s4)).order_by(-UTrain.uptime).paginate(page, per_page, error_out=False)
+    return utrain
+
+
 # 列表显示用户申请培训信息
 @main.route('/searchabilityuser',methods=['GET','POST'])
 def searchabilityuser():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        username=request.args.get('username')#用户名
+        name=request.args.get('name')#培训任务名
+        uptime=request.args.get('uptime')#用户提交时间
+        status=request.args.get('status')#状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        username = request.form.get('username')  # 用户名
+        name = request.form.get('name')  # 培训任务名
+        uptime = request.form.get('uptime')  # 用户提交时间
+        status = request.form.get('status')  # 状态
     page = int(page)
     per_page = int(per_page)
     # 连表查询未过期的用户申请培训
-    utrain=UTrain.query.join(TUT).join(Train).filter(Train.endtime>datetime.datetime.now()).order_by(-UTrain.uptime).paginate(page, per_page, error_out=False)
+    #utrain=UTrain.query.join(TUT).join(Train).filter(Train.endtime>datetime.datetime.now()).order_by(-UTrain.uptime).paginate(page, per_page, error_out=False)
+    utrain=tsutrain(username,name,uptime,status,page,per_page)
     items = utrain.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -69,7 +119,7 @@ def searchabilityuser():
         itemss = {'number': count + i + 1, 'id': items[i].id, 'username': username,'name':train.name,'begintime': str(train.begintime),
                   'endtime': str(train.endtime), 'uptime': str(items[i].uptime),'status':status}
         item.append(itemss)
-    # 返回总页数、活动总数、当前页、用户申报集合
+    # 返回总页数、活动总数、当前页、用户申请集合
     data = {'zpage': utrain.pages, 'total': utrain.total, 'dpage': utrain.page, 'item': item}
     return Response(json.dumps(data), mimetype='application/json')
 
@@ -84,7 +134,7 @@ def detailabilityuser():
     utrain=UTrain.query.filter(UTrain.id==id).all()[0]
     # 获取用户名
     name = User.query.filter_by(id=utrain.userid).all()[0].username
-    # 获取对应的申报任务
+    # 获取对应的申请任务
     train = Train.query.join(TUT).join(UTrain).filter(UTrain.id == utrain.id).all()[0]
     # 获取文件
     data = utrain.datas

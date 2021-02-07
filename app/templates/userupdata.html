@@ -15,25 +15,46 @@
     <link href="../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
+        .table>tbody>tr>td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table>thead>tr>th {
+            vertical-align: middle;
+            text-align: center;
+        }
         .dropdown-menu li{
             text-align: left;
             padding-left: 10px;
         }
+        .operation{
+
+        }
+        .operation button{
+            background-color: #D3D3D3;
+            border-radius: 3px;
+            width: 40px;
+            height:25px;
+            font-size: 10px;
+            margin:5px;
+        }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
-        <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+        <div class="navbar-header" style="width: 100%;">
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
-                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通</a></li>
+                            <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user" aria-hidden="true"></i> 用户账号：{{ username }}</a></li>
                             <li role="separator" class="divider"></li>
@@ -46,64 +67,71 @@
         </div>
     </div>
 </nav>
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.olduser')}}">首页</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.useractivity')}}">已提交活动</a>
-                    </div>
-                </div>
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.olduser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              活动报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.usertrainregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              培训报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交活动
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userupdata')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userndreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              年度总结提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userkjzreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              科技周报提交
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link"  href="{{ url_for('main.useractivityregister') }}">活动报名</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.userndreport')}}">年度总结提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.user_setting')}}">账户信息</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.user_setting')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             账户信息设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
-        <div class="col-md-10 col-md-offset-2 main ml-auto">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">添加新活动</h2>
             <form id="update" enctype='multipart/form-data'>
-            <!--<form method="POST" id="update" enctype='multipart/form-data'>-->
                 <div class="form-group">
-                    <label for="name" class="col-sm-2 control-label">活动名称:</label>
+                    <label for="name" class="col-sm-2 control-label"style="margin-top:10px;">活动名称:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
                         <input class="form-control" id="name" placeholder="请输入名称" required>
                     </div>
@@ -163,13 +191,30 @@
                                accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
                     </div>
                 </div>
-                    <div class="form-group">
-                        <div class="col-sm-10">
-                            <button class="btn btn-outline-danger">取消</button>
-                            <button type="submit" class="btn btn-outline-info">提交</button>
-                        </div>
+                <!--<div class="form-group">
+                    <div class="col-sm-10">
+                        <button type="button" class="layui-btn layui-btn-normal" id="chooseFile">选择文件</button>
                     </div>
-
+                    <div class="layui-upload-list col-md-12">
+                        <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                            <thead style="text-align: center">
+                            <tr>
+                                <th style="width: 50%">文件名</th>
+                                <th style="width: 10%;text-align: center">大小</th>
+                                <th style="width: 30%;text-align: center">时间</th>
+                                <th style="width: 10%;text-align: center">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="fileList"></tbody>
+                        </table>
+                    </div>
+                </div>-->
+                <div class="form-group" style="margin-top: 35px">
+                    <div class="col-sm-10">
+                    <button class="btn btn-outline-danger" id="cancel">取消</button>
+                    <button type="button" class="btn btn-outline-info" id="updateActivity">提交</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -177,24 +222,91 @@
 <script type="text/javascript">
     $(document).ready(function(){
         console.log("weclome");
-        /*var href=window.location.href
-        var s=href.split("?")
-        if(s.length==2){
-            var status=s[1].split("=")[1]
-            if(status=="False")
-                alert("文件上传失败！");
-            else alert("文件上传成功！");
-            window.location.href=s[0]
+        // $("#cancel").on("click", function (){
+        //
+        // })
+        /*$(function () {
+        //获取当前时间
+        function fileTime(){
+            function getNow(s) {
+                return s < 10 ? '0' + s : s;
+            }
+            var myDate = new Date;
+            var year = myDate.getFullYear(); //获取当前年
+            var mon = myDate.getMonth() + 1; //获取当前月
+            var date = myDate.getDate(); //获取当前日
+            var h = myDate.getHours();//获取当前小时数(0-23)
+            var m = myDate.getMinutes();//获取当前分钟数(0-59)
+            var s = myDate.getSeconds();//获取当前秒
+            var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "&nbsp;" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
+            return res
         }
-        $("#update").submit(function(){
-            let name = $('#name').val();
-            let begintime = $('#starttime').val();
-            let endtime = $('#endtime').val();
-            let main = $('#content').val();
-            let type = $('#type').val();
-            s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
-            $("#update").attr("action", s);
-        });*/
+        layui.use('upload', function () {
+        var $ = layui.jquery,
+            upload = layui.upload;
+        //多文件列表示例
+        var fileListView = $('#fileList'),
+            uploadListIns = upload.render({
+                elem: '#chooseFile',
+                // url: './addactivitycs',
+                accept: 'file',
+                exts: 'doc|docx|pdf|mp3|mp4|jpg',
+                multiple: true,
+                auto: false,
+                bindAction: '#updateActivity',
+                choose: function (obj) {
+                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    var file_time = fileTime();
+                    //读取本地文件
+                    obj.preview(function (index, file, result) {
+                        var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td style="width: 65%">' + file.name + '</td>'
+                            , '<td style="width: 10%">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td style="width: 15%">' + file_time + '</td>'
+                            , '<td style="width: 10%">'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+
+                        //删除
+                        tr.find('.demo-delete').on('click', function () {
+                            delete files[index]; //删除对应的文件
+                            tr.remove();
+                            uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                        });
+
+                        fileListView.append(tr);
+                    });
+                     $("#updateActivity").on("click", function () {
+                         let name = $('#name').val();
+                         let begintime = $('#starttime').val();
+                         let endtime = $('#endtime').val();
+                         let main = $('#content').val();
+                         let type = $('#type').val();
+                         s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
+                         // var formData = new FormData($("#update")[0]);
+                         $.ajax({
+                             url: s,
+                             type: "post",
+                             dataType: "json",
+                             async: false,
+                             contentType: 'application/json',
+                             processData: false,
+                             // data: formData,
+                             success: function (result) {
+                                 console.log(result.status);
+                                 if (result.status == true) {
+                                     layer.msg("上传成功！", {icon: 6});
+                                 } else if (result.status == false) {
+                                     layer.msg(result.msg, {icon: 5});
+                                 }
+                             }
+                         })
+                     })
+                },
+            });
+        })
+    })*/
         $("#update").submit(function(){
             let name = $('#name').val();
             let begintime = $('#starttime').val();
@@ -205,10 +317,10 @@
             var formData = new FormData($("#update")[0]);
             console.log(formData);
             $.ajax({
-                type: "POST",
-                data: formData,
-                url: s,
-                contentType: false,
+                 type: "POST",
+                 data: formData,
+                 url: s,
+                 contentType: false,
                  processData: false,
                  success:function(re){
                     Flush();

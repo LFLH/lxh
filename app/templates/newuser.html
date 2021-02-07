@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>首页</title>
+    <title>新用户申报</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
@@ -75,14 +75,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-            <div class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">
-                <div id="accordion" style="padding-left: 20px; padding-right: 20px">
-                    <div class="card">
-                        <div class="card-header">
-                            <a class="collapsed card-link" data-toggle="collapse" href="{{url_for('main.newuser')}}">新用户申报</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              新用户申报
+                            </a>
+                        </li>
+                    </ul>
+               </div>
              </div>
         </div>
         <div class="col-md-10" style="margin-top: 50px">

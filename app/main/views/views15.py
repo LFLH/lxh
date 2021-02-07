@@ -4,7 +4,7 @@ from app.main import main
 from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,AU
 from app import db
 import json,datetime,random,string,os
-from sqlalchemy import or_,and_
+from sqlalchemy import or_,and_,not_
 from werkzeug.utils import secure_filename
 
 @main.after_app_request
@@ -14,22 +14,54 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#条件检索
+def tssysactivity(activityname,status,page,per_page,uesrid):
+    if activityname!=None:
+        s1=(Activity.name==activityname)
+    else:
+        s1=True
+    if status is None:
+        s2=True
+    else:
+        status=int(status)
+        if status==1:#已过期
+            s2=(Activity.stoptime<datetime.datetime.now())
+        elif status==2:#已报名
+            au=Activity.query.join(AU).filter(and_(Activity.typeuser=="系统",Activity.status!=3,AU.userid==uesrid,Activity.stoptime>datetime.datetime.now())).all()
+            aid=[]
+            for a in au:
+                aid.append(a.id)
+            s2=and_(Activity.id in aid,Activity.stoptime>datetime.datetime.now())
+        elif status==0:#未报名
+            au = Activity.query.join(AU).filter(and_(Activity.typeuser=="系统",Activity.status!=3,AU.userid==uesrid,Activity.stoptime>datetime.datetime.now())).all()
+            aid = []
+            for a in au:
+                aid.append(a.id)
+            s2 = and_(not_(Activity.id in aid),Activity.stoptime>datetime.datetime.now())
+    activity=Activity.query.filter(and_(s1,s2,Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    return activity
+
 # 列表查看系统活动
 @main.route('/searchsysactivity', methods=['GET', 'POST'])
 def searchsysactivity():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        activityname=request.args.get('activityname')#活动名
+        status=request.args.get('status')#状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        activityname = request.form.get('activityname')  # 活动名
+        status = request.form.get('status')  # 状态
     page=int(page)
     per_page=int(per_page)
     user=session.get('user')
     userid=user['userid']
-    activity = Activity.query.filter(and_(Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    #activity = Activity.query.filter(and_(Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    activity=tssysactivity(activityname,status,page,per_page,userid)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)

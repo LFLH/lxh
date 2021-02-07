@@ -4,6 +4,7 @@ from app.main import main
 from app.models.models import User,Activity,AD,Data,Declare,UDeclare,DUDC
 from app import db
 import json,datetime
+from sqlalchemy import or_,and_
 
 @main.after_app_request
 def after_request(response):
@@ -12,21 +13,63 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#条件检索
+def tsudeclare(username,uptime,status,page,per_page):
+    if username!=None:
+        s1=(User.username==username)
+    else:
+        s1=True
+    if uptime!=None:
+        s2=(UDeclare.uptime==uptime)
+    else:
+        s2=True
+    if status is None:
+        s3=True
+    else:
+        status=int(status)
+        if status==0:# 用户申报未通过
+            s3=and_(User.checked!=2,Declare.status==0,Declare.endtime>datetime.datetime.now(),UDeclare.type==0)
+        elif status==1:#用户申报通过
+            s3=and_(User.checked!=2,Declare.status==0,Declare.endtime>datetime.datetime.now(),UDeclare.type==1)
+        elif status==10:#用户申报未通过但系统发布申报任务过期
+            s3=and_(User.checked!=2,Declare.status==0,Declare.endtime<datetime.datetime.now(),UDeclare.type==0)
+        elif status==11:#用户申报通过但系统发布申报任务过期
+            s3=and_(User.checked!=2,Declare.status==0,Declare.endtime<datetime.datetime.now(),UDeclare.type==1)
+        elif status==20:# 用户被删除但用户申报未通过
+            s3=and_(User.checked==2,Declare.status==0,Declare.endtime>datetime.datetime.now(),UDeclare.type==0)
+        elif status==21:#用户被删除但用户申报通过
+            s3=and_(User.checked==2,Declare.status==0,Declare.endtime>datetime.datetime.now(),UDeclare.type==1)
+        elif status==30:#用户被删除但用户申报未通过但系统发布申报任务过期
+            s3=and_(User.checked==2,Declare.status==0,Declare.endtime<datetime.datetime.now(),UDeclare.type==0)
+        elif status==31:#用户被删除但用户申报通过但系统发布申报任务过期
+            s3=and_(User.checked==2,Declare.status==0,Declare.endtime<datetime.datetime.now(),UDeclare.type==1)
+        elif status==2:#未启用的申报，即被作废的申报
+            s3=and_(Declare.status==1)
+    udeclare=UDeclare.query.join(DUDC).join(Declare).join(User).filter(and_(s1,s2,s3)).order_by(-UDeclare.uptime).paginate(page, per_page, error_out=False)
+    return udeclare
+
 #列表显示用户申报信息
 @main.route('/searchdeclareuser',methods=['GET','POST'])
 def searchdeclareuser():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        username=request.args.get('username')#用户名
+        uptime=request.args.get('uptime')#用户提交时间
+        status=request.args.get('status')#状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        username = request.form.get('username')  # 用户名
+        uptime = request.form.get('uptime')  # 用户提交时间
+        status = request.form.get('status')  # 状态
     page = int(page)
     per_page = int(per_page)
     #连表查询未过期的用户申报
-    udeclare=UDeclare.query.join(DUDC).join(Declare).order_by(-UDeclare.uptime).paginate(page, per_page, error_out=False)
+    #udeclare=UDeclare.query.join(DUDC).join(Declare).order_by(-UDeclare.uptime).paginate(page, per_page, error_out=False)
+    udeclare=tsudeclare(username,uptime,status,page,per_page)
     items = udeclare.items
     item = []
     count = (int(page) - 1) * int(per_page)

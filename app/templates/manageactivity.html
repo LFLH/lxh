@@ -13,10 +13,13 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
             text-align: center;
+            font-size: 14px;
         }
         .table>thead>tr>th {
             vertical-align: middle;
@@ -26,6 +29,23 @@
             text-align: left;
             padding-left: 10px;
         }
+        .table>tbody>tr>td:last-child {
+            text-align: left;
+        }
+        .table td, .table th {
+            padding: .45rem .75rem;
+        }
+        .btn-group-sm>.btn, .btn-sm {
+            padding: .25rem 1rem;
+        }
+        /*.operation button{*/
+        /*    background-color: #D3D3D3;*/
+        /*    border-radius: 3px;*/
+        /*    width: 40px;*/
+        /*    height:25px;*/
+        /*    font-size: 10px;*/
+        /*    margin:5px;*/
+        /*}*/
     </style>
 </head>
 <body>
@@ -55,80 +75,79 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
-                    </div>
-                </div>
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.manage')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              申报任务用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              申报任务添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              能力提升培训用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              能力提升培训添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             用户管理
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                   <div class="card-header">
-                     <a class="collapsed card-link" href="{{url_for('main.managereportuser')}}">报告管理</a>
-                   </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
-                  </div>
-                </div>
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageexamine')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             考核管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managereportuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             报告管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managesystem')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             系统设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
-
-        <div class="col-md-10 col-md-offset-2 main ml-auto">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">活动列表</h2>
-            <nav class="navbar navbar-expand navbar-light bg-light">
-                <div class="container-fluid">
-                    <div class="collapse navbar-collapse" style="height: 37px;padding-left: 15px">
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                        data-target="#addModal" style="margin-left: 15px; cursor: pointer">添加</button>
-                    </div>
-                </div>
-            </nav>
+            <button type="button" class="layui-btn layui-btn-normal" data-toggle="modal"
+                    data-target="#addModal" style="height: 30px; margin-top: 10px;padding: 0px 17px;line-height: 30px">添加</button>
 <!--            <form>-->
             <div class="table-responsive", style="padding-top: 10px">
                 <table class="table table-bordered table-hover" id="mytable">
@@ -141,7 +160,7 @@
                             <th>开始时间</th>
                             <th>结束时间</th>
                             <th>状态</th>
-                            <th>操作</th>
+                            <th style="width: 28%">操作</th>
                         </tr>
                     </thead>
                     <tbody id="tableText">
@@ -176,9 +195,8 @@
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
-
             <div class="modal-header">
-                <h4 class="modal-title">添加活动</h4>
+                <h3 class="modal-title">添加活动</h3>
                 <button type="button" class="close" data-dismiss="modal">&times;
                 </button>
             </div>
@@ -240,7 +258,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="myshowModal">活动详情</h4>
+          <h3 class="modal-title" id="myshowModal">活动详情</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body" id="showModal-body">
@@ -318,7 +336,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="myshowModal2">活动详情</h4>
+          <h3 class="modal-title" id="myshowModal2">活动详情</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body" id="showModal-body2">
@@ -378,7 +396,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="myeditModal2">活动详情</h4>
+          <h3 class="modal-title" id="myeditModal2">活动详情</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body" id="modifyModal-body">
@@ -402,7 +420,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="editbegintime" class="col-sm-3 control-label">活动起始时间:</label>
+                    <label for="editbegintime" class="col-sm-3 control-label" style="display: inline">活动起始时间:</label>
                     <div class="col-md-4" style="padding-left: 20px;">
                         <input type="date" class="form-control" id="editbegintime">
                     </div>
@@ -428,16 +446,38 @@
       </div>
     </div>
   </div>
+  <!-- 签到模态框 #modifyModal -->
+  <div class="modal fade" id="signModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="mysignModal">签到</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body" id="sign-body" name="sign">
+            <form>
+            全部<input type="checkbox" id="selectAll"/>
+            音乐<input type="checkbox" value=""/> <br>
+            代码<input type="checkbox" value=""/>
+                </form>
+        </div>
+        <div class="modal-footer" id="sign-foot">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" id="sign" class="btn btn-success" data-dismiss="modal" id="sign">签到</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- 通过模态框 #passModal -->
   <div class="modal fade" id="passModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="mypassModal">通过</h4>
+          <h3 class="modal-title" id="mypassModal">通过活动申请</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-          <h2>确认通过？</h2>
+          <h4>确认通过？</h4>
         </div>
         <div class="modal-footer" id="pass-foot">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -451,11 +491,11 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="myrefModal">驳回</h4>
+          <h3 class="modal-title" id="myrefModal">驳回活动申请</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-          <h2>确认驳回？</h2>
+          <h4>确认驳回？</h4>
         </div>
         <div class="modal-footer" id="refuse-foot">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -469,11 +509,11 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="mydelModal">取消窗口</h4>
+          <h3 class="modal-title" id="mydelModal">取消活动窗口</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-          <h2>确认取消？</h2>
+          <h4>确认取消？</h4>
         </div>
         <div class="modal-footer" id="del-foot">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -482,33 +522,7 @@
       </div>
     </div>
   </div>
-<!--<script type="text/javascript">
-    $("#search").click(function () {
-        let page = 1;       //当前页
-        let per_page = 5;   //平均页
-        let username = username;
-        let type = type;    //具体要看怎么获取这个type
-        let time = time;    //怎么获取这个时间
-        $.ajax({
-            url: "{{url_for('main.searchactivity')}}",
-            data: { 'page': page, 'per_page': per_page,'username':username,'type':type,'time':time },
-            type: 'POST',
-            dataType: 'json',
-            contentType: 'application/x-www-form-urlencoded',
-            success: function (d) {
-                //查询成功的函数...
-                if (d.item.username != undefined) {
-                    s = true;
-                    console.log('successful');
-                    console.log(d.item.username);
-                    console.log(d.zpage);
-                    console.log(d.total);
-                    console.log(d.dpage);
-                }
-            },
-        });
-    });
-</script>-->
+
 <script type="text/javascript">
     $(document).ready(function(){
         let dpage=1
@@ -543,12 +557,13 @@
                                     "</td><td>" + data.item[index].activityname +
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
-                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                    "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px' disabled>取消</button>" +"</tr>";
                             }else {
                                 var sta = '通过';
                                 str += "<tr><td>" + data.item[index].number +
@@ -556,11 +571,12 @@
                                     "</td><td>" + data.item[index].activityname +
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                    "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
                                     "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
                             }
                         }else {
@@ -575,19 +591,7 @@
                                 var sta = '通过';
                                 break;
                              case 3:
-                                var sta = '删除';
-                                break;
-                             case 10:
-                                var sta= '审核中但用户考核未过';
-                                break;
-                            case 11:
-                                var sta = '驳回但用户考核未过';
-                                break;
-                             case 12:
-                                var sta = '通过但用户考核未过';
-                                break;
-                             case 13:
-                                var sta = '删除但用户考核未过';
+                                var sta = '取消';
                                 break;
                             }
                             str += "<tr><td>" + data.item[index].number +
@@ -595,7 +599,7 @@
                                     "</td><td>" + data.item[index].activityname +
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
@@ -746,37 +750,39 @@
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + '通过' +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                        "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px' disabled>取消</button>" +"</tr>";
                                 }else {
                                     var sta = '通过';
                                     str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + '通过' +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                        "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
                                         "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
                                 }
                             }else {
                                switch(data.item[index].status) {
-                                 case '0':
+                                 case 0:
                                     var sta = '审核中';
                                     break;
-                                 case '1':
+                                 case 1:
                                     var sta = '驳回';
                                     break;
-                                 case '2':
+                                 case 2:
                                     var sta = '通过';
                                     break;
-                                 case '3':
+                                 case 3:
                                     var sta = '取消';
                                     break;
                                 }
@@ -784,7 +790,7 @@
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
@@ -843,37 +849,39 @@
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + '通过' +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
-                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                        "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
+                                        "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px' disabled>取消</button>" +"</tr>";
                                     }else {
                                         var sta = '通过';
                                         str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + '通过' +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                        "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
                                         "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
                                 }
                             }else {
                                 switch(data.item[index].status) {
-                                     case '0':
+                                     case 0:
                                         var sta = '审核中';
                                         break;
-                                     case '1':
+                                     case 1:
                                         var sta = '驳回';
                                         break;
-                                     case '2':
+                                     case 2:
                                         var sta = '通过';
                                         break;
-                                     case '3':
+                                     case 3:
                                         var sta = '取消';
                                         break;
                                 }
@@ -881,7 +889,7 @@
                                         "</td><td>" + data.item[index].activityname +
                                         "</td><td>" + data.item[index].typeuser +
                                         "</td><td>" + data.item[index].type +
-                                        "</td><td>" + data.item[index].begintime +
+                                        "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
                                         "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
@@ -929,12 +937,13 @@
                                     "</td><td>" + data.item[index].activityname +
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
                                     "</td><td>" + '通过' +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
-                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                                    "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
+                                    "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px' disabled>取消</button>" +"</tr>";
                             }else {
                                 var sta = '通过';
                                 str += "<tr><td>" + data.item[index].number +
@@ -942,25 +951,26 @@
                                     "</td><td>" + data.item[index].activityname +
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
                                     "</td><td>" + '通过' +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                    "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
                                     "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
                             }
                         }else {
                             switch(data.item[index].status) {
-                             case '0':
+                             case 0:
                                 var sta = '审核中';
                                 break;
-                             case '1':
+                             case 1:
                                 var sta = '驳回';
                                 break;
-                             case '2':
+                             case 2:
                                 var sta = '通过';
                                 break;
-                             case '3':
+                             case 3:
                                 var sta = '取消';
                                 break;
                             }
@@ -969,7 +979,7 @@
                                     "</td><td>" + data.item[index].activityname +
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
-                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
@@ -1149,7 +1159,7 @@
                 let type = $('#edittype').val();
                 s='./updatesysactivity?id='+id+'&name='+name+'&type='+type+'&begintime='+begintime+'&endtime='+endtime+'&stoptime='+stoptime+'&main='+main
                 $.ajax({
-                    type: "POST",
+                    type: "get",
                     url: s,
                     // data:{
                     //     name:document.getElementById("editname").value,
@@ -1161,21 +1171,15 @@
                     // },
                     contentType: false,
                     processData: false,
+                    contentType: 'application/json',
                     success:function(re){
-                        Flush();
+                        // Flush();
                         Toast(re.status);
                         init();
                     }
                 });
             })
-            function Flush(){
-                $('#editname').val('');
-                $('#editstoptime').val('');
-                $('#editbegintime').val('');
-                $('#editendtime').val('');
-                $('#editcontent').val('');
-                $('#edittype').val('');
-            };
+
             function Toast(status){
             if(status==true){
                 msg="修改成功！";
@@ -1197,34 +1201,106 @@
         // 导出报名表
         $("#export-foot").on('click', '.exportExcel', function () {
             var id = $(this).data('id')
-                $.ajax({
-                    type:'GET',
-                    url:'./xlsxsysactivity',
-                    data:{'id':id},
-                    dataType:'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success:function(data){
-                        console.log(data)
-                    }
-                });
+            window.open("./xlsxsysactivity?id="+id);
+            // window.location.href="./xlsxsysactivity?id="+id;
+            // var $eleForm = $("<form method='post'></form>");
+            // $eleForm.attr("action","./xlsxsysactivity?id="+id);
+            // $(document.body).append($eleForm);
+            // //提交表单，实现下载
+            // $eleForm.submit();
         })
+
         // 生成二维码
         $("#export-foot").on('click', '.code', function () {
             var id = $(this).data('id')
+            window.open("./ewmsysactivity?id="+id);
+        })
+        // 签到
+        $("#mytable").on("click", ".user-active-sign", function () {
+            $("#sign").attr("data-activityid",$(this).data('id'));
+            var activityid = $(this).data('id');
+            s='./websignuser?activityid='+activityid
             $.ajax({
-                type:'GET',
-                url:'./ewmsysactivity',
-                data:{'id':id},
+                type:'get',
+                url:s,
                 dataType:'json',
                 async: false,
                 cache: false,
                 contentType: 'application/json',
                 success:function(data){
-                    console.log(1234)
+                    console.log('websignuser',data)
+                    var strSign = '<input type="checkbox" id="selectAll"/>全部 <br>'
+                        for(var i=0;i<data.userz.length;i++){
+                            strSign+= '<input type="checkbox" name="checkbox" class="userCheckbox" data-userid='+ data.userz[i].userid +'/>'+ data.userz[i].name+ '<br>'
+                        }
+                    $("#sign-body").html(strSign);
+                    $("#signModal").modal('show')
                 }
             });
+            $("#sign").click(function() {
+                var checkeduser = [];
+                if($("input[name=checkbox]:checked").length<1){
+                    alert("请至少选择一个用户");
+                    return false
+                }
+                $("input[name=checkbox]:checked").each(function(i){
+                  checkeduser[i] = $(this).data("userid");
+                });
+                console.log(checkeduser,'id')
+                var activityid = $(this).data("activityid");
+                s='./websign?activityid='+activityid
+                $.ajax({
+                    type: "POST",
+                    url: s,
+                    data:{
+                        userz:checkeduser
+                    },
+                    contentType: false,
+                    processData: false,
+                    success:function(re){
+                        init();
+                        if (re.status==1){
+                            alert('签到成功')
+                        }else {
+                            alert('签到失败')
+                        }
+                    }
+                });
+            })
+            $("#selectAll").click(function (){
+                //id=all是全选/反选的checkbox，判断是选中还是没选中
+                var isChecked=$("#selectAll").is(':checked');
+                //获取所有checkbox组成的数组
+                // var checkedArrs=$("input[type='checkbox']:checked");
+                //判断是全选还是反选
+                if(isChecked){
+                    $("input[type='checkbox']").each(function(){
+                        $(this).prop('checked',true);
+                    });
+                }else{
+                    $("input[type='checkbox']").each(function(){
+                        $(this).prop('checked',false);
+                    });
+                }
+            })
+            $("#sign-body").on('click', '.userCheckbox', function () {
+                var userid = $('.userCheckbox:checked').data('userid');
+                console.log(userid,11)
+                if (userid){
+                    var all = true;
+                    var checkedArrs=$("input[type='checkbox']");
+                    console.log(checkedArrs)
+                    for(var i=1;i<checkedArrs.length;i++){
+                       if(!checkedArrs[i].checked){
+                           all = false;
+                           break;
+                       }
+                    }
+                    document.getElementById('selectAll').checked = all;
+                }else {
+                    document.getElementById('selectAll').checked = false;
+                }
+            })
         })
     });
 </script>

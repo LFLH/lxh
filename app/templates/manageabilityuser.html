@@ -363,6 +363,10 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].uptime +
                             "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
+                             + "<!--<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>-->"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                            "</td><td>" + data.item[index].status +
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
                              + "<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>"
                              +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
                 }

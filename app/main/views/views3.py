@@ -48,21 +48,56 @@ def addsysactivity():
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
+#条件检索
+def tsactivity(name,typeuser,type,status,page,per_page):
+    if name!=None:
+        s1=(Activity.name==name)
+    else:
+        s1=True
+    if typeuser!=None:
+        s2=(Activity.typeuser==typeuser)
+    else:
+        s2=True
+    if type!=None:
+        s3=(Activity.type==type)
+    else:
+        s3=True
+    if status!=None:
+        status=int(status)
+        if status<10:
+            s4=(Activity.status==status)
+        else:
+            k=status-10
+            s4=and_(Activity.status==k,User.checked!=1)
+    else:
+        s4=True
+    activity=Activity.query.join(User).filter(and_(s1,s2,s3,s4)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    return activity
+
 #列表显示活动
 @main.route('/searchactivity',methods=['GET', 'POST'])
 def searchactivity():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        name=request.args.get('name')#活动名
+        typeuser=request.args.get('typeuser')#活动类别，自主或系统
+        type=request.args.get('type')#活动类型
+        status=request.args.get('type')#状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        name = request.form.get('name')  # 活动名
+        typeuser = request.form.get('typeuser')  # 活动类别，自主或系统
+        type = request.form.get('type')  # 活动类型
+        status = request.form.get('type')  # 状态
     page = int(page)
     per_page = int(per_page)
     #获取未删除活动倒叙
-    activity = Activity.query.order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    activity=tsactivity(name,typeuser,type,status,page,per_page)
+    #activity = Activity.query.order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -146,6 +181,11 @@ def detailsysactivity():
     user=[]
     for users in userz:
         user.append(users.username)
+    # 获取系统活动的签到用户
+    userz2 = User.query.join(AU).filter(and_(AU.activityid == id,AU.type==1)).all()
+    user2=[]
+    for users2 in userz2:
+        user2.append(users2.username)
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、用户组
     da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'stoptime':str(activity.stoptime),'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user}
     return Response(json.dumps(da), mimetype='application/json')
