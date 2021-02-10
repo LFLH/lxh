@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container">
-        <h2 style="padding-top: 20px">申报任务添加</h2>
+        <h2 style="padding-top: 20px">添加申报任务</h2>
         <br>
         <br>
         <form>
@@ -34,57 +34,81 @@
 
 {% block js %}
     $(function () {
-            $("#cancel").click(function () {
-                $("#name").val('');
-                $('#startTime').val('');
-                $('#stopTime').val('');
-                $('#content').val('');
+        //获取当前时间
+        function createTime(){
+            function getNow(s) {
+                return s < 10 ? '0' + s : s;
+            }
+            var myDate = new Date;
+            var year = myDate.getFullYear(); //获取当前年
+            var mon = myDate.getMonth() + 1; //获取当前月
+            var date = myDate.getDate(); //获取当前日
+            var h = myDate.getHours();//获取当前小时数(0-23)
+            var m = myDate.getMinutes();//获取当前分钟数(0-59)
+            var s = myDate.getSeconds();//获取当前秒
+            var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "-" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
+            return res
+        }
+        var createtime = createTime();
+        $("#cancel").click(function () {
+            $("#name").val('');
+            $('#startTime').val('');
+            $('#stopTime').val('');
+            $('#content').val('');
         });
-            $("#submit").click(function () {
-                var content = $("#content").val();
-                var startTime = $('#startTime').val();
-                var stopTime = $('#stopTime').val();
-                var name= $('#name').val();
+        $("#submit").click(function () {
+            var content = $("#content").val();
+            var startTime = $('#startTime').val();
+            var stopTime = $('#stopTime').val();
+            var name= $('#name').val();
 
-                 if(name == ''){
-                 alert('名字不能为空！');
+             if(name == ''){
+             alert('名字不能为空！');
+             return
+             }
+             if(startTime == ''){
+                 alert('请选择开始时间！');
                  return
-                 }
-                 if(startTime == ''){
-                     alert('请选择开始时间！');
+             }
+             if(stopTime != ''){
+                 if(startTime > stopTime){
+                     alert('结束时间不能早于开始时间！');
                      return
                  }
-                 if(stopTime != ''){
-                     if(startTime > stopTime){
-                         alert('结束时间不能早于开始时间！');
-                         return
-                     }
-                 }else {
-                     alert('请选择结束时间！');
-                     return
+                 if(stopTime < createtime){
+                    alert('结束时间不能早于当前时间！');
+                    return
                  }
-                if(content == '') {
-                    alert("内容不能为空！");
+             }else {
+                 alert('请选择结束时间！');
+                 return
+             }
+            if(content == '') {
+                alert("内容不能为空！");
+            }
+            $.ajax({
+                type: "GET",
+                url: "/adddeclare",
+                data: {name:$('#name').val(),begintime:$('#startTime').val(),endtime:$('#stopTime').val(),main:$("#content").val(),createtime:createtime},
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function (re) {
+                    Flush(re.status);
                 }
-                $.ajax({
-                    type: "GET",
-                    url: "/adddeclare",
-                    data: {name:$('#name').val(),begintime:$('#startTime').val(),endtime:$('#stopTime').val(),main:$("#content").val()},
-                    dataType: 'json',
-                    async: false,
-                    cache: false,
-                    contentType: 'application/json',
-                    success:function () {
-                        Flush();
-                    }
-                });
             });
-            function Flush(){
+        });
+        function Flush(status){
+            if(status==true){
                 $('#name').val('');
                 $('#startTime').val('');
                 $('#stopTime').val('');
                 $('#content').val('');
                 alert("添加成功！")
+            }else{
+                alert("添加失败！")
             }
-        });
+        }
+    });
 {% endblock %}

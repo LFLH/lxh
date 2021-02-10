@@ -1,7 +1,7 @@
 #/manageuser的后端API
 from flask import request,jsonify,session,redirect,Response,send_file
 from app.main import main
-from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,Record,DUDC,TUT
+from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,Record,DUDC,TUT,DU
 from app import db
 import json,datetime,random,string,os,xlrd,xlwt,time,mimetypes,zipfile
 from sqlalchemy import or_,and_
@@ -30,8 +30,6 @@ def adduser():
         phone = request.form.get('phone')
         address = request.form.get('address')
     user=User.query.filter(User.name==name).all()
-    maxdate='9999-12-31 23:59:59'
-    maxdate=datetime.datetime.strptime(maxdate, '%Y-%m-%d %H:%M:%S')
     #不存在用户
     if len(user)==0:
         k = random.randint(6, 8)
@@ -54,13 +52,13 @@ def adduser():
         #自动生成密码
         password=''.join(random.sample(string.ascii_letters + string.digits, k))
         #添加用户
-        newuser=User(username=username,name=name,email=email,phone=phone,address=address,password=password,type='user',checked=0,endtime=maxdate)
+        newuser=User(username=username,name=name,email=email,phone=phone,address=address,password=password,type='user',checked=0)
         db.session.add(newuser)
         db.session.commit()
     #存在用户
     else:
         user[0].checked=0
-        user[0].endtime=maxdate
+        user[0].endtime=datetime.datetime.now()
         db.session.add(user[0])
         db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -124,6 +122,47 @@ def exceladduser():
                     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
+#查看用户信息
+@main.route('/detailuser',methods=['GET', 'POST'])
+def detailuser():
+    if request.method == "GET":
+        id = request.args.get('id')
+    else:
+        id = request.form.get('id')
+    user=User.query.filter(User.id==id).all()[0]
+    if user.checked == 0:
+        if user.endtime > datetime.datetime.now():
+            status = 0  # 新用户
+        else:
+            status = 1  # 未激活用户
+    elif user.checked == 1:
+        status = 2  # 正式用户
+    else:
+        status = 3  # 考核未过用户
+    users={'username':user.username,'name':user.name,'email':user.email,'phone':user.phone,'address':user.address,'password':user.password,'type':user.type,'status':status}
+    return Response(json.dumps(users), mimetype='application/json')
+
+#条件检索
+def tsuser(username,status,page,per_page):
+    if username!=None:
+        s1=(User.username==username)
+    else:
+        s1=True
+    if status!=None:
+        status=int(status)
+        if status==0:
+            s2=and_(User.checked==0,User.endtime>datetime.datetime.now())
+        elif status==1:
+            s2=and_(User.checked==0,User.endtime<datetime.datetime.now())
+        elif status==2:
+            s2=(User.checked==1)
+        elif status==3:
+            s2=(User.checked==2)
+    else:
+        s2=True
+    user=User.query.filter(and_(User.type != 'sysadmin',s1,s2)).order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    return user
+
 #删除用户
 @main.route('/deleteuser',methods=['GET', 'POST'])
 def deleteuser():
@@ -131,20 +170,23 @@ def deleteuser():
         id = request.args.get('id')
         page = request.args.get('page')  # 当前页
         per_page = request.args.get('per_page')  # 平均页数
+        # 检索条件
+        username = request.args.get('username')  # 用户名
+        status = request.args.get('status')  # 用户类型
     else:
         id = request.form.get('id')
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #id = request.json.get('id')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        username = request.form.get('username')  # 用户名
+        status = request.form.get('status')  # 用户类型
     #移除用户的相关活动及数据
     page = int(page)
     per_page = int(per_page)
     user=User.query.filter(User.id==id).all()[0]
     user.checked=2#删除标识
     # 倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
-    user = User.query.filter(User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    user = tsuser(username,status,page,per_page)
     items = user.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -172,16 +214,21 @@ def searchuser():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        username=request.args.get('username')#用户名
+        status=request.args.get('status')#用户类型
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        username = request.form.get('username')#用户名
+        status = request.form.get('status')#用户类型
     #倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
     page=int(page)
     per_page = int(per_page)
     #查询用户需要sysadmin用户和老用户、未过期用户
-    user=User.query.filter(User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    user=tsuser(username,status,page,per_page)
+    #user=User.query.filter(User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page, error_out=False)
     items=user.items
     item=[]
     count=(int(page)-1)*int(per_page)
@@ -268,10 +315,16 @@ def setpassword():
         id = request.args.get('id')
         page = request.args.get('page')  # 当前页
         per_page = request.args.get('per_page')  # 平均页数
+        # 检索条件
+        username = request.args.get('username')  # 用户名
+        status = request.args.get('status')  # 用户类型
     else:
         id = request.form.get('id')
         page = request.form.get('page')
         per_page = request.form.get('per_page')
+        # 检索条件
+        username = request.form.get('username')  # 用户名
+        status = request.form.get('status')  # 用户类型
     page=int(page)
     per_page=int(per_page)
     user=User.query.filter(User.id==id).all()[0]
@@ -282,7 +335,7 @@ def setpassword():
     db.session.add(user)
     db.session.commit()
     # 倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
-    user = User.query.filter(User.type != 'sysadmin').order_by(-User.updatetime).paginate(page, per_page,error_out=False)
+    user = tsuser(username,status,page,per_page)
     items = user.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -311,6 +364,93 @@ def create_dir(s):
         os.makedirs(file_dir)
     return file_dir
 
+#创建文件夹树
+def createdirtree(userid):
+    # 创建文件夹树
+    file_dir ={}
+    # 创建基本文件夹data
+    file_dir['base']=create_dir('data')
+    # 创建输出文件夹data/userout
+    file_dir['userout'] = create_dir('data/userout')
+    # 创建用户文件夹
+    user=User.query.filter(User.id==userid).all()[0]
+    file_dir['user'] = create_dir('data/userout/' + user.name)
+    #创建活动文件夹
+    activity=Activity.query.filter(Activity.userid==userid).all()
+    file_dir['activity'] ={}
+    abase=create_dir('data/userout/'+user.name+'/自主活动')#video,music,image,pdf,word
+    activitytype=['video','music','image','pdf','word']
+    file_dir['activity']['base']=abase
+    for a in activity:
+        ai={}
+        ai['base']=create_dir('data/userout/'+user.name+'/自主活动/'+a.name)
+        for type in activitytype:
+            ai[type]=create_dir('data/userout/'+user.name+'/自主活动/'+a.name+'/'+type)
+        file_dir['activity'][str(a.id)]=ai
+    # 创建申报文件夹
+    file_dir['declare'] = {}
+    dbase = create_dir('data/userout/' + user.name + '/申报')#pdf,word
+    file_dir['declare']['base']=dbase
+    declaretype = ['pdf', 'word']
+    #创建用户相关申报文件夹
+    declare=Declare.query.join(DU).join(User).filter(User.id==userid).all()
+    for d in declare:
+        di={}
+        di['base']=create_dir('data/userout/' + user.name + '/申报/'+d.name)
+        udeclare=UDeclare.query.join(DUDC).join(Declare).filter(Declare.id==d.id).all()
+        for ud in udeclare:
+            udi={}
+            udi['base']=create_dir('data/userout/' + user.name + '/申报/'+d.name+'/'+str(ud.id))
+            for type in declaretype:
+                udi[type]=create_dir('data/userout/' + user.name + '/申报/'+d.name+'/'+str(ud.id)+'/'+type)
+            di[str(ud.id)]=udi
+        file_dir['declare'][d.name]=di
+    # 创建培训文件夹
+    file_dir['train'] = {}
+    tbase = create_dir('data/userout/' + user.name + '/培训')#image,pdf,word
+    file_dir['train']['base']=tbase
+    traintype=['image','pdf','word']
+    #创建用户相关培训文件夹
+    train=Train.query.join(TUT).join(UTrain).filter(UTrain.userid==userid).all()
+    for t in train:
+        ti={}
+        ti['base']=('data/userout/' + user.name + '/培训/'+t.name)
+        utrain=UTrain.query.join(TUT).join(Train).filter(Train.id==t.id).all()
+        for ut in utrain:
+            uti={}
+            uti['base']=create_dir('data/userout/' + user.name + '/培训/'+t.name+'/'+str(ut.id))
+            for type in traintype:
+                uti[type]=create_dir('data/userout/' + user.name + '/培训/'+t.name+'/'+str(ut.id)+'/'+type)
+            ti[str(ut.id)]=uti
+        file_dir['train'][t.name]=ti
+    # 创建年度报告文件夹
+    record1 = Record.query.filter(and_(Record.userid == userid, Record.type == '年度')).all()
+    file_dir['ndreport'] = {}
+    ndrbase = create_dir('data/userout/' + user.name + '/年度报告')#mage,pdf,word
+    ndtype=['image','pdf','word']
+    file_dir['ndreport']['base']=ndrbase
+    for nr in record1:
+        ndri={}
+        ndri['base'] = create_dir('data/userout/' + user.name + '/年度报告/' + nr.name)
+        for type in ndtype:
+            ndri[type]=create_dir('data/userout/' + user.name + '/年度报告/' + nr.name+'/'+type)
+        file_dir['ndreport'][str(nr.id)]=ndri
+    # 创建科技周报告文件夹
+    record2 = Record.query.filter(and_(Record.userid == userid, Record.type == '科技周')).all()
+    file_dir['kjzreport'] = {}
+    kjzrbase = create_dir('data/userout/' + user.name + '/科技周报告')#video,image,pdf,word
+    kjztype=['video','image','pdf','word']
+    file_dir['kjzreport']['base']=kjzrbase
+    for kjr in record2:
+        kjzri={}
+        kjzri['base'] = create_dir('data/userout/' + user.name + '/科技周报告/' + kjr.name)
+        for type in kjztype:
+            kjzri[type]=create_dir('data/userout/' + user.name + '/科技周报告/' + kjr.name+'/'+type)
+        file_dir['kjzreport'][str(kjr.id)]=kjzri
+    # 创建zip文件夹
+    file_dir['zip'] = create_dir('data/zip')
+    return file_dir
+
 #批量用户文档导出
 @main.route('/useroutdata',methods=['GET', 'POST'])
 def useroutdata():
@@ -318,93 +458,9 @@ def useroutdata():
         id = request.args.get('id')
     else:
         id = request.form.get('id')
+    # 创建文件夹树
+    file_dir = createdirtree(id)
     user=User.query.filter(User.id==id).all()[0]
-    #自主活动
-    activity=Activity.query.filter(Activity.userid==id).all()
-    #申报
-    udeclare=UDeclare.query.filter(UDeclare.userid==id).all()
-    #培训
-    utrain=UTrain.query.filter(UTrain.userid==id).all()
-    #年度报告
-    record1=Record.query.filter(and_(Record.userid==id,Record.type=='年度')).all()
-    # 科技周报告
-    record2 = Record.query.filter(and_(Record.userid == id, Record.type == '科技周')).all()
-    #创建文件夹
-    file_dir={}
-    #创建基本文件夹data
-    file_dir['base']=create_dir('data')
-    #创建输出文件夹data/userout
-    file_dir['userout'] =create_dir('data/userout')
-    #创建用户文件夹
-    file_dir['user'] =create_dir('data/userout/'+user.name)
-    #创建活动文件夹
-    file_dir['activity'] =[]
-    abase=create_dir('data/userout/'+user.name+'/自主活动')
-    file_dir['activity'].append(abase)
-    for a in activity:
-        ai=create_dir('data/userout/'+user.name+'/自主活动/'+a.name)
-        file_dir['activity'].append(ai)
-    #创建申报文件夹
-    file_dir['declare']=[]
-    dbase=create_dir('data/userout/'+user.name+'/申报')
-    file_dir['declare'].append(dbase)
-    for ud in udeclare:
-        declare=Declare.query.join(DUDC).join(UDeclare).filter(UDeclare.id==ud.id).all()
-        if len(declare)>0:
-            di=create_dir('data/userout/'+user.name+'/申报/'+declare[0].name)
-            file_dir['declare'].append(di)
-    #创建培训文件夹
-    file_dir['train'] = []
-    tbase = create_dir('data/userout/' + user.name + '/培训')
-    file_dir['train'].append(tbase)
-    for ut in utrain:
-        train=Train.query.join(TUT).join(UTrain).filter(UTrain.id==ut.id).all()
-        if len(train)>0:
-            ti=create_dir('data/userout/'+user.name+'/培训/' + train[0].name)
-            file_dir['train'].append(ti)
-    #创建年度报告文件夹
-    file_dir['ndreport'] = []
-    ndrbase = create_dir('data/userout/' + user.name + '/年度报告')
-    file_dir['ndreport'].append(ndrbase)
-    for nr in record1:
-        ndri=create_dir('data/userout/' + user.name + '/年度报告/' + nr.name)
-        file_dir['ndreport'].append(ndri)
-    # 创建科技周报告文件夹
-    file_dir['kjzreport'] = []
-    kjzrbase = create_dir('data/userout/' + user.name + '/科技周报告')
-    file_dir['kjzreport'].append(kjzrbase)
-    for kjr in record2:
-        kjzri=create_dir('data/userout/' + user.name + '/科技周报告/' + kjr.name)
-        file_dir['kjzreport'].append(kjzri)
-    #创建zip文件夹
-    file_dir['zip']=create_dir('data/zip')
-    #print(file_dir)
-    #存文件
-    #存活动文件
-    for i in range(len(activity)):
-        datas=activity[i].datas
-        for data in datas:
-            copyfile(data.path,file_dir['activity'][i+1]+'/'+data.newname)
-    #存申报文件
-    for i in range(len(udeclare)):
-        datas=udeclare[i].datas
-        for data in datas:
-            copyfile(data.path,file_dir['declare'][i+1]+'/'+data.newname)
-    #存培训文件
-    for i in range(len(utrain)):
-        datas=utrain[i].datas
-        for data in datas:
-            copyfile(data.path,file_dir['train'][i+1]+'/'+data.newname)
-    #年度报告文件
-    for i in range(len(record1)):
-        datas=record1[i].datas
-        for data in datas:
-            copyfile(data.path, file_dir['ndreport'][i + 1] + '/' + data.newname)
-    #科技周报告文件
-    for i in range(len(record2)):
-        datas=record2[i].datas
-        for data in datas:
-            copyfile(data.path, file_dir['kjzreport'][i + 1] + '/' + data.newname)
     #压缩文件
     startdir = file_dir['user']  # 要压缩的文件夹路径
     file_news = file_dir['zip']+'/'+str(user.name)+'.zip'  # 压缩后文件夹的名字

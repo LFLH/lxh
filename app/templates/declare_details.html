@@ -1,0 +1,150 @@
+<title>申报任务详情</title>
+{% extends "base_Txx.html" %}
+
+{% block css %}
+    tbody {
+       counter-reset:sectioncounter;
+    }
+
+    .SortCLASS:before {
+       content:counter(sectioncounter);
+       counter-increment:sectioncounter;
+    }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 style="padding-top: 20px">申报任务详情</h2>
+    <br>
+    <form id="ability" role="form">
+        <div class="form-group">
+          <label for="name" style="font-size: large; font-weight: bold">申报任务名：</label>
+          <input type="text" class="form-control" id="name" name="abilityName">
+        </div>
+        <div class="form-group">
+          <label for="startTime" style="font-size: large; font-weight: bold">申报任务创建时间：</label>
+          <input type="text" class="form-control" id="createTime" name="time" disabled="disabled">
+        </div>
+        <div class="form-group">
+          <label for="startTime" style="font-size: large; font-weight: bold">申报开始时间：</label>
+          <input type="text" class="form-control" id="startTime" name="time1" >
+        </div>
+        <div class="form-group" style="font-size: large; font-weight: bold">
+          <label for="stopTime">申报结束时间：</label>
+          <input type="text" class="form-control" id="stopTime" name="time2">
+        </div>
+        <div class="form-group" style="font-size: large; font-weight: bold">
+          <label for="content">申报任务内容：</label>
+          <input type="text" class="form-control" id="content" name="abilityContent">
+        </div>
+        <div style="text-align:center">
+            <button id="cancel" type="button" class="btn btn-default" style="margin:50px; background-color: lightgrey;">取消</button>
+            <button id="change" type="button" class="btn btn-success" style="margin:50px">修改</button>
+        </div>
+        <br>
+        <p style="font-size: large; font-weight: bold">申报用户记录</p>
+        <br>
+        <div class="form-group">
+            <div class="input-group col-xs-12">
+             <div class="input-group-btn">
+                <select name="type" class="form-control" style="width: auto;">
+                    <option>申报人用户名</option>
+                    <option>申报人账户</option>
+                    <option>申报状态</option>
+                </select>
+             </div>
+                <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" id="search" type="submit">搜索</button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+                <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                    <thead style="text-align: center">
+                    <tr>
+                        <th style="width: 10%; text-align: center">序号</th>
+                        <th style="width: 40%; text-align: center">申报人用户名</th>
+                        <th style="width: 40%; text-align: center">申报时间</th>
+                        <th style="width: 10%; text-align: center">申报状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="demoList"></tbody>
+                </table>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    $(function () {
+         var searchUrl = window.location.href;
+         var searchData = searchUrl.split("="); //截取 url中的“=”,获得“=”后面的参数
+         var id = decodeURI(searchData[1]); //decodeURI解码
+         console.log(id);
+         $("#cancel").on("click", function () {
+             window.location.reload();
+         });
+         $.ajax({
+             type:'GET',
+             url:'/detaildeclare',
+             data:{id:id},
+             dataType:'json',
+             async: false,
+             cache: false,
+             contentType: 'application/json',
+             success:function(da) {
+{#                 console.log(re.status);#}
+                 console.log(da);
+                 let name = da.name;
+                 let createtime = da.createtime;
+                 let begintime = da.begintime;
+                 console.log(begintime);
+                 let endtime = da.endtime;
+                 let main = da.main;
+                 $('#name').val(name);
+                 $('#createTime').val(createtime);
+                 $('#startTime').val(begintime);
+                 $('#stopTime').val(endtime);
+                 $('#content').val(main);
+                 let str2 = "";
+                 let idz=new Array(200);
+                 var acquire=new Array(200);
+                 for (let index = 0; index < da.user.length; index++) {
+                     idz[index] = da.user[index].id;
+                     let number = index + 1;
+                     str2 += "<tr><td>" + number +
+                         "</td><td>" + da.user[index].username +
+                         "</td><td>" + da.user[index].uptime +
+                         "</td><td>" + da.user[index].status + "</tr>";
+                 }
+                 $("#demoList").html(str2);
+             }
+         });
+         $("#change").on("click", function () {
+            let name = $('#name').val();
+            let begintime = $('#startTime').val();
+            let endtime = $('#stopTime').val();
+            let main = $('#content').val();
+            console.log(main);
+             $.ajax({
+                 type:'GET',
+                 url:'/updatedeclare',
+                 data:{'id':id, 'name':name, 'begintime':begintime, 'endtime':endtime, 'main':main},
+                 dataType:'json',
+                 async: false,
+                 cache: false,
+                 contentType: 'application/json',
+                 success:function(re){
+                     if(re.status==true){
+                         alert("修改成功！");
+                         window.location.reload();
+                     }
+                     if(re.status==false){
+                         alert("该申报任务已过期或已撤销，不可修改！")
+                     }
+                 }
+             })
+         });
+    })
+{% endblock %}

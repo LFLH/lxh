@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <button id="declare">测试申报文件批量导出</button>
+    <button id="train">培训文件批量导出</button>
+    <button id="activity">自主活动文件批量导出</button>
+    <button id="record">报告文件批量导出</button>
+    <button id="user">用户所有文件批量导出</button>
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    		$("#declare").click(function(){
+    			var id=1;
+    			$.ajax({
+					type:'GET',
+	                url:'./download/declare/'+id,
+	                data:{},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.url);
+	                	url=re.url;
+	                	for (let i = 0; i < url.length; i++) {
+						    const iframe = document.createElement("iframe");
+						    iframe.style.display = "none"; 
+						    iframe.style.height = 0; 
+						    // url自己进行指定
+						    iframe.src = url[i];
+						    document.body.appendChild(iframe);
+						    // 不能马上将iframe进行删除，否者也会出现马上取消的情况
+						    setTimeout(() => {
+						        iframe.remove();
+						    }, 5 * 1000);
+						}
+	                }
+				});
+    		});
+    		$("#train").click(function(){
+    			var id=1;
+    			$.ajax({
+					type:'GET',
+	                url:'./download/train/'+id,
+	                data:{},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.url);
+	                	url=re.url;
+	                	for (let i = 0; i < url.length; i++) {
+						    const iframe = document.createElement("iframe");
+						    iframe.style.display = "none"; 
+						    iframe.style.height = 0; 
+						    // url自己进行指定
+						    iframe.src = url[i];
+						    document.body.appendChild(iframe);
+						    // 不能马上将iframe进行删除，否者也会出现马上取消的情况
+						    setTimeout(() => {
+						        iframe.remove();
+						    }, 5 * 1000);
+						}
+	                }
+				});
+    		});
+    		$("#activity").click(function(){
+    			var id=1;
+    			$.ajax({
+					type:'GET',
+	                url:'./download/activity/'+id,
+	                data:{},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.url);
+	                	url=re.url;
+	                	for (let i = 0; i < url.length; i++) {
+						    const iframe = document.createElement("iframe");
+						    iframe.style.display = "none"; 
+						    iframe.style.height = 0; 
+						    // url自己进行指定
+						    iframe.src = url[i];
+						    document.body.appendChild(iframe);
+						    // 不能马上将iframe进行删除，否者也会出现马上取消的情况
+						    setTimeout(() => {
+						        iframe.remove();
+						    }, 5 * 1000);
+						}
+	                }
+				});
+    		});
+    		$("#record").click(function(){
+    			var id=1;
+    			$.ajax({
+					type:'GET',
+	                url:'./download/record/'+id,
+	                data:{},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.url);
+	                	url=re.url;
+	                	for (let i = 0; i < url.length; i++) {
+						    const iframe = document.createElement("iframe");
+						    iframe.style.display = "none"; 
+						    iframe.style.height = 0; 
+						    // url自己进行指定
+						    iframe.src = url[i];
+						    document.body.appendChild(iframe);
+						    // 不能马上将iframe进行删除，否者也会出现马上取消的情况
+						    setTimeout(() => {
+						        iframe.remove();
+						    }, 5 * 1000);
+						}
+	                }
+				});
+    		});
+    		$("#user").click(function(){
+    			var id=1;
+    			$.ajax({
+					type:'GET',
+	                url:'./download/user/'+id,
+	                data:{},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.url);
+	                	url=re.url;
+	                	for (let i = 0; i < url.length; i++) {
+						    const iframe = document.createElement("iframe");
+						    iframe.style.display = "none"; 
+						    iframe.style.height = 0; 
+						    // url自己进行指定
+						    iframe.src = url[i];
+						    document.body.appendChild(iframe);
+						    // 不能马上将iframe进行删除，否者也会出现马上取消的情况
+						    setTimeout(() => {
+						        iframe.remove();
+						    }, 5 * 1000);
+						}
+	                }
+				});
+    		});
+    	});
+    </script>
+</body>
+</html>

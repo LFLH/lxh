@@ -15,13 +15,16 @@ def after_request(response):
 
 #计算百分比保留一位小数
 def zbfb(a,b):
-    m=a/b*1000
-    mi=int(m)
-    km=m-mi
-    if km>0.5:
-        mi=mi+1
-    k=mi/10
-    return k,100-k
+    if b!=0:
+        m=a/b*1000
+        mi=int(m)
+        km=m-mi
+        if km>0.5:
+            mi=mi+1
+        k=mi/10
+        return k,100-k
+    else:
+        return 0.0,100.0
 
 # 获取用户提交活动数、系统要求参与数、各月提交数、被驳回的活动信息，培训申请状态，新活动发布，新培训发布，活动报名截止，培训报名截止
 @main.route('/olduserall',methods=['GET','POST'])
@@ -33,9 +36,11 @@ def olduserall():
     userid=user['userid']
     year = str(datetime.datetime.now()).split('-')[0]
     jyear = year + '-01-01 00:00:00'
-    acount=Activity.query.filter(and_(Activity.userid==userid,Activity.updatetime>jyear)).count()
+    acount=Activity.query.filter(and_(Activity.userid==userid,Activity.updatetime>jyear,Activity.status!=3)).count()
     # 转保留一位小数的百分比
-    ya, wa = zbfb(acount, count)
+    #ya, wa = zbfb(acount, count)
+    ya=acount
+    wa=count-acount
     a={"ya":ya,"wa":wa}
     # 各月活动提交情况
     year = str(datetime.datetime.now()).split('-')[0]
@@ -48,7 +53,7 @@ def olduserall():
     activitycount = []
     for i in range(12):
         # 按月查询
-        activity = Activity.query.filter(and_(Activity.updatetime >= month[i], Activity.updatetime < month[i + 1],Activity.userid==userid)).count()
+        activity = Activity.query.filter(and_(Activity.updatetime >= month[i], Activity.updatetime < month[i + 1],Activity.userid==userid,Activity.status!=3)).count()
         activitycount.append(activity)
     message=[]
     #被驳回的活动信息
@@ -59,7 +64,7 @@ def olduserall():
     #培训申请状态
     utrain=UTrain.query.filter(and_(UTrain.userid==userid,UTrain.type==0)).all()
     for ut in utrain:
-        train=Train.query.join(TUT).join(UTrain).filter(UTrain.id==ut.id).all()
+        train=Train.query.join(TUT).join(UTrain).filter(and_(UTrain.id==ut.id,Train.status==0)).all()
         if len(train)>0:
             if train[0].endtime>datetime.datetime.now():
                 s=train[0].name+"申请未通过"

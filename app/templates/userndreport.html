@@ -13,6 +13,10 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -30,15 +34,15 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：普通用户</a></li>
                             <li role="separator" class="divider"></li>
@@ -57,164 +61,209 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-{#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
-{#                <li><a class="nav-link" href="#">已提交活动</a></li>#}
-{#                <li><a class="nav-link" href="#">活动提交</a></li>#}
-{#                <li><a class="nav-link" href="{{ url_for('main.useractivityregister') }}">活动报名</a></li>#}
-{#                <li><a class="nav-link" href="#">培训报名</a></li>#}
-{#                <li><a class="nav-link" href="{{ url_for('main.userndreport') }}">年度总结提交</a></li>#}
-{#                <li><a class="nav-link" href="{{ url_for('main.userkjzreport') }}">科技周报告提交</a></li>#}
-{#            </ul>#}
-              <div id="accordion">
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.olduser')}}">首页</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.useractivity')}}">已提交活动</a>
-                    </div>
-                </div>
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.olduser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              活动报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.usertrainregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              培训报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交活动
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userupdata')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交报告
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userndreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              年度总结提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userkjzreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              科技周报提交
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.userupdata')}}">活动提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link"  href="{{ url_for('main.useractivityregister') }}">活动报名</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{ url_for('main.usertrainregister') }}">培训报名</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.userndreport')}}">年度总结提交</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{ url_for('main.userkjzreport')}}">科技周报告提交</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.user_setting')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             账户信息设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
-        <div class="col-md-10">
-         <h2 class="sub-header" style="margin-top: 10px">年度总结提交</h2>
-{# enctype='multipart/form-data：指表单数据bai有多部分构成，既有文本数据，又有文件等二进制数据#}
+
+        <div class="col-md-10 col-md-offset-2 main ml-auto">
+            {#实现多文件上传#}
+            <h2 class="sub-header" style="margin-top: 50px">年度总结提交</h2>
             <form id="update" enctype='multipart/form-data'>
-            <!--<form method="POST" id="update" enctype='multipart/form-data'>-->
                 <div class="form-group">
-{# control-label：label标签就变成了可控制的标签#}
+                    <br>
                     <label for="name" class="col-sm-2 control-label" style="font-size: 20px">报告名:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
-{#  required: required 属性规定必需在提交表单之前填写输入字段。#}
                         <input class="form-control" id="name" placeholder="请输入名称" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="exampleInputFilePDF" class="control-label" style="font-size: 20px">上传PDF文件:</label>
-                    <div class="col-sm-10">
-                        <input type="file" multiple="" name="pdf" id="exampleInputFilePDF" accept="application/pdf"/>
+                    <div class="layui-upload">
+                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInputFilePDF">选择PDF文件、Word文件、图片</button>
+                          <button id="testListAction" type="submit" class="layui-btn layui-btn-normal" style="margin-left: 15px">文件上传</button>
+                          <br>
+                          <br>
+                    </div>
+                    <div class="layui-upload-list col-md-12">
+                        <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                            <thead style="text-align: center">
+                            <tr>
+                                <th style="width: 45%">文件名</th>
+                                <th style="width: 15%">大小</th>
+                                 <th style="width: 25%">时间</th>
+                                <th style="width: 15%">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="VIEWList"></tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputFileWord" class="control-label" style="font-size: 20px">上传word文件:</label>
-                    <div class="col-sm-10">
-                        <input type="file" multiple="" name="word" id="exampleInputFileWord" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
-"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputFileImage" class="control-label" style="font-size: 20px">上传图片:</label>
-                    <div class="col-sm-10">
-                        <input type="file" multiple="" name="image" id="exampleInputFileImage" accept="image/*"/>
-                    </div>
-                </div>
-                    <div class="form-group" style="margin-top: 120px">
-                        <div class="col-sm-10">
-                            <button id='del_txt' class="btn btn-outline-dark btn-lg" style="margin-left: 80px">取消</button>
-                            <button id="submit" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 180px">上传</button>
-                        </div>
-                    </div>
 
             </form>
-{#            显示最后上传信息是否成功的div提示框#}
-            <div id="show_msg_div">
 
+            {#显示最后上传信息是否成功的div提示框#}
+            <div id="show_msg_div">
             </div>
       </div>
     </div>
 </div>
 
 <script>
-{#取消键实现报告名和文件内容全部取消的功能#}
-$(function(){
-   $("#del_txt").click(function(){
-       $("#name").val("");
-       $("#exampleInputFilePDF").val("");
-       $("#exampleInputFileWord").val("");
-       $("#exampleInputFileImage").val("");
-   })
-});
-
-
-$(document).ready(function(){
-    $("#update").submit(function(){
+$(function () {
+  var form = new FormData();
+  var files={};
+  //获取当前时间
+  function fileTime(){
+    function getNow(s) {
+        return s < 10 ? '0' + s : s;
+    }
+    var myDate = new Date;
+    var year = myDate.getFullYear(); //获取当前年
+    var mon = myDate.getMonth() + 1; //获取当前月
+    var date = myDate.getDate(); //获取当前日
+    var h = myDate.getHours();//获取当前小时数(0-23)
+    var m = myDate.getMinutes();//获取当前分钟数(0-59)
+    var s = myDate.getSeconds();//获取当前秒
+    var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "&nbsp;" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
+    return res
+  }
+  {#选择多个文件#}
+    layui.use('upload', function () {
+        var $ = layui.jquery;
+        var upload = layui.upload;
         let name = $('#name').val();
-        //str_url='./addndreport?name='+name;
-        str_url='./bmsystrain?id='+3;
-        {#定义一个formData对象，FormData类中上传表单#}
-        var formData = new FormData($("#update")[0]);
-        $.ajax({
-            type: "POST",
-            data: formData,
-            url: str_url,
-            contentType: false,
-            processData: false,
-            success:function(result){
-                console.log("result=",result);
-                Flush();
-                Toast(result.status);
-           }
+        str_url='./addndreport?name='+name;
+        //多文件选择
+        var Viewlist = $('#VIEWList'),
+        uploadIns = upload.render({
+            elem: '#exampleInputFilePDF',
+            url: 'str_url',
+            accept: 'file,images',
+            exts: 'doc|docx|pdf|jpg|png',
+            multiple: true,
+            auto: false,
+            bindAction: '#submit',
+            choose: function (obj) {
+                files = obj.pushFile(); //选择文件赋给files
+                var file_time = fileTime();
+                //读取本地文件
+                obj.preview(function (index, file, result) {
+                    var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td style="width: 65%">' + file.name + '</td>'
+                            , '<td style="width: 10%">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td style="width: 15%">' + file_time + '</td>'
+                            , '<td style="width: 10%">'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+                    
+                    //删除文件按钮
+                    tr.find('.demo-delete').on('click', function () {
+                        console.log("走到这里了")
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                    })
+                    Viewlist.append(tr);
+                });
+            }
         });
-        return false;
-    });
-    function Flush(){
-        $('#name').val('');
-        $('#exampleInputFilePDF').val('');
-        $('#exampleInputFileWord').val('');
-        $('#exampleInputFileImage').val('');
-    }
-    function Toast(status){
-        if(status==true){
-            msg="年度报告提交成功！";
-        }else{
-            msg="年度报告提交失败！";
-        }
-        {#创建一个div，显示msg，显示后再移除该div#}
-        $(document).ready(function(){
-            {#$("#show_msg_div").text(msg);#}
-            {#$("#show_msg_div").show();#}
-            setTimeout(function(){
-                {#$("#show_msg_div").hide();#}
-                {#$("#show_msg_div").empty(msg);#}
-                alert(msg)
-            },2000)
       });
-
-    }
-});
+    $('#testListAction').on("click",function(){
+      for(let k in files){
+        form.append("files",files[k]);
+      }
+      var len = 0;
+      form.forEach((value, key) => {
+        console.log("key %s: value %s", key, value);
+        len = key.length;
+      });
+      console.log(len);
+      if(len==0){
+        layer.msg("未选择文件！", {icon: 5});
+      }else{
+        var name=$('#name').val();
+        var s='/addndreport?name='+name;
+        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        $.ajax({
+          url: s,
+          type: "POST",
+          data: form,
+          contentType: false,
+          processData: false,
+          success: function (result) {
+            //关闭加载层
+            layer.closeAll('loading'); 
+            console.log(result);
+            if (result.code == 200) {
+              layer.msg("上传成功！", {icon: 6});
+            } else if (result.code == 500) {
+              layer.msg(result.msg, {icon: 5});
+            }
+          }
+        });
+      }
+    });
+  })
 
 </script>
 </body>

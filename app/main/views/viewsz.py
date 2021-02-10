@@ -99,11 +99,35 @@ def managedeclareadd():
             return redirect('/newuser')
     else:
         return render_template('managedeclareadd.html',username=user["username"])
-#跳转到能力提升培训任务添加的单独界面
+
+#跳转到申报任务添加的单独界面
 @main.route('/managedeclareadd_new',methods=['GET','POST'])
 def managedeclareadd_new():
     user = session.get('user')
-    return render_template('managedeclareadd_new.html', username=user["username"])
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
+    else:
+        return render_template('managedeclareadd_new.html',username=user["username"])
+
+#单个申报任务详情界面
+@main.route('/declare_details/id=<id>',methods=['GET','POST'])
+def declare_details(id):
+    user = session.get('user')
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
+    else:
+        return render_template('declare_details.html', name=user["name"],username=user["username"])
+
 
 #能力提升培训用户管理
 @main.route('/manageabilityuser',methods=['GET','POST'])
@@ -132,11 +156,34 @@ def manageabilityadd():
             return redirect('/newuser')
     else:
         return render_template('manageabilityadd.html',username=user["username"])
+
 #跳转到能力提升培训任务添加的单独界面
 @main.route('/manageabilityadd_new',methods=['GET','POST'])
 def manageabilityadd_new():
     user = session.get('user')
-    return render_template('manageabilityadd_new.html', username=user["username"])
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
+    else:
+        return render_template('manageabilityadd_new.html',username=user["username"])
+
+#能力提升培训任务详情界面
+@main.route('/ability_details/id=<id>',methods=['GET','POST'])
+def ability_details(id):
+    user = session.get('user')
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
+    else:
+        return render_template('ability_details.html', name=user["name"],username=user["username"])
 
 #考核管理
 @main.route('/manageexamine',methods=['GET','POST'])
@@ -184,7 +231,6 @@ def managesystem():
 @main.route('/newuser',methods=['GET','POST'])
 def newuser():
     user = session.get('user')
-    print(user)
     if user == None:
         return redirect('/login')
     elif user['usertype']=='sysadmin':
@@ -193,11 +239,20 @@ def newuser():
         return redirect('/olduser')
     else:
         return render_template('newuser.html',username=user["username"])
+
 #新用户申报
 @main.route('/newuser_declare', methods=['GET','POST'])
 def newuser_declare():
     user = session.get('user')
-    return render_template('newuser_declare.html',username=user["username"])
+    if user == None:
+        return redirect('/login')
+    elif user['usertype']=='sysadmin':
+        return redirect('/manage')
+    elif user['checked']==1:
+        return redirect('/olduser')
+    else:
+        return render_template('newuser_declare.html',username=user["username"])
+        
 #老用户界面
 @main.route('/olduser',methods=['GET','POST'])
 def olduser():
@@ -210,11 +265,7 @@ def olduser():
         return redirect('/newuser')
     else:
         return render_template('olduser.html',username=user["username"])
-#老用户账户设置界面
-@main.route('/user_setting',methods=['GET','POST'])
-def user_setting():
-    user = session.get('user')
-    return render_template('user_setting.html',username=user["username"])
+
 #用户已提交活动
 @main.route('/useractivity',methods=['GET','POST'])
 def useractivity():
@@ -292,3 +343,43 @@ def userkjzreport():
         return redirect('/newuser')
     else:
         return render_template('userkjzreport.html',username=user["username"])
+
+#年度报告及科技周报告管理
+@main.route('/managereportuser',methods=['GET','POST'])
+def managereportuser():
+    user = session.get('user')
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
+    else:
+        return render_template('managereportuser.html',username=user["username"])
+
+#用户已提交报告
+@main.route('/userreport',methods=['GET','POST'])
+def userreport():
+    user = session.get('user')
+    if user==None:
+        return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
+    else:
+        return render_template('userreport.html',username=user["username"])
+
+#用户设置
+@main.route('/user_setting',methods=['GET','POST'])
+def user_setting():
+    user = session.get('user')
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] == 'sysadmin':
+        return redirect('/manage')
+    elif user['checked'] == 0:
+        return redirect('/newuser')
+    else:
+        return render_template('user_setting.html', username=user["username"])

@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>能力提升管理</title>
+    <title>用户报告管理</title>
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <script src="../static/js/jquery-3.5.1.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
@@ -38,9 +38,10 @@
             position: absolute;
             background: #FFF;
             display: none;
-            top: 15%;
-            left:20%;
+            top: 20%;
+            left:30%;
             overflow:scroll;
+
         }
     </style>
 </head>
@@ -143,7 +144,7 @@
         </div>
 
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
-            <h2 class="sub-header">能力提升培训申请列表</h2>
+            <h2 class="sub-header">提交报告列表</h2>
             <br>
             <form action="" method="POST">
                 {#添加搜索栏#}
@@ -152,9 +153,10 @@
                          <div class="input-group-btn">
                             <select name="type" class="form-control" style="width: auto;">
                                 <option>用户名</option>
-                                <option>培训任务名</option>
-                                <option>提交时间</option>
-                                <option>状态</option>
+                                <option>报告名称</option>
+                                <option>年份</option>
+                                <option>报告类型</option>
+                                <option>报告状态</option>
                             </select>
                          </div>
                             <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
@@ -172,11 +174,10 @@
                             <tr class="table-info">
                                 <th>序号</th>
                                 <th>用户名</th>
-                                <th>培训任务名</th>
-                                <th>报名开始时间</th>
-                                <th>报名截止时间</th>
-                                <th>提交时间</th>
-                                <th>状态</th>
+                                <th>报告名称</th>
+                                <th>年份</th>
+                                <th>报告类型</th>
+                                <th>报告状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -189,56 +190,55 @@
                     </nav>
                 </div>
             </form>
-
             <!-- 查看模态框 #lookModal -->
             <div class="modal fade" id="look_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" style="text-align: center;font-size: 30px">能力提升培训详情</h4>
+                            <h4 class="modal-title" style="text-align: center;font-size: 30px">报告详情</h4>
                         </div>
                         <div class="modal-body">
                             <form id="show" enctype='multipart/form-data'>
                                 <div class="form-group">
-                                    <label for="content" class="col-sm-2 control-label">培训名:</label>
+                                    <label for="content" class="col-sm-2 control-label">报告名:</label>
                                     <div class="col-sm-5" style="padding-left: 20px;">
-                                        <p id="train_name" style="display: inline;width: 450px"></p>
+                                        <p id="report_name" style="display: inline;width: 450px"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="begintime" class="col-sm-3 control-label">培训内容:</label>
+                                    <label for="begintime" class="col-sm-3 control-label">报告类型:</label>
                                     <div class="col-sm-4" style="padding-left: 20px;">
-                                        <p id="train_main" style="display: inline;width: 450px"></p>
+                                        <p id="report_type" style="display: inline;width: 450px"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="endtime" class="col-sm-3 control-label">用户:</label>
+                                    <label for="endtime" class="col-sm-3 control-label">报告年份:</label>
                                     <div class="col-sm-4" style="padding-left: 20px;">
-                                        <p id="user_name" style="display: inline;width: 450px"></p>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="endtime" class="col-sm-3 control-label">提交时间:</label>
-                                    <div class="col-sm-4" style="padding-left: 20px;">
-                                        <p id="train_uptime" style="display: inline;width: 450px"></p>
+                                        <p id="report_year" style="display: inline;width: 450px"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="endtime" class="col-sm-3 control-label">PDF文件:</label>
                                     <div class="col-sm-4" style="padding-left: 20px;">
-                                       <p id="train_pdf" style="display: inline;width: 450px"></p>
+                                       <p id="report_pdf" style="display: inline;width: 450px"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="endtime" class="col-sm-3 control-label">word文件:</label>
                                     <div class="col-sm-4" style="padding-left: 20px;">
-                                       <p id="train_word" style="display: inline;width: 450px"></p>
+                                       <p id="report_word" style="display: inline;width: 450px"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="endtime" class="col-sm-3 control-label">图片:</label>
+                                    <label for="endtime" class="col-sm-3 control-label">video文件:</label>
                                     <div class="col-sm-4" style="padding-left: 20px;">
-                                       <p id="train_image" style="display: inline;width: 450px"></p>
+                                       <p id="report_video" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">image文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_image" style="display: inline;width: 450px"></p>
                                     </div>
                                 </div>
                             </form>
@@ -250,14 +250,14 @@
                 </div>
             </div>
 
-            {#modal模式框：当管理员点击驳回按钮时再次确认#}
-            <div class="modal fade" id="reject_modal_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+         {#modal模式框：当管理员点击驳回按钮时再次确认#}
+            <div class="modal fade" id="reject_modal_list" >
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-body">确定驳回？</div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button type="button" class="btn btn-default" id="reject_modal_list_sure" data-dismiss="modal">确定</button>
+                                <button type="button" class="btn btn-default" id="reject_modal_list_sure">确定</button>
                             </div>
                         </div>
                     </div>
@@ -273,8 +273,8 @@
                         </div>
                     </div>
             </div>
-             {#modal模式框：当管理员点击通过按钮时再次确认#}
-            <div class="modal fade" id="pass_modal_list" >
+            {#modal模式框：当管理员点击通过按钮时再次确认#}
+            <div class="modal fade" id="pass_modal_list">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-body">确定通过？</div>
@@ -299,29 +299,29 @@
         </div>
         </div>
 </div>
+<script type="text/javascript">
 
-<script>
-
-
-var acquire=new Array(10);
+var acquire=new Array(100);
 var pass;
 var reject;
+var new_ac_reject_id;
 var new_ac_pass_id;
-var get_test1=0;
-var cookie_push = [];
-var get_cookie_push = [];
-var get_array=0;
+var cookie_report=[];
+var get_cookie_report=[];
+var get_array_report=0;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
-        if($.cookie("cookie_push")!=undefined) {
-            get_cookie_push = $.cookie("cookie_push");
-            get_array = get_cookie_push.split(",")
-            console.log("get_array=",get_array)
+        if($.cookie("cookie_report")!=undefined) {
+            get_cookie_report = $.cookie("cookie_report");
+            get_array_report = get_cookie_report.split(",")
+            console.log("get_array_report=",get_array_report)
         }
-    {#dpage：应该是表示第几页
+       {#dpage：应该是表示第几页
         pages：应该是表示总共的页数
         d_per_page:总共有多少条数据
         idz:存储每条数据的id#}
+        {#a_name = JSON.parse($.cookie("a_name"));#}
+        {#a_name = $.cookie('a_name');#}
         let dpage=1;
         let pages=1;
         let per_page=10;
@@ -329,7 +329,7 @@ $(document).ready(function(){
         let idz=new Array(10);
         $.ajax({
             type:'GET',
-            url:'./searchabilityuser',
+            url:'./searchrecord',
             data:{'page':1,'per_page':per_page},
             dataType:'json',
             async: false,
@@ -352,23 +352,22 @@ $(document).ready(function(){
                    {#驳回按钮：获取id#}
                    let reject_id;
                    reject_id = data.item[index].id;
-                   {#通过按钮获取通过按钮的id#}
-                   let acquire_id;
-                   acquire_id=data.item[index].id;
+                   {#通过按钮：获取id#}
+                   let pass_id;
+                   pass_id = data.item[index].id;
                    str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].name +
-                            "</td><td>" + data.item[index].begintime +
-                            "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].uptime +
+                            "</td><td >" + data.item[index].username +
+                            "</td><td>" + data.item[index].recordname +
+                            "</td><td>" + data.item[index].year +
+                            "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
-                             + "<!--<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>-->"
-                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                             +"<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回 >"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+pass_id+"' value=通过 >" +"</tr>";
                 }
                 $("#tableText").html(str);
-                for(let i =0;i<get_array.length;i++) {
-                      $(get_array[i]).attr('disabled', "true")
+                for(let i =0;i<get_array_report.length;i++) {
+                      $(get_array_report[i]).attr('disabled', "true")
                 }
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
                 strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>";
@@ -388,12 +387,11 @@ $(document).ready(function(){
                 }
             }
         });
-
         $('#page-li').on('click',"#prev",function(){
-            if($.cookie("cookie_push")!=undefined) {
-                 get_cookie_push = $.cookie("cookie_push");
-                 get_array = get_cookie_push.split(",")
-                 console.log("get_array=",get_array)
+            if($.cookie("cookie_report")!=undefined) {
+                 get_cookie_report = $.cookie("cookie_report");
+                 get_array_report = get_cookie_report.split(",")
+                 console.log("get_array_report=",get_array_report)
             }
             if(dpage==1){
                 alert("该页是第一页！");
@@ -409,7 +407,7 @@ $(document).ready(function(){
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchabilityuser',
+                    url:'./searchrecord',
                     data:{'page':dpage-1,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -432,23 +430,22 @@ $(document).ready(function(){
                             {#驳回按钮：获取id#}
                             let reject_id;
                             reject_id = data.item[index].id;
-                            {#通过按钮获取通过按钮的id#}
-                            let acquire_id;
-                            acquire_id=data.item[index].id;
+                            {#通过按钮：获取id#}
+                            let pass_id;
+                            pass_id = data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].name +
-                            "</td><td>" + data.item[index].begintime +
-                            "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].uptime +
+                            "</td><td >" + data.item[index].username +
+                            "</td><td>" + data.item[index].recordname +
+                            "</td><td>" + data.item[index].year +
+                            "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
-                             + "<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>"
-                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                             +"<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回 >"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+pass_id+"' value=通过 >" +"</tr>";
                         }
                         $("#tableText").html(str);
-                        for(let i =0;i<get_array.length;i++) {
-                             $(get_array[i]).attr('disabled', "true")
+                        for(let i =0;i<get_array_report.length;i++) {
+                              $(get_array_report[i]).attr('disabled', "true")
                         }
                         let s="#li"+dpage;
                         $(s).css("border-color","blue");
@@ -463,12 +460,11 @@ $(document).ready(function(){
                 });
             }
         });
-
         $('#page-li').on('click',"#next",function(){
-            if($.cookie("cookie_push")!=undefined) {
-                 get_cookie_push = $.cookie("cookie_push");
-                 get_array = get_cookie_push.split(",")
-                 console.log("get_array=",get_array)
+            if($.cookie("cookie_report")!=undefined) {
+                 get_cookie_report = $.cookie("cookie_report");
+                 get_array_report = get_cookie_report.split(",")
+                 console.log("get_array_report=",get_array_report)
             }
             if(dpage==pages){
                 alert("该页是最后一页！");
@@ -484,7 +480,7 @@ $(document).ready(function(){
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchabilityuser',
+                    url:'./searchrecord',
                     data:{'page':dpage+1,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -507,23 +503,22 @@ $(document).ready(function(){
                             {#驳回按钮：获取id#}
                             let reject_id;
                             reject_id = data.item[index].id;
-                            {#通过按钮获取通过按钮的id#}
-                            let acquire_id;
-                            acquire_id=data.item[index].id;
+                            {#通过按钮：获取id#}
+                            let pass_id;
+                            pass_id = data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].name +
-                            "</td><td>" + data.item[index].begintime +
-                            "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].uptime +
+                            "</td><td >" + data.item[index].username +
+                            "</td><td>" + data.item[index].recordname +
+                            "</td><td>" + data.item[index].year +
+                            "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
-                             + "<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>"
-                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                             +"<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回 >"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+pass_id+"' value=通过 >" +"</tr>";
                         }
                         $("#tableText").html(str);
-                        for(let i =0;i<get_array.length;i++) {
-                             $(get_array[i]).attr('disabled', "true")
+                        for(let i =0;i<get_array_report.length;i++) {
+                              $(get_array_report[i]).attr('disabled', "true")
                         }
                         let s="#li"+dpage;
                         $(s).css("border-color","blue");
@@ -542,11 +537,11 @@ $(document).ready(function(){
         for(let index=1;index<=pages;index++){
             let s="#li"+index;
             $('#page-li').on('click',s,function(){
-                if($.cookie("cookie_push")!=undefined) {
-                      get_cookie_push = $.cookie("cookie_push");
-                      get_array = get_cookie_push.split(",")
-                      console.log("get_array=",get_array)
-                }
+                if($.cookie("cookie_report")!=undefined) {
+                     get_cookie_report = $.cookie("cookie_report");
+                     get_array_report = get_cookie_report.split(",")
+                     console.log("get_array_report=",get_array_report)
+                 }
                 let s2="#li"+dpage;
                 $(s2).css("border-color","");
                 if(dpage<pages){
@@ -558,7 +553,7 @@ $(document).ready(function(){
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchabilityuser',
+                    url:'./searchrecord',
                     data:{'page':index,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -581,23 +576,22 @@ $(document).ready(function(){
                             {#驳回按钮：获取id#}
                             let reject_id;
                             reject_id = data.item[index].id;
-                            {#通过按钮获取通过按钮的id#}
-                            let acquire_id;
-                            acquire_id=data.item[index].id;
+                            {#通过按钮：获取id#}
+                            let pass_id;
+                            pass_id = data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].name +
-                            "</td><td>" + data.item[index].begintime +
-                            "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + data.item[index].uptime +
+                            "</td><td >" + data.item[index].username +
+                            "</td><td>" + data.item[index].recordname +
+                            "</td><td>" + data.item[index].year +
+                            "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].status +
-                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm open' id='look"+acquire_number+"' value=查看>"
-                            + "<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回>"
-                            +"<input type='button' class='btn btn-success btn-sm' id='pass"+acquire_id+"' value=通过 >"+ "</tr>";
+                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
+                             +"<input type='button' class='btn btn-info btn-sm' id='reject"+reject_id+"' value=驳回 >"
+                             +"<input type='button' class='btn btn-success btn-sm' id='pass"+pass_id+"' value=通过 >" +"</tr>";
                         }
                         $("#tableText").html(str);
-                        for(let i =0;i<get_array.length;i++) {
-                             $(get_array[i]).attr('disabled', "true")
+                        for(let i =0;i<get_array_report.length;i++) {
+                            $(get_array_report[i]).attr('disabled', "true")
                         }
                         let s="#li"+dpage;
                         $(s).css("border-color","blue");
@@ -610,142 +604,221 @@ $(document).ready(function(){
                         }
                     }
                 });
+
             });
+
         }
     });
-
-var train_pdf = "";
-var train_word = "";
-var train_image = "";
-{#操作中的查看详细信息弹窗#}
-$(document).ready(function(){
+{#操作实现#}
+var report_pdf = "";
+var report_word = "";
+var report_video = "";
+var report_image = "";
+$(document).ready(function () {
+   {# 实现查看按钮#}
    $(document).on("click",".btn-primary",function() {
-        $("#train_pdf").html('');
-        $("#train_word").html('');
-        $("#train_image").html('');
+        $("#report_pdf").html('');
+        $("#report_word").html('');
+        $("#report_video").html('');
+        $("#report_image").html('');
         {#先给后端传id#}
         let user_number = $(this).attr('id');
         {#获取传递给后端的id#}
         let acquire_user_id = acquire[user_number];
-        {#将查看的id传递给悬浮框的驳回键#}
+        {#为了将查看的id传递给悬浮框的驳回键#}
         reject = acquire_user_id;
-        {#将查看中的id传递给悬浮框中的通过键#}
-        console.log("acquire_user_id=",acquire_user_id)
+        {#为了将查看中的id传递给悬浮框中的通过键#}
         pass = acquire_user_id;
-        {#给div悬浮框添加取消和通过按钮#}
+        console.log("reject=",reject)
+        console.log("pass=",pass)
+         {#给div悬浮框添加取消和通过按钮#}
         let str_div = "";
-        str_div +="<button class='btn btn-default btn-lg delete' id='close_delete' style='margin-left: 80px'>取消</button>"
-                +"<button type='submit' class='btn btn-default btn-lg open_reject' id='reject_two"+reject+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#reject_modal_div\">驳回</button>"
-            +"<button type='submit' class='btn btn-default btn-lg pass' id='pass_two"+pass+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#pass_modal_div\">通过</button>";
+        str_div +="<button class='btn btn-default btn-lg delete_win' id='close_delete' style='margin-left: 80px'>取消</button>"
+            +"<button type='submit' class='btn btn-default btn-lg reject_win' id='reject_two"+reject+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#reject_modal_div\">驳回</button>"
+            +"<button type='submit' class='btn btn-default btn-lg pass_win' id='pass_two"+pass+"' style='margin-left: 80px' data-toggle=\"modal\" data-target=\"#pass_modal_div\">通过</button>";
         $('#div_butt').html(str_div);
-       {#判断div悬浮框中通过键是否应该是disabled状态#}
-        let pass_id = $(".pass").attr('id')
-        pass_id = '#'+pass_id
-        let reject_id = $(".open_reject").attr('id')
-        reject_id = '#'+reject_id
-        console.log("pass_id=",pass_id)
-        for(let i =0;i<get_array.length;i++) {
-            let get_array_sp = get_array[i].split('#');
-            get_array_sp = get_array_sp.pop();
-            let re_get_array_sp = get_array_sp.split("pass");
-            re_get_array_sp = re_get_array_sp.pop();
-            let pass_sp = parseInt(re_get_array_sp);
-            var pass_a = '#pass_two' + pass_sp;
-            var reject_a = '#reject_two' + pass_sp;
-            if (pass_a == pass_id) {
+       {#判断div悬浮框中通过键和驳回键是否应该是disabled状态#}
+        let pass_two_id = $(".pass_win").attr('id')
+        pass_two_id = '#'+pass_two_id
+        let reject_two_id = $(".reject_win").attr('id')
+        reject_two_id = '#'+reject_two_id
+        for(let i =0;i<get_array_report.length;i++) {
+            let get_array_pass_sp = get_array_report[i].split('#');
+            get_array_pass_sp = get_array_pass_sp.pop()
+            let re_get_array_pass_sp = get_array_pass_sp.split("pass");
+            re_get_array_pass_sp = re_get_array_pass_sp.pop();
+            let sp = parseInt(re_get_array_pass_sp)
+            var pass_a = '#pass_two' + sp
+            var reject_a = '#reject_two' + sp
+            if (pass_a == pass_two_id) {
                 $(pass_a).attr('disabled', "true")
             }
-            if(reject_a == reject_id){
+            if(reject_a == reject_two_id){
                 $(reject_a).attr('disabled', "true")
             }
         }
          $.ajax({
             type:'GET',
-            url:'./detailabilityuser',
+            url:'./detailrecord',
             data:{'id':acquire_user_id},
             dataType:'json',
             async: false,
             cache: false,
             contentType: 'application/json',
             success:function(data){
-                let train_name = data.name;
-                let train_main = data.main;
-                let user_name = data.username;
-                let train_uptime = data.uptime;
+                let report_name = data.name;
+                let report_type = data.type;
+                let report_year = data.year;
                 let data_pdf = data.pdf;
                 let data_word = data.word;
+                let data_video = data.video;
                 let data_image = data.image;
-                $("#train_name").text(train_name);
-                $("#train_main").text(train_main);
-                $("#user_name").text(user_name);
-                $("#train_uptime").text(train_uptime);
+                $("#report_name").text(report_name);
+                $("#report_type").text(report_type);
+                $("#report_year").text(report_year);
+
                 if (data_pdf.length == 0){
-                    $("#train_pdf").text("此用户没有上传pdf");
+                    $("#report_pdf").text("此用户没有上传pdf文件");
                 }
                 else{
                     for(var i=0;i<data_pdf.length;i++){
-                        train_pdf = data_pdf[i].newname;
-                        $("#train_pdf").append("<a href='"+data_pdf[i].path+"'>"+train_pdf+"</a>");
-                        {#$("#train_pdf").append("<br/>");#}
-                        $("#train_pdf").append("  ")
+                        report_pdf = data_pdf[i].newname;
+                        $("#report_pdf").append("<a href='"+data_pdf[i].path+"'>"+report_pdf+"</a>");
+                        $("#report_pdf").append("  ");
                      }
 
                 }
                 if (data_word.length == 0){
-                    $("#train_word").text("此用户没有上传word");
+                    $("#report_word").text("此用户没有上传word文件");
                 }
                 else{
                    for(var j=0;j<data_word.length;j++){
-                        train_word =  data_word[j].newname;
-                        $("#train_word").append("<a href='"+data_word[j].path+"'>"+train_word+"</a>");
-                        $("#train_word").append("  ")
+                        report_word =  data_word[j].newname;
+                        $("#report_word").append("<a href='"+data_word[j].path+"'>"+report_word+"</a>");
+                        $("#report_word").append("  ");
                      }
 
                 }
-                if(data_image.length == 0 ){
-                    $("#train_image").text("此用户没有上传word");
+                if (data_video.length == 0){
+                    $("#report_video").text("此用户没有上传视频");
                 }
                 else{
-                    for(var k=0;k<data_image.length;k++){
-                        train_image =  data_image[k].newname;
-                        $("#train_image").append("<a href='"+data_image[k].path+"'>"+train_image+"</a>")
-                        $("#train_image").append("  ")
+                   for(var k=0;k<data_video.length;k++){
+                        report_video =  data_video[k].newname;
+                        $("#report_video").append("<a href='"+data_video[k].path+"'>"+report_video+"</a>");
+                        $("#report_video").append("  ");
                      }
 
                 }
+                if (data_image.length == 0){
+                    $("#report_image").text("此用户没有上传图片");
+                }
+                else{
+                   for(var m=0;m<data_image.length;m++){
+                        report_image =  data_image[m].newname;
+                        $("#report_image").append("<a href='"+data_image[m].path+"'>"+report_image+"</a>");
+                        $("#report_image").append("  ");
+                     }
 
-
+                }
             }
         });
-         $("#look_modal_div").modal('show')
-         return false;
+        $("#look_modal_div").modal('show')
+        return false;
     });
-     {#操作中的驳回键的modal确认框#}
-     $(document).on("click",".btn-info",function () {
-         let reject_id = $(this).attr("id")
-         reject_id = reject_id.split("reject")
-         reject_id = reject_id.pop()
-         $("#reject_modal_list_sure").attr("data-id",reject_id)
-         $("#reject_modal_list").modal('show')
-     });
-     {#操作中的驳回键交互#}
-     $(document).on("click","#reject_modal_list_sure",function () {
-        let reject_id = $(this).attr("data-id")
+   {#查看按钮div悬浮框的取消按钮#}
+   $(document).on("click","#close_delete",function() {
+        $("#look_modal_div").modal('hide')
+        return false;
+    });
+  {# 查看按钮div悬浮框的驳回按钮#}
+  $(document).on("click","#reject_modal_div_sure",function () {
+       $("#look_modal_div").modal('hide')
+       $.ajax({
+            type:'GET',
+            url:'./bhrecord',
+            data:{'id':reject},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(result){
+               console.log("result=",result);
+               display_reject(result.status);
+            }
+        })
+       return false
+  });
+  {#  查看按钮div悬浮框的通过按钮#}
+    $(document).on("click","#pass_modal_div_sure",function () {
+       $("#look_modal_div").modal('hide')
+       $.ajax({
+            type:'GET',
+            url:'./tgrecord',
+            data:{'id':pass},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(result){
+               console.log("result=",result);
+               display_pass(result.status);
+            }
+        })
+        {#点击查看按钮中的通过键实现list列表中的通过键和驳回键全部disabled#}
+        let pas_id = parseInt(pass)
+        let rej_id = parseInt(reject)
+        let list_pass = "#pass" + pas_id;
+        let list_reject = '#reject'+rej_id;
+
+        if($.cookie("cookie_report")!=undefined) {
+             let pass_a = $.cookie("cookie_report");
+             if(cookie_report.length == 0){
+                 cookie_report.push(pass_a)
+             }
+         }
+         cookie_report.push(list_pass)
+         cookie_report.push(list_reject)
+         $(list_pass).attr('disabled',"true")
+         $(list_reject).attr('disabled',"true")
+
+         {#设置cookie来记住通过的id#}
+         $.cookie(
+            "cookie_report",
+             cookie_report,
+            { expires: 1});
+        return false
+    });
+  {#操作中的驳回键的modal确认框#}
+    $(document).on("click",".btn-info",function() {
+        {#先给后端传id#}
+        let ac_reject_id = $(this).attr('id');
+        new_ac_reject_id = ac_reject_id.split("reject");
+        new_ac_reject_id = new_ac_reject_id.pop();
+        {#console.log("acquire_pass_id=", acquire_pass_id)#}
+        $("#reject_modal_list").modal("show");
+        return false
+    });
+  {# 实现驳回操作#}
+   $(document).on("click","#reject_modal_list_sure",function () {
+        $("#reject_modal_list").modal("hide");
+        console.log("new_ac_reject_id=",new_ac_reject_id)
         $.ajax({
             type: 'GET',
-            url: './bhabilityuser',
-            data: {'id': reject_id},
+            url: './bhrecord',
+            data: {'id': new_ac_reject_id},
             dataType: 'json',
             async: false,
             cache: false,
             contentType: 'application/json',
             success: function (result) {
-                console.log('result', result)
+                console.log("result=", result);
                 display_reject(result.status);
             }
         })
-     });
-     function display_reject(status){
+   });
+
+   function display_reject(status){
         if(status==true){
             msg="驳回操作成功！";
         }else{
@@ -757,8 +830,8 @@ $(document).ready(function(){
             },1000)
       });
     }
-     {#操作中的通过键的modal确认框#}
-     $(document).on("click",".btn-success",function() {
+{#操作中的通过键的modal确认框#}
+    $(document).on("click",".btn-success",function() {
         {#先给后端传id#}
         let ac_pass_id = $(this).attr('id');
         new_ac_pass_id = ac_pass_id.split("pass");
@@ -766,12 +839,12 @@ $(document).ready(function(){
         $("#pass_modal_list").modal("show");
         return false
     });
-     {#操作中的通过键交互#}
-     $(document).on("click","#pass_modal_list_sure",function() {
+{# 实现通过按钮#}
+   $(document).on("click","#pass_modal_list_sure",function () {
         $("#pass_modal_list").modal("hide");
         $.ajax({
             type: 'GET',
-            url: './tgabilityuser',
+            url: './tgrecord',
             data: {'id': new_ac_pass_id},
             dataType: 'json',
             async: false,
@@ -779,105 +852,41 @@ $(document).ready(function(){
             contentType: 'application/json',
             success: function (result) {
                 console.log("result=", result);
-                display_alert(result.status);
+                display_pass(result.status);
             }
         })
-      {# 实现通过键的disabled#}
-        if($.cookie("cookie_push")!=undefined) {
-             let test_pass = $.cookie("cookie_push");
-             if(cookie_push.length == 0){
-                 cookie_push.push(test_pass)
+        {# 实现通过键和驳回键的disabled#}
+        if($.cookie("cookie_report")!=undefined) {
+             let t_pass = $.cookie("cookie_report");
+             if(cookie_report.length == 0){
+                 cookie_report.push(t_pass)
              }
          }
          let pass_t ="#pass"+new_ac_pass_id;
          let reject_t = "#reject"+new_ac_pass_id;
-         cookie_push.push(pass_t)
-         cookie_push.push(reject_t)
+         cookie_report.push(pass_t)
+         cookie_report.push(reject_t)
          $(pass_t).attr('disabled',"true")
          $(reject_t).attr('disabled',"true")
          {#设置cookie来记住通过的id#}
          $.cookie(
-            "cookie_push",
-             cookie_push,
+            "cookie_report",
+             cookie_report,
             { expires: 1});
-
-    });
-     function display_alert(status){
+   });
+   function display_pass(status){
         if(status==true){
-            msg="已通过！";
+            msg="通过操作成功！";
         }else{
-            msg="通过失败！";
+            msg="通过操作失败！";
         }
-        {#创建一个div，显示msg，显示后再移除该div#}
         $(document).ready(function(){
             setTimeout(function(){
                 alert(msg)
             },1000)
       });
     }
-    {#实现查看按钮中的取消键#}
-    $(document).on("click","#close_delete",function() {
-        $("#look_modal_div").modal('hide')
-        return false;
-    });
-    {#实现查看按钮中的驳回键#}
-    $(document).on("click","#reject_modal_div_sure",function () {
-        $("#look_modal_div").modal('hide')
-         $.ajax({
-            type: 'GET',
-            url: './bhabilityuser',
-            data: {'id': reject},
-            dataType: 'json',
-            async: false,
-            cache: false,
-            contentType: 'application/json',
-            success: function (result) {
-                console.log('result', result)
-                display_reject(result.status);
-            }
-        })
-    });
-    {# 实现查看按钮中的通过键 #}
-    $(document).on("click","#pass_modal_div_sure",function() {
-        $("#look_modal_div").modal('hide')
-         $.ajax({
-             type: 'GET',
-             url: './tgabilityuser',
-             data: {'id': pass},
-             dataType: 'json',
-             async: false,
-             cache: false,
-             contentType: 'application/json',
-             success: function (result) {
-                 console.log("result=", result);
-                 display_alert(result.status);
-             }
-         });
-         {#点击查看按钮中的通过键实现div悬浮框和list列表中的通过键全部disabled，其实div悬浮框的disabled不用做，查看中就直接显示出来了#}
-        let pas_id = parseInt(pass)
-        let list_pass = "#pass" + pas_id;
-        let rej_id = parseInt(reject)
-        let list_reject = "#reject"+rej_id;
 
-         if($.cookie("cookie_push")!=undefined) {
-             let pass_a = $.cookie("cookie_push");
-             if(cookie_push.length == 0){
-                 cookie_push.push(pass_a)
-             }
-         }
-         cookie_push.push(list_pass)
-         cookie_push.push(list_reject)
-         {#console.log("test1=",test1)#}
-         $(list_pass).attr('disabled',"true")
-         $(list_reject).attr('disabled',"true")
-         {#设置cookie来记住通过的id#}
-         $.cookie(
-            "cookie_push",
-             cookie_push,
-            { expires: 1});
-         return false;
-    });
-
-});
+})
 </script>
 </body>

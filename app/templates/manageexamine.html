@@ -13,6 +13,10 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -30,15 +34,15 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：管理员</a></li>
                             <li role="separator" class="divider"></li>
@@ -57,120 +61,106 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-{#            <ul class="nav sidebar nav-sidebar" style="padding: 20px 0 0 20px; width: 18%">#}
-{#                <li><a class="nav-link"#}
-{#                       href="{{url_for('main.manageuser')}}">用户管理</a></li>#}
-{#                <li><a class="nav-link" href="{{url_for('main.manageactivity')}}">用户活动管理</a></li>#}
-{##}
-{##}
-{#                <li><a class="nav-link" data-toggle="dropdown" href="{{url_for('main.managedeclareuser')}} ">申报管理</a></li>#}
-{#                <li class="nav-item dropdown">#}
-{#                    <a class="nav-link dropdown-toggle open" href="#" data-toggle="dropdown">申报管理</a>#}
-{#                        <div class="dropdown-menu ">#}
-{#                            <a class="dropdown-item" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>#}
-{#                            <a class="dropdown-item" href="#">申报任务添加</a>#}
-{#                        </div>#}
-{#                </li>#}
-{##}
-{##}
-{#                <li><a class="nav-link" href="#">能力提升管理</a></li>#}
-{#                <li class="nav-item dropdown">#}
-{#                    <a class="nav-link dropdown-toggle open" href="#" data-toggle="dropdown">能力提升管理</a>#}
-{#                        <div class="dropdown-menu ">#}
-{#                            <a class="dropdown-item" href="{{url_for('main.manageabilityuser')}}">已申报培训用户</a>#}
-{#                            <a class="dropdown-item" href="#">能力提升培训添加</a>#}
-{#                        </div>#}
-{#                </li>#}
-{##}
-{##}
-{##}
-{#                <li><a class="nav-link" href="{{url_for('main.manageexamine')}}">考核管理</a></li>#}
-{#                <li><a class="nav-link" href="{{url_for('main.managesystem')}}">系统设置</a></li>#}
-{#            </ul>#}
-          <div id="accordion">
-{#                <div class="card">#}
-{#                    <div class="card-header">#}
-{#                        <a class="collapsed card-link"  href="#">活动管理</a>#}
-{#                    </div>#}
-{#                </div>#}
-{#             <div class="card">#}
-{#                  <div class="card-header">#}
-{#                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">活动管理</a>#}
-{#                  </div>#}
-{#                  <div id="collapseOne" class="collapse" data-parent="#accordion">#}
-{#                    <div class="card-body">#}
-{#                      <a class="nav-link" href="{{url_for('main.manage')}}">活动情况</a>#}
-{#                      <a class="nav-link" href="{{url_for('main.manageactivity')}}">活动列表</a>#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.manage')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              申报任务用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              申报任务添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              能力提升培训用户
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              能力提升培训添加
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             用户管理
+                            </a>
+                        </li>
 
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">系统设置</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageexamine')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             考核管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managereportuser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             报告管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.managesystem')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             系统设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
 
-        <div class="col-md-10" style="margin-top: 50px">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">考核成绩表</h2>
+            <br>
             <form action="" method="POST">
+                {#添加搜索栏#}
+                <div class="form-group">
+                     <div class="input-group col-xs-12">
+                         <div class="input-group-btn">
+                            <select name="type" class="form-control" style="width: auto;">
+                                <option>用户名</option>
+                                <option>参与活动次数</option>
+                                <option>考核第一年分数</option>
+                                <option>考核第二年分数</option>
+                                <option>考核第三年分数</option>
+                            </select>
+                         </div>
+                            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                            <span class="input-group-btn">
+                                <button class="btn btn-dark" id="search" type="submit">搜索</button>
+                            </span>
+                        </div>
+                   <br>
+                </div>
+
                 <div class="table-responsive">
                     <form action="/"></form>
                     <table class="table table-bordered table-hover" id="table">
                         <thead>
-                            <tr>
+                            <tr class="table-info">
                                 <th>序号</th>
-                                <th>用户</th>
+                                <th>用户名</th>
                                 <th>参与活动次数</th>
                                 <th>考核第一年分数</th>
                                 <th>考核第二年分数</th>
@@ -193,15 +183,6 @@
 </div>
 
 <script>
-
-{#管理员申报管理的下拉菜单#}
-$(function () {
-　var openddt = $(".open");
-{#　　　　openddt.attr('data-toggle', '');#}
-　openddt.click(function () {
-　$(this).siblings(".dropdown-menu").toggle();
-　　　});
-　});
 
 
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
@@ -238,7 +219,7 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].onys +
                             "</td><td>" + data.item[index].twys +
                             "</td><td>" + data.item[index].thys +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-primary btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
                 }
                 $("#tableText").html(str);
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
@@ -295,7 +276,7 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].onys +
                             "</td><td>" + data.item[index].twys +
                             "</td><td>" + data.item[index].thys +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-primary btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -347,7 +328,7 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].onys +
                             "</td><td>" + data.item[index].twys +
                             "</td><td>" + data.item[index].thys +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-primary btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -399,7 +380,7 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].onys +
                             "</td><td>" + data.item[index].twys +
                             "</td><td>" + data.item[index].thys +
-                            "</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
+                            "</td><td>"+ "<button class='btn btn-primary btn-sm' id='del"+index+"'>生成打分</button>" + "</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
