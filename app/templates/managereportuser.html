@@ -683,7 +683,7 @@ $(document).ready(function () {
                 else{
                     for(var i=0;i<data_pdf.length;i++){
                         report_pdf = data_pdf[i].newname;
-                        $("#report_pdf").append("<a href='/data/pdf/"+report_pdf+"'>"+report_pdf+"</a>");
+                        $("#report_pdf").append("<a href='"+data_pdf[i].path+"'>"+report_pdf+"</a>");
                         $("#report_pdf").append("  ");
                      }
 
@@ -694,7 +694,7 @@ $(document).ready(function () {
                 else{
                    for(var j=0;j<data_word.length;j++){
                         report_word =  data_word[j].newname;
-                        $("#report_word").append("<a href='/data/word/"+report_word+"'>"+report_word+"</a>");
+                        $("#report_word").append("<a href='"+data_word[j].path+"'>"+report_word+"</a>");
                         $("#report_word").append("  ");
                      }
 
@@ -705,7 +705,7 @@ $(document).ready(function () {
                 else{
                    for(var k=0;k<data_video.length;k++){
                         report_video =  data_video[k].newname;
-                        $("#report_video").append("<a href='/data/video/"+report_video+"'>"+report_video+"</a>");
+                        $("#report_video").append("<a href='"+data_video[k].path+"'>"+report_video+"</a>");
                         $("#report_video").append("  ");
                      }
 
@@ -716,7 +716,7 @@ $(document).ready(function () {
                 else{
                    for(var m=0;m<data_image.length;m++){
                         report_image =  data_image[m].newname;
-                        $("#report_image").append("<a href='/data/image/"+report_image+"'>"+report_image+"</a>");
+                        $("#report_image").append("<a href='"+data_image[m].path+"'>"+report_image+"</a>");
                         $("#report_image").append("  ");
                      }
 

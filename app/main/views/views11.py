@@ -3,7 +3,7 @@ from flask import request,jsonify,session,redirect,Response
 from app.main import main
 from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,DUDC,DU,TUT,Record
 from app import db
-import json,datetime,random,string,os
+import json,datetime,random,string,os,time
 from sqlalchemy import or_,and_
 from werkzeug.utils import secure_filename
 
@@ -20,10 +20,13 @@ def getnewuserdeclare():
     user=session.get('user')
     userid=user['userid']
     user=User.query.filter(User.id==userid).all()[0]
-    # 用户名,科普基地单位名称,邮箱,联系电话,地址,密码
-    endtime=str(user.endtime)
-    return Response(json.dumps(endtime), mimetype='application/json')
-
+    udeclare=UDeclare.query.filter(UDeclare.userid==userid).all()
+    if len(udeclare)>0:
+        status=udeclare[0].type
+    else:
+        status=-1
+    data={'endtime':str(user.endtime),'status':status}
+    return Response(json.dumps(data), mimetype='application/json')
 
 #判断上传文件类型
 def panduan(ext):
@@ -172,14 +175,15 @@ def adduserdeclare():
         ext = filename.rsplit('.')
         ext = ext[len(ext) - 1].lower()  # 获取文件后缀
         type = panduan(ext)
-        new_filename = str(userid) + "_" + str(udeclare.id) + "_" + str(i + 1) + '.' + ext  # 修改了上传的文件名
+        timestamp = str(time.mktime(time.strptime(str(udeclare.uptime), "%Y-%m-%d %H:%M:%S")))
+        new_filename = str(user.username) + "_" + str(declare.name) +"_"+timestamp+ "_" + str(i + 1) + '.' + ext  # 修改了上传的文件名
         path=file_dir['declare'][declare.name][str(udeclare.id)][str(type)]#保存文件的目录
         file.save(os.path.join(path, new_filename))  # 保存文件到目录
         file_data=path+'/'+new_filename
         f=open(file_data,'wb')
         f.write(filedata[i])
         f.close()
-        data=Data(name=file.filename,type=type,path=path,newname=new_filename)
+        data=Data(name=file.filename,type=type,path=file_data,newname=new_filename)
         db.session.add(data)
         db.session.commit()
         udeclare.datas.append(data)

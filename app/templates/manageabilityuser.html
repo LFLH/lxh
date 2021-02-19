@@ -685,7 +685,7 @@ $(document).ready(function(){
                 else{
                     for(var i=0;i<data_pdf.length;i++){
                         train_pdf = data_pdf[i].newname;
-                        $("#train_pdf").append("<a href='/data/pdf/"+train_pdf+"'>"+train_pdf+"</a>");
+                        $("#train_pdf").append("<a href='"+data_pdf[i].path+"'>"+train_pdf+"</a>");
                         {#$("#train_pdf").append("<br/>");#}
                         $("#train_pdf").append("  ")
                      }
@@ -697,7 +697,7 @@ $(document).ready(function(){
                 else{
                    for(var j=0;j<data_word.length;j++){
                         train_word =  data_word[j].newname;
-                        $("#train_word").append("<a href='/data/word/"+train_word+"'>"+train_word+"</a>");
+                        $("#train_word").append("<a href='"+data_word[j].path+"'>"+train_word+"</a>");
                         $("#train_word").append("  ")
                      }
 
@@ -708,7 +708,7 @@ $(document).ready(function(){
                 else{
                     for(var k=0;k<data_image.length;k++){
                         train_image =  data_image[k].newname;
-                        $("#train_image").append("<a href='/data/image/"+train_image+"'>"+train_image+"</a>")
+                        $("#train_image").append("<a href='"+data_image[k].path+"'>"+train_image+"</a>")
                         $("#train_image").append("  ")
                      }
 

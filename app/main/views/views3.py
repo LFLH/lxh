@@ -48,41 +48,36 @@ def addsysactivity():
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
-#条件检索
-def tsactivity(name,typeuser,type,status,page,per_page):
+#条件检索系统活动
+def tsactivity1(name,type,status,page,per_page):
     if name!=None:
         s1=(Activity.name==name)
     else:
         s1=True
-    if typeuser!=None:
-        s2=(Activity.typeuser==typeuser)
+    if type!=None:
+        s2=(Activity.type==type)
     else:
         s2=True
-    if type!=None:
-        s3=(Activity.type==type)
-    else:
-        s3=True
     if status!=None:
         status=int(status)
         if status<10:
-            s4=(Activity.status==status)
+            s3=(Activity.status==status)
         else:
             k=status-10
-            s4=and_(Activity.status==k,User.checked!=1)
+            s3=and_(Activity.status==k,User.checked!=1)
     else:
-        s4=True
-    activity=Activity.query.join(User).filter(and_(s1,s2,s3,s4)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+        s3=True
+    activity=Activity.query.join(User).filter(and_(s1,s2,s3,Activity.typeuser=='系统')).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     return activity
 
-#列表显示活动
-@main.route('/searchactivity',methods=['GET', 'POST'])
-def searchactivity():
+#列表显示系统活动
+@main.route('/searchmansysactivity',methods=['GET', 'POST'])
+def searchmansysactivity():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
         #检索条件
         name=request.args.get('name')#活动名
-        typeuser=request.args.get('typeuser')#活动类别，自主或系统
         type=request.args.get('type')#活动类型
         status=request.args.get('type')#状态
     else:
@@ -90,13 +85,76 @@ def searchactivity():
         per_page = request.form.get('per_page')
         # 检索条件
         name = request.form.get('name')  # 活动名
-        typeuser = request.form.get('typeuser')  # 活动类别，自主或系统
         type = request.form.get('type')  # 活动类型
         status = request.form.get('type')  # 状态
     page = int(page)
     per_page = int(per_page)
     #获取未删除活动倒叙
-    activity=tsactivity(name,typeuser,type,status,page,per_page)
+    activity=tsactivity1(name,type,status,page,per_page)
+    #activity = Activity.query.order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    items = activity.items
+    item = []
+    count = (int(page) - 1) * int(per_page)
+    for i in range(len(items)):
+        if items[i].typeuser=='自主':
+            user=User.query.filter(User.id==items[i].userid).all()[0]
+            if user.checked==1:
+                status=items[i].status
+            else:
+                status=10+items[i].status
+        else:
+            status=items[i].status
+        #number，活动id号，活动名，活动类别，活动类型，开始时间，结束时间，状态（0创建，1驳回，2通过，3删除，10+0，1，2，3因用户考核被删除的记录）
+        itemss = {'number': count + i + 1, 'id': items[i].id, 'activityname': items[i].name, 'typeuser':items[i].typeuser,'type': items[i].type,
+                  'begintime': str(items[i].begintime), "endtime": str(items[i].endtime),'status':status}
+        item.append(itemss)
+    #返回总页数、活动总数、当前页、活动集合
+    data = {'zpage': activity.pages, 'total': activity.total, 'dpage': activity.page, 'item': item}
+    return Response(json.dumps(data), mimetype='application/json')
+
+#条件检索自主活动
+def tsactivity2(name,type,status,page,per_page):
+    if name!=None:
+        s1=(Activity.name==name)
+    else:
+        s1=True
+    if type!=None:
+        s2=(Activity.type==type)
+    else:
+        s2=True
+    if status!=None:
+        status=int(status)
+        if status<10:
+            s3=(Activity.status==status)
+        else:
+            k=status-10
+            s3=and_(Activity.status==k,User.checked!=1)
+    else:
+        s3=True
+    activity=Activity.query.join(User).filter(and_(s1,s2,s3,Activity.typeuser=='自主')).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    return activity
+
+#列表显示自主活动
+@main.route('/searchzhactivity',methods=['GET', 'POST'])
+def searchzhactivity():
+    if request.method == "GET":
+        page = request.args.get('page')#当前页
+        per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        name=request.args.get('name')#活动名
+        type=request.args.get('type')#活动类型
+        status=request.args.get('type')#状态
+    else:
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        # 检索条件
+        name = request.form.get('name')  # 活动名
+        type = request.form.get('type')  # 活动类型
+        status = request.form.get('type')  # 状态
+    page = int(page)
+    per_page = int(per_page)
+    #获取未删除活动倒叙
+    activity=tsactivity2(name,type,status,page,per_page)
     #activity = Activity.query.order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     items = activity.items
     item = []
@@ -187,7 +245,7 @@ def detailsysactivity():
     for users2 in userz2:
         user2.append(users2.username)
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、用户组
-    da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'stoptime':str(activity.stoptime),'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user}
+    da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'stoptime':str(activity.stoptime),'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user,'user2':user2}
     return Response(json.dumps(da), mimetype='application/json')
 
 #更新系统活动信息
@@ -211,19 +269,28 @@ def updatesysactivity():
         stoptime = request.form.get('stoptime')
         main = request.form.get('main')
     # 处理时间类型数据
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
-    stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%d')
+    if begintime!=None:
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    if endtime!=None:
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    if stoptime!=None:
+        stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%d')
     user=session.get('user')
     userid=user['userid']
     # 修改活动及存表
     activity=Activity.query.filter(Activity.id==id).all()[0]
-    activity.name=name
-    activity.type=type
-    activity.begintime=begintime
-    activity.endtime=endtime
-    activity.stoptime=stoptime
-    activity.main=main
+    if name!=None:
+        activity.name=name
+    if type!=None:
+        activity.type=type
+    if begintime!=None:
+        activity.begintime=begintime
+    if endtime!=None:
+        activity.endtime=endtime
+    if stoptime!=None:
+        activity.stoptime=stoptime
+    if main!=None:
+        activity.main=main
     db.session.add(activity)
     db.session.commit()
     user2 = User.query.filter(User.id == userid).all()[0]

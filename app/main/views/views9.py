@@ -130,7 +130,16 @@ def detailuser():
     else:
         id = request.form.get('id')
     user=User.query.filter(User.id==id).all()[0]
-    users={'username':user.username,'name':user.name,'email':user.email,'phone':user.phone,'address':user.address,'password':user.password,'type':user.type,'status':user.checked}
+    if user.checked == 0:
+        if user.endtime > datetime.datetime.now():
+            status = 0  # 新用户
+        else:
+            status = 1  # 未激活用户
+    elif user.checked == 1:
+        status = 2  # 正式用户
+    else:
+        status = 3  # 考核未过用户
+    users={'username':user.username,'name':user.name,'email':user.email,'phone':user.phone,'address':user.address,'password':user.password,'type':user.type,'status':status}
     return Response(json.dumps(users), mimetype='application/json')
 
 #条件检索

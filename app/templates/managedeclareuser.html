@@ -677,7 +677,7 @@ $(document).ready(function(){
                 else{
                     for(var i=0;i<data_pdf.length;i++){
                         declare_pdf = data_pdf[i].newname;
-                        $("#declare_pdf").append("<a href='/data/pdf/"+declare_pdf+"'>"+declare_pdf+"</a>");
+                        $("#declare_pdf").append("<a href='"+data_pdf[i].path+"'>"+declare_pdf+"</a>");
                         $("#declare_pdf").append("  ");
                      }
 
@@ -688,7 +688,7 @@ $(document).ready(function(){
                 else{
                    for(var j=0;j<data_word.length;j++){
                         declare_word =  data_word[j].newname;
-                        $("#declare_word").append("<a href='/data/word/"+declare_word+"'>"+declare_word+"</a>");
+                        $("#declare_word").append("<a href='"+data_word[j].path+"'>"+declare_word+"</a>");
                         $("#declare_word").append("  ");
                      }
 

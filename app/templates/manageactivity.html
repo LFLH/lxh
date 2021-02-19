@@ -377,9 +377,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="attenduser" class="col-sm-3 control-label">参加用户:</label>
+                    <label for="attenduser" class="col-sm-3 control-label">报名用户:</label>
                     <div class="col-md-7" style="padding: 3px 0 0 20px;">
                         <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="attenduser" disabled></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signuser" class="col-sm-3 control-label">签到用户:</label>
+                    <div class="col-md-7" style="padding: 3px 0 0 20px;">
+                        <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="signuser" disabled></textarea>
                     </div>
                 </div>
         </div>
@@ -456,9 +462,9 @@
         </div>
         <div class="modal-body" id="sign-body" name="sign">
             <form>
-            全部<input type="checkbox" id="selectAll"/>
-            音乐<input type="checkbox" value=""/> <br>
-            代码<input type="checkbox" value=""/>
+            全部<input type="checkbox" id="selectAll">
+            音乐<input type="checkbox" value=""> <br>
+            代码<input type="checkbox" value="">
                 </form>
         </div>
         <div class="modal-footer" id="sign-foot">
@@ -558,7 +564,7 @@
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
-                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + data.item[index].endtime.split(' ')[0] +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
@@ -572,7 +578,7 @@
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
-                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + data.item[index].endtime.split(' ')[0] +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
@@ -600,7 +606,7 @@
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
-                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + data.item[index].endtime.split(' ')[0] +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
@@ -1051,7 +1057,6 @@
                         $("#showModal").find("#showstarttime").val(data.begintime)
                         $("#showModal").find("#showendtime").val(data.endtime)
                         $("#showModal").find("#showcontent").val(data.main)
-                        $("#showModal").find("#attenduser").val(data.user)
                         var videoStr = ''
                         if(data.video.length >0){
                             for(var i=0;i<data.video.length;i++){
@@ -1116,6 +1121,7 @@
                     $("#showModal2").find("#showendtime2").val(data.endtime)
                     $("#showModal2").find("#showcontent2").val(data.main)
                     $("#showModal2").find("#attenduser").val(data.user)
+                    $("#showModal2").find("#signuser").val(data.user2)
                     $("#export-foot").empty()
                     var strPass = '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
                       +'<button type="button" class="btn btn-success exportExcel" data-dismiss="modal" data-id="' + id + '">导出报名表</button>'
@@ -1229,44 +1235,14 @@
                 contentType: 'application/json',
                 success:function(data){
                     console.log('websignuser',data)
-                    var strSign = '<input type="checkbox" id="selectAll"/>全部 <br>'
+                    var strSign = '<input type="checkbox" id="selectAll">全部 <br>'
                         for(var i=0;i<data.userz.length;i++){
-                            strSign+= '<input type="checkbox" name="checkbox" class="userCheckbox" data-userid='+ data.userz[i].userid +'/>'+ data.userz[i].name+ '<br>'
+                            strSign+= '<input type="checkbox" name="checkbox" class="userCheckbox" data-userid='+ data.userz[i].userid +'>'+ data.userz[i].name+ '<br>'
                         }
                     $("#sign-body").html(strSign);
                     $("#signModal").modal('show')
                 }
             });
-            $("#sign").click(function() {
-                var checkeduser = [];
-                if($("input[name=checkbox]:checked").length<1){
-                    alert("请至少选择一个用户");
-                    return false
-                }
-                $("input[name=checkbox]:checked").each(function(i){
-                  checkeduser[i] = $(this).data("userid");
-                });
-                console.log(checkeduser,'id')
-                var activityid = $(this).data("activityid");
-                s='./websign?activityid='+activityid
-                $.ajax({
-                    type: "POST",
-                    url: s,
-                    data:{
-                        userz:checkeduser
-                    },
-                    contentType: false,
-                    processData: false,
-                    success:function(re){
-                        init();
-                        if (re.status==1){
-                            alert('签到成功')
-                        }else {
-                            alert('签到失败')
-                        }
-                    }
-                });
-            })
             $("#selectAll").click(function (){
                 //id=all是全选/反选的checkbox，判断是选中还是没选中
                 var isChecked=$("#selectAll").is(':checked');
@@ -1283,15 +1259,15 @@
                     });
                 }
             })
-            $("#sign-body").on('click', '.userCheckbox', function () {
+            $("#sign-body").off('click').on('click','.userCheckbox', function () {
                 var userid = $('.userCheckbox:checked').data('userid');
                 console.log(userid,11)
                 if (userid){
                     var all = true;
-                    var checkedArrs=$("input[type='checkbox']");
-                    console.log(checkedArrs)
-                    for(var i=1;i<checkedArrs.length;i++){
-                       if(!checkedArrs[i].checked){
+                    checkArrs=$("input[type='checkbox']");
+                    console.log(checkArrs)
+                    for(var i=1;i<checkArrs.length;i++){
+                       if(!checkArrs[i].checked){
                            all = false;
                            break;
                        }
@@ -1300,6 +1276,41 @@
                 }else {
                     document.getElementById('selectAll').checked = false;
                 }
+            })
+
+            $("#sign").unbind('click').click(function() {
+                var checkeduser = [];
+                if($("input[name=checkbox]:checked").length<1){
+                    alert("请至少选择一个用户");
+                    return false
+                }else {
+                    $("input[name=checkbox]:checked").each(function(i){
+                        checkeduser[i] = $(this).data("userid");
+                    });
+                }
+                console.log(checkeduser,'id')
+                var activityid = $(this).data("activityid");
+                s='./websign?activityid='+activityid
+                $.ajax({
+                    type: 'get',
+                    url: s,
+                    data:{
+                        'userz':checkeduser
+                    },
+                    // processData: false,
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(re){
+                        if (re.status==1){
+                            alert('签到成功')
+                        }else {
+                            alert('签到失败')
+                        }
+                        init();
+                    }
+                });
             })
         })
     });
