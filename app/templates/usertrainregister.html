@@ -126,7 +126,24 @@
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">林学会能力提升培训列表</h2>
-                <div class="table-responsive">
+                <div class="form-group" style="margin-top: 10px">
+                     <div class="input-group col-xs-12" style="float: right">
+                         <div class="input-group-btn">
+                            <select name="selectSta" class="form-control" style="width: auto;" id="selectSta">
+                                <option>状态</option>
+                                <option>未报名</option>
+                                <option>已报名</option>
+                                <option>已过期</option>
+                            </select>
+                         </div>
+                         <input type="text" name="trainName" id="trainName" class="form-control" style="margin-left: 7px" placeholder="请输入培训任务名">
+                         <span class="input-group-btn">
+                             <button class="btn btn-outline-info" id="search" type="submit" style="margin-left: 7px">搜索</button>
+                         </span>
+                     </div>
+                     <br>
+                </div>
+                <div class="table-responsive" style="padding-top: 10px">
                     <table class="table table-bordered table-hover" id="mytable">
                         <thead>
                             <tr class="table-info">
@@ -134,7 +151,7 @@
                                 <th>培训任务名</th>
                                 <th>报名开始时间</th>
                                 <th>报名截止时间</th>
-                                <th>报名情况</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -234,13 +251,13 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="myapplyModal">培训详情</h3>
+                <h3 class="modal-title" id="myapplyModal">培训报名</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="edit" enctype='multipart/form-data'>
-                    <div class="form-group">
+                <form id="edit">
+                    <!--<div class="form-group">
                         <label for="InputFilePDF" class="control-label">PDF文件:</label>
                         <div class="col-sm-10">
                             <input type="file" multiple="" name="pdf" id="InputFilePDF"
@@ -259,7 +276,28 @@
                         <div class="col-sm-10">
                             <input type="file" multiple="" name="image" id="InputFileImage" accept="image/*"/>
                         </div>
+                    </div>-->
+                    <div class="form-group">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 14px" id="chooseFile">选择文件</button>
+                        <br>
+                        <br>
+                        <label style="font-size: small;color: grey">（仅支持doc、docx、pdf 和 jpg格式的文件）</label>
+                        <div class="layui-upload-list col-md-11">
+                            <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                                <thead style="text-align: center">
+                                <tr>
+                                    <th style="width: 45%">文件名</th>
+                                    <th style="width: 15%;text-align: center">大小</th>
+                                    <th style="width: 30%;text-align: center">时间</th>
+                                    <th style="width: 10%;text-align: center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="fileList"></tbody>
+                            </table>
+                        </div>
                     </div>
+                </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -363,7 +401,100 @@
             }else {
                 $("#apply-centain").attr("data-id",$(this).data('id'));
                 $("#applyModal").modal('show')
-                $("#apply-centain").click(function() {
+                $(function () {
+                    var formData = new FormData();
+                    var files={};
+                    //获取当前时间
+                    function fileTime(){
+                        function getNow(s) {
+                            return s < 10 ? '0' + s : s;
+                        }
+                        var myDate = new Date;
+                        var year = myDate.getFullYear(); //获取当前年
+                        var mon = myDate.getMonth() + 1; //获取当前月
+                        var date = myDate.getDate(); //获取当前日
+                        var h = myDate.getHours();//获取当前小时数(0-23)
+                        var m = myDate.getMinutes();//获取当前分钟数(0-59)
+                        var s = myDate.getSeconds();//获取当前秒
+                        var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "&nbsp;" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
+                        return res
+                    }
+                    layui.use('upload', function () {
+                    var $ = layui.jquery,
+                        upload = layui.upload;
+                    //多文件列表示例
+                    var fileListView = $('#fileList'),
+                        uploadListIns = upload.render({
+                            elem: '#chooseFile',
+                            accept: 'file',
+                            exts: 'doc|docx|pdf|jpg',
+                            multiple: true,
+                            auto: false,
+                            choose: function (obj) {
+                                files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                                // formData.append("files", files);//保存每一个文件
+                                var file_time = fileTime();
+                                //读取本地文件
+                                obj.preview(function (index, file, result) {
+                                    var tr = $(['<tr id="upload-' + index + '">'
+                                        , '<td style="width: 65%">' + file.name + '</td>'
+                                        , '<td style="width: 10%">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                        , '<td style="width: 15%">' + file_time + '</td>'
+                                        , '<td style="width: 10%">'
+                                        , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                        , '</td>'
+                                        , '</tr>'].join(''));
+                                    //删除
+                                    tr.find('.demo-delete').on('click', function () {
+                                        delete files[index]; //删除对应的文件
+                                        tr.remove();
+                                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                    });
+                                    fileListView.append(tr);
+                                });
+                            },
+                        })
+                    });
+                    //提交
+                    $("#apply-centain").on("click", function () {
+                        console.log(formData);
+                        for(let k in files){
+                            formData.append("files",files[k]);
+                        }
+                        var len = 0;
+                        formData.forEach((value, key) => {
+                        console.log("key %s: value %s", key, value);
+                        len = key.length;
+                        });
+                        console.log(len);
+                        if(len==0){
+                            layer.msg("未选择文件！", {icon: 5});
+                        }else{
+                            var id = $(this).data("id");
+                            s='./bmsystrain?id='+id
+                            layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+                            $.ajax({
+                                url: s,
+                                type: "POST",
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                success: function (result) {
+                                    console.log(result);
+                                    if (result.code == 200) {
+                                        layer.msg("上传成功！", {icon: 6});
+                                        setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
+                                    } else if (result.code == 500) {
+                                        layer.msg(result.msg, {icon: 5});
+                                        setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
+                                    }
+                                    init();
+                                }
+                            })
+                        }
+                    });
+                })
+                /*$("#apply-centain").click(function() {
                 var id = $(this).data("id");
                 s='./bmsystrain?id='+id
                 var formData = new FormData($("#edit")[0]);
@@ -380,8 +511,8 @@
                         init();
                     }
                 });
-            })
-                function Flush(){
+            })*/
+                /*function Flush(){
                     $('#InputFilePDF').val('');
                     $('#InputFileWord').val('');
                     $('#InputFileImage').val('');
@@ -402,10 +533,86 @@
                         m.style.opacity = '0';
                         setTimeout(function() { document.body.removeChild(m) }, d * 1000);
                     });
-                };
+                };*/
             }
         })
-
+        // 条件检索
+        $("#search").on('click', function () {
+            if (document.getElementById('trainName').value){
+                var name = document.getElementById('trainName').value
+            }
+            switch (document.getElementById('selectSta').value)
+                {
+                    case '未报名':
+                        var status = 0;
+                        break;
+                    case '已过期':
+                        var status = 1;
+                        break;
+                    case '已报名':
+                        var status = 2;
+                        break;
+                }
+            $.ajax({
+                type: 'GET',
+                url: './searchsystrain',
+                data:{
+                    page:dpage,
+                    per_page:per_page,
+                    name:name,
+                    status:status
+                },
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log('data',data)
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str = ""
+                    for (let index = 0; index < data.item.length; index++) {
+                        switch(data.item[index].status) {
+                             case 0:
+                                var sta = '未报名';
+                                break;
+                             case 1:
+                                var sta = '已过期';
+                                break;
+                            case 2:
+                                var sta = '已报名';
+                                break;
+                        }
+                        str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].name +
+                            "</td><td>" + data.item[index].begintime +
+                            "</td><td>" + data.item[index].endtime +
+                            "</td><td>" + sta +
+                            "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
+                            "<button class='btn btn-warning btn-sm user-active-apply' data-id='" + data.item[index].id + "'>报名</button>" + "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    let strli = "<li class='page-item'><a class='page-link' href='#' id='prev'>前一页</a></li>"
+                    strli += "<li class='page-item'><a id=li" + 1 + " href='#' class='page-link page-num'>" + 1 + "</a></li>"
+                    for (let index = 2; index <= pages; index++) {
+                        strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link page-num'>" + index + "</a></li>"
+                    }
+                    strli += "<li class='page-item'><a class='page-link' href='#' id='next'>后一页</a></li>"
+                    $("#page-li").html(strli);
+                    let s = "#li" + dpage
+                    $(s).css("border-color", "blue");
+                    if (dpage < pages) {
+                        let r = dpage + 1
+                        let rs = "#li" + r
+                        $(rs).css("border-left-color", "blue");
+                    } else {
+                        $("#next").css("border-left-color", "blue");
+                    }
+                }
+            });
+        })
         // 前一页
         $("#page-li").on("click", "#prev", function () {
             if (dpage == 1) {

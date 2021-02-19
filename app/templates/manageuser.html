@@ -67,6 +67,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动发布
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{url_for('main.manageactivity')}}">
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                               活动管理
@@ -125,49 +131,55 @@
                </div>
             </div>
         </div>
-        <div class="col-md-10 main ml-auto" style="margin-top: 50px">
+        <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">用户列表</h2>
-            <nav class="navbar navbar-expand navbar-light bg-light">
-                <div class="container-fluid">
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"
-                         style="height: 37px;padding-left: 15px">
+<!--            <nav class="navbar navbar-expand navbar-light bg-light">-->
+                <div class="form-group" style="margin-top: 10px">
+<!--                            <form class="form-inline" id="adduser">-->
+                        <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                data-target="#addModal">添加</button>
+                        <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                data-target="#addModal2" style="margin-left: 5px">批量导入</button>
+                        <button type="button" class="btn btn-outline-primary" id="userout"
+                                style="margin-left: 5px">导出用户</button>
+                         <div class="input-group col-md-6" style="float: right;padding-right: 0;">
+                             <div class="input-group-btn">
+                                <select name="selectType" class="form-control" style="width: auto;" id="selectType">
+                                    <option>用户类型</option>
+                                    <option>新用户</option>
+                                    <option>正式用户</option>
+                                    <option>未激活用户</option>
+                                    <option>考核未通过</option>
+                                </select>
+                             </div>
+                             <input type="text" name="username" id="username" class="form-control" style="margin-left: 7px" placeholder="请输入用户名">
+                             <span class="input-group-btn">
+                                 <button class="btn btn-outline-info" id="search" style="margin-left: 7px">搜索</button>
+                             </span>
+                         </div>
+                         <br>
+<!--                            </form>-->
+                            <!--<div class="" tyle="padding-left: 15px">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                               aria-haspopup="true" aria-expanded="false" style="color: #212529">选择搜索类型
+                                                <span class="caret"></span></a>
+                                            <div class="dropdown-menu">
+                                                <a href="#" class="dropdown-item">用户</a>
+                                                <a href="#" class="dropdown-item">截止时间</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <form class="form-inline" method="POST" action="/searchuser" onsubmit="return search();">
+                                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                                        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">搜索</button>
+                                    </form>
 
-                        <nav class="navbar navbar-light bg-light">
-                            <form class="form-inline" id="adduser">
-                                <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                        data-target="#addModal">添加</button>
-                                <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                        data-target="#addModal2" style="margin-left: 5px">批量导入</button>
-                                <button type="button" class="btn btn-outline-primary" id="userout"
-                                        style="margin-left: 5px">导出用户</button>
-                            </form>
-                        </nav>
+                                </div>-->
                     </div>
-                </div>
-            </nav>
-            <!--<nav class="navbar navbar-expand navbar-light bg-light">
-                <div class="container-fluid">
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="height: 37px;padding-left: 15px">
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true" aria-expanded="false" style="color: #212529">选择搜索类型
-                                    <span class="caret"></span></a>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item">用户</a>
-                                    <a href="#" class="dropdown-item">截止时间</a>
-                                </div>
-                            </li>
-                        </ul>
-                        <nav class="navbar navbar-light bg-light">
-                            <form class="form-inline" method="POST" action="/searchuser" onsubmit="return search();">
-                                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-info my-2 my-sm-0" type="submit">搜索</button>
-                            </form>
-                        </nav>
-                    </div>
-                </div>
-            </nav>-->
+<!--            </nav>-->
+
 <!--            <form action="" method="POST" style="padding-top: 10px">-->
                 <div class="table-responsive" style="padding-top: 10px">
                     <table class="table table-bordered table-hover" id="table">
@@ -326,7 +338,7 @@
 </form>
 
 <!-- 文档模态框 #addModal -->
-<form class="form-inline">
+<!--<form class="form-inline">
     <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -335,7 +347,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;
                     </button>
                 </div>
-                <!--<div class="modal-body">
+                &lt;!&ndash;<div class="modal-body">
                    &lt;!&ndash; <div class="form-group">
                         <label for="showusername" class="control-label" style="display: inline"
                                >用户名:</label>
@@ -384,7 +396,7 @@
                             <input class="form-control" id="showstatus" style="width: calc(100% - 30px)">
                         </div>
                     </div>&ndash;&gt;
-                </div>-->
+                </div>&ndash;&gt;
                 <div class="modal-footer" id="file-foot">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         关闭
@@ -394,7 +406,7 @@
             </div>
         </div>
     </div>
-</form>
+</form>-->
 
 <!-- 批量添加模态框 #addModal2 -->
     <div class="modal fade" id="addModal2">
@@ -449,6 +461,7 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
+
         var dpage=1
         var pages=1
         var per_page=5
@@ -500,8 +513,8 @@
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                             "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                            // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
                 }
                 $("#tableText").html(str);
                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -524,7 +537,7 @@
         });
         }
         // 确认导出文档
-        $("#file-foot").on('click', '.file', function(){
+        /*$("#file-foot").on('click', '.file', function(){
             var id = $(this).attr("id");
             console.log(id)
             window.open("./useroutdata?id="+id);
@@ -533,13 +546,13 @@
             // $(document.body).append($eleForm);
             // //提交表单，实现下载
             // $eleForm.submit();
-        });
+        });*/
         // 确认删除
         $("#del-foot").on('click', '.del', function () {
                 var id = $(this).attr("id");
-                if(idz[0]==id){
-                    dpage=dpage-1;
-                }
+                // if(idz[0]==id){
+                //     dpage=dpage-1;
+                // }
                 $.ajax({
                     type:'GET',
                     url:'./deleteuser',
@@ -549,11 +562,9 @@
                     cache: false,
                     contentType: 'application/json',
                     success:function(data){
-                        console.log(1)
                         pages = data.zpage;
                         let total = data.total;
                         dpage = data.dpage;
-                        let activity = data.item;
                         let str=""
                         d_per_page=data.item.length;
                         for (let index = 0; index < data.item.length; index++) {
@@ -585,8 +596,8 @@
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                             "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                            // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
                         }
                         $("#tableText").html(str);
                         let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -664,8 +675,8 @@
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                             "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                            // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -738,8 +749,8 @@
                             "</td><td>" + sta+
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                             "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                            // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -811,8 +822,8 @@
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                             "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                            // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage
@@ -933,8 +944,8 @@
                                             "</td><td>" + sta +
                                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                                             "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                                            "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                                            "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                                            // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
                                 }
                                 $("#tableText").html(str);
                                 let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -1027,8 +1038,8 @@
                                         "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                                         "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                                        "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                                        // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
                             }
                             $("#tableText").html(str);
                             let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -1110,8 +1121,8 @@
                                         "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
                                         "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
-                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +
-                                        "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +"</tr>";
+                                        "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                                        // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
                             }
                             $("#tableText").html(str);
                             let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
@@ -1145,6 +1156,98 @@
             //提交表单，实现下载
             $eleForm.submit();
         })
+        //条件检索
+        $("#search").on('click', function () {
+            if (document.getElementById('username').value){
+                var username = document.getElementById('username').value
+            }
+            switch (document.getElementById('selectType').value)
+                {
+                    case '新用户':
+                        var status = 0;
+                        break;
+                    case '未激活用户':
+                        var status = 1;
+                        break;
+                    case '正式用户':
+                        var status = 2;
+                        break;
+                    case '考核未通过':
+                        var status = 3;
+                        break;
+                }
+            $.ajax({
+                url:'./searchuser',
+                type:'get',
+                data:{
+                    page:dpage,
+                    per_page:per_page,
+                    username:username,
+                    status:status
+                },
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    pages = data.zpage;
+                    dpage = data.dpage;
+                    let str=""
+                    d_per_page=data.item.length
+                    for (let index = 0; index < data.item.length; index++) {
+                    idz[index]=data.item[index].id
+                    switch (data.item[index].status)
+                    {
+                        case 0:
+                            var sta = '新用户';
+                            break;
+                        case 1:
+                            var sta = '未激活';
+                            break;
+                        case 2:
+                            var sta = '正式用户';
+                            break;
+                        case 3:
+                            var sta = '考核未通过';
+                            break;
+                    }
+                    /*if(data.item[index].status === 0){
+                        var sta = '新用户';
+                    }else {
+                        var sta = '新用户';
+                    }*/
+                    str += "<tr><td>" + data.item[index].number +
+                                "</td><td>" + data.item[index].username +
+                                "</td><td>" + data.item[index].password +
+                                "</td><td>" + data.item[index].lasttime +
+                                "</td><td>" + sta +
+                                "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
+                                "<button class='btn btn-danger btn-sm' id='del"+index+"'>删除</button> " +
+                                "<button class='btn btn-warning btn-sm' id='setPw"+index+"'>密码重置</button> " +"</tr>";
+                                // "<button class='btn btn-outline-primary btn-sm' id='file"+index+"'>文档</button>" +
+                    }
+                    // $("#tableText").empty();
+                    $("#tableText").html(str);
+                    let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
+                    strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>"
+                    for(let index=2;index<=pages;index++){
+                        strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
+                    }
+                    strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
+                    $("#page-li").html(strli);
+                    let s="#li"+dpage
+                    $(s).css("border-color","blue");
+                    if(dpage<pages){
+                        let r=dpage+1
+                        let rs="#li"+r
+                        $(rs).css("border-left-color","blue");
+                    }else{
+                        $("#next").css("border-left-color","blue");
+                    }
+                }
+            })
+        })
+
     });
 </script>
 </body>

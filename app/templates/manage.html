@@ -84,6 +84,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动发布
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{url_for('main.manageactivity')}}">
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                               活动管理
@@ -168,6 +174,7 @@
                 orient: 'vertical',
                 left: 'left',
             },
+
             series: [
                 {
                     // name: '访问来源',
@@ -180,7 +187,16 @@
                             shadowOffsetX: 0,
                             shadowColor: 'rgba(0, 0, 0, 0.5)'
                         }
-                    }
+                    },
+                    label : {
+                　　　　normal : {
+                　　　　　　formatter: '{b}:{c}: ({d}%)',
+                　　　　　　textStyle : {
+                　　　　　　　　fontWeight : '300',
+                　　　　　　　　fontSize : 15
+                　　　　　　}
+                　　　　}
+                　　},
                 }
             ]
         };
@@ -204,7 +220,8 @@
             },
             yAxis: {
                 name: '数量',
-                type: 'value'
+                type: 'value',
+                minInterval: 1
             },
             series: [{
                 data: [],
@@ -255,9 +272,12 @@
                console.log('result',result)
                // 饼状图
                var containerPieChart = echarts.init(document.getElementById('container-pie'));
+                    // if (result.d.wd<0) {
+                    //     result.d.wd=0
+                    // }
                     pieOption1.series[0].data = [
-                        {value: result.d.yd, name: '已提交'},
-                        {value: result.d.wd, name: '未提交'}
+                        {value: result.d.yd/10, name: '已提交'},
+                        {value: result.d.wd/10, name: '未提交'}
                     ]
                containerPieChart.setOption(pieOption1);
                // 柱状图

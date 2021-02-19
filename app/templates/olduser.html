@@ -182,6 +182,17 @@
                 orient: 'vertical',
                 left: 'left',
             },
+           /* label:{ //饼图图形上的文本标签
+                normal:{
+                    show:true,
+                    position:'inner', //标签的位置
+                    textStyle : {
+                        fontWeight : 300 ,
+                        fontSize : 16    //文字的字体大小
+                    },
+                    formatter:'{b}:{c}: ({d}%)',
+                }
+            },*/
             series: [
                 {
                     // name: '访问来源',
@@ -194,7 +205,16 @@
                             shadowOffsetX: 0,
                             shadowColor: 'rgba(0, 0, 0, 0.5)'
                         }
-                    }
+                    },
+                    label : {
+                　　　　normal : {
+                　　　　　　formatter: '{b}:{c}: ({d}%)',
+                　　　　　　textStyle : {
+                　　　　　　　　fontWeight : '300',
+                　　　　　　　　fontSize : 15
+                　　　　　　}
+                　　　　}
+                　　},
                 }
             ]
         };
@@ -225,7 +245,8 @@
             },
             yAxis: {
                 name: '数量',
-                type: 'value'
+                type: 'value',
+                minInterval:1
             },
             series: [{
                 data: [],
@@ -248,10 +269,14 @@
                console.log('result',result)
                // 饼状图
                var containerPieChart = echarts.init(document.getElementById('container-pie'));
+                        if (result.a.wa<0) {
+                            result.a.wa=0
+                        }
                     pieOption.series[0].data = [
-                        {value: result.a.ya, name: '已提交'},
-                        {value: result.a.wa, name: '未提交'}
+                        {value: result.a.ya/10, name: '已提交'},
+                        {value: result.a.wa/10, name: '未提交'}
                     ]
+                    // pieOption.series[0].label.normal.formatter = '({d}%)',
                containerPieChart.setOption(pieOption);
                // 柱状图
                var containerBarChart = echarts.init(document.getElementById('container-bar'));
