@@ -652,35 +652,40 @@
             })
         }
         $(document).on("click",".btn-warning",function() {
-        {#先给后端传id#}
-            let user_number = $(this).attr('id');
-            {#获取传递给后端的id#}
-            let acquire_user_id = acquire[user_number];
-            console.log("user_number=",user_number);
-            console.log("acquire_user_id=",acquire_user_id);
-             $.ajax({
-                type:'GET',
-                url:'./deletetrain',
-                data:{'id':acquire_user_id},
-                dataType:'json',
-                async: false,
-                cache: false,
-                contentType: 'application/json',
-                success:function(result){
-                    console.log(result.status)
-                    Flush(result.status);
+            var flag = confirm("确定删除吗？");
+            if(flag == false){
+                return false
+            }else {
+                {#先给后端传id#}
+                let user_number = $(this).attr('id');
+                {#获取传递给后端的id#}
+                let acquire_user_id = acquire[user_number];
+                console.log("user_number=",user_number);
+                console.log("acquire_user_id=",acquire_user_id);
+                 $.ajax({
+                    type:'GET',
+                    url:'./deletetrain',
+                    data:{'id':acquire_user_id},
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(result){
+                        console.log(result.status)
+                        Flush(result.status);
 
-                }
-            });
-            function Flush(status){
-                if(status==true){
-                    alert("该培训活动已成功删除！");
-{#                    $("#tableText").load(location.href + "#tableText");#}
-                    return
-                }
-                if(status==false){
-                    alert("该培训活动已过期或已删除！");
-                    return false;
+                    }
+                });
+                function Flush(status){
+                    if(status==true){
+                        alert("该培训活动已成功删除！");
+    {#                    $("#tableText").load(location.href + "#tableText");#}
+                        return
+                    }
+                    if(status==false){
+                        alert("该培训活动已过期或已删除！");
+                        return false;
+                    }
                 }
             }
         });

@@ -16,19 +16,19 @@ def after_request(response):
 #条件检索
 def tstrain(name,createtime,begintime,endtime,status,page,per_page):
     if name != None:
-        s1=(Train.name==name)
+        s1=(Train.name.contains(name))
     else:
         s1 = True
     if createtime != None:
-        s2=(Train.createtime==createtime)
+        s2=(Train.createtime.ilike('%'+createtime+'%'))
     else:
         s2 = True
     if begintime != None:
-        s3=(Train.begintime==begintime)
+        s3=(Train.begintime.ilike('%'+begintime+'%'))
     else:
         s3 = True
     if endtime != None:
-        s4=(Train.endtime==endtime)
+        s4=(Train.endtime.ilike('%'+endtime+'%'))
     else:
         s4 = True
     if status is None:

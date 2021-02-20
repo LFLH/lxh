@@ -122,29 +122,34 @@
              }
          });
          $("#change").on("click", function () {
-            let name = $('#name').val();
-            let begintime = $('#startTime').val();
-            let endtime = $('#stopTime').val();
-            let main = $('#content').val();
-            console.log(main);
-             $.ajax({
-                 type:'GET',
-                 url:'/updatedeclare',
-                 data:{'id':id, 'name':name, 'begintime':begintime, 'endtime':endtime, 'main':main},
-                 dataType:'json',
-                 async: false,
-                 cache: false,
-                 contentType: 'application/json',
-                 success:function(re){
-                     if(re.status==true){
-                         alert("修改成功！");
-                         window.location.reload();
+            var flag = confirm("确定修改吗？");
+            if(flag == false){
+                return false
+            }else {
+                let name = $('#name').val();
+                let begintime = $('#startTime').val();
+                let endtime = $('#stopTime').val();
+                let main = $('#content').val();
+                console.log(main);
+                 $.ajax({
+                     type:'GET',
+                     url:'/updatedeclare',
+                     data:{'id':id, 'name':name, 'begintime':begintime, 'endtime':endtime, 'main':main},
+                     dataType:'json',
+                     async: false,
+                     cache: false,
+                     contentType: 'application/json',
+                     success:function(re){
+                         if(re.status==true){
+                             alert("修改成功！");
+                             window.location.reload();
+                         }
+                         if(re.status==false){
+                             alert("该申报任务已过期或已删除，不可修改！")
+                         }
                      }
-                     if(re.status==false){
-                         alert("该申报任务已过期或已撤销，不可修改！")
-                     }
-                 }
-             })
+                 })
+            }
          });
     })
 {% endblock %}

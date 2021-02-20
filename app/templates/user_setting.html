@@ -121,28 +121,33 @@
               window.location.reload();
           });
           $('#change').click(function () {
-              var name = $("#name").val() ;
-              var password = $('#password').val();
-              var phone = $('#phone').val();
-              var email = $('#email').val();
-              var address = $('#address').val();
-              $.ajax({
-              type: "GET",
-              url: "/setuser",
-              data: {'name':name, 'password':password, 'phone':phone, 'email':email, 'address':address },
-              dataType: 'json',
-              async: false,
-              cache: false,
-              contentType: 'application/json',
-              success:function (re) {
-                  if(re.status==true){
-                      alert("修改成功！")
+            var flag = confirm("确定修改吗？");
+            if(flag == false){
+                return false
+            }else {
+                  var name = $("#name").val() ;
+                  var password = $('#password').val();
+                  var phone = $('#phone').val();
+                  var email = $('#email').val();
+                  var address = $('#address').val();
+                  $.ajax({
+                  type: "GET",
+                  url: "/setuser",
+                  data: {'name':name, 'password':password, 'phone':phone, 'email':email, 'address':address },
+                  dataType: 'json',
+                  async: false,
+                  cache: false,
+                  contentType: 'application/json',
+                  success:function (re) {
+                      if(re.status==true){
+                          alert("修改成功！")
+                      }
+                      if(re.status==false){
+                          alert("修改失败！")
+                      }
                   }
-                  if(re.status==false){
-                      alert("修改失败！")
-                  }
-              }
-          });
+              });
+             }
           })
       })
 {% endblock %}
