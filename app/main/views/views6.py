@@ -74,6 +74,12 @@ def searchabilityuser():
         status = request.form.get('status')  # 状态
     page = int(page)
     per_page = int(per_page)
+    print("page=", page)
+    print("per_page=", per_page)
+    print("username=",username)
+    print("name=", name)
+    print("uptime=", uptime)
+    print("status=", status)
     # 连表查询未过期的用户申请培训
     #utrain=UTrain.query.join(TUT).join(Train).filter(Train.endtime>datetime.datetime.now()).order_by(-UTrain.uptime).paginate(page, per_page, error_out=False)
     utrain=tsutrain(username,name,uptime,status,page,per_page)
@@ -92,32 +98,41 @@ def searchabilityuser():
                 if train.endtime > datetime.datetime.now():
                     if items[i].type == 1:
                         status = 1  # 用户申请通过
+                        status_show = '用户申请通过'
                     else:
                         status = 0  # 用户申请未通过
+                        status_show = '用户申请未通过'
                 elif items[i].type == 1:
                     status = 11  # 用户申请通过但系统发布申请培训过期
+                    status_show = '用户申请通过但培训已过期'
                 else:
                     status = 10  # 用户申请未通过但系统发布申请培训过期
+                    status_show = '用户申请未通过且培训已过期'
             else:
                 status=2#未启用的培训，即被作废的培训
+                status_show = '培训已作废'
         else:
             if train.status==0:
                 if train.endtime > datetime.datetime.now():
                     if items[i].type == 1:
                         status = 21  # 用户被删除但用户申请通过
+                        status_show = '用户申请已通过但用户被删除'
                     else:
                         status = 20  # 用户被删除但用户申请未通过
+                        status_show = '用户申请未通过且用户被删除'
                 elif items[i].type == 1:
                     status = 31  # 用户被删除但用户申请通过但系统发布申请培训过期
+                    status_show = '用户申请已通过但用户被删除且申请培训已过期'
                 else:
                     status = 30  # 用户被删除但用户申请未通过但系统发布申请培训过期
+                    status_show = '用户被删除且用户申请未通过且申请培训已过期'
             else:
                 status=2#未启用的培训，即被作废的培训
         # 返回id，用户名，培训名，培训起始时间，结束时间，提交时间，能否点击通过按钮的状态
         # (1通过，0未通过，11用户申请通过但系统发布申请培训过期，10用户申请未通过但系统发布申请培训过期，2未启用的培训，即被作废的培训)
         #（21用户被删除但用户申请通过，20用户被删除但用户申请未通过，31用户被删除但用户申请通过但系统发布申请培训过期，30用户被删除但用户申请未通过但系统发布申请培训过期）
         itemss = {'number': count + i + 1, 'id': items[i].id, 'username': username,'name':train.name,'begintime': str(train.begintime),
-                  'endtime': str(train.endtime), 'uptime': str(items[i].uptime),'status':status}
+                  'endtime': str(train.endtime), 'uptime': str(items[i].uptime),'status':status,"status_show":status_show}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、用户申请集合
     data = {'zpage': utrain.pages, 'total': utrain.total, 'dpage': utrain.page, 'item': item}
