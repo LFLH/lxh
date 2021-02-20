@@ -110,3 +110,26 @@ def showscore():
     # 返回总页数、活动总数、当前页、用户分数集合
     data={'zpage':user.pages,'total':user.total,'dpage':user.page,'item':item}
     return Response(json.dumps(data), mimetype='application/json')
+
+#分数设置
+@main.route('/dfscore',methods=['GET','POST'])
+def dfscore():
+    if request.method == "GET":
+        id = request.args.get('id')#当前页
+        score=request.args.get('score')#平均页数
+    else:
+        id = request.form.get('id')
+        score = request.form.get('score')
+    # 获取当前年数
+    year = int(datetime.datetime.now().strftime('%Y'))
+    score=int(score)
+    scores=Score.query.filter(and_(Score.userid==id,Score.year==year)).all()
+    if len(scores)>0:
+        scores[0].score=score
+        db.session.add(scores[0])
+        db.session.commit()
+    else:
+        newscore=Score(userid=id,year=year,score=score)
+        db.session.add(newscore)
+        db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')

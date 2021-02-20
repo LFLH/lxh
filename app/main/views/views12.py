@@ -38,7 +38,9 @@ def olduserall():
     jyear = year + '-01-01 00:00:00'
     acount=Activity.query.filter(and_(Activity.userid==userid,Activity.updatetime>jyear,Activity.status!=3)).count()
     # 转保留一位小数的百分比
-    ya, wa = zbfb(acount, count)
+    #ya, wa = zbfb(acount, count)
+    ya=acount
+    wa=count-acount
     a={"ya":ya,"wa":wa}
     # 各月活动提交情况
     year = str(datetime.datetime.now()).split('-')[0]

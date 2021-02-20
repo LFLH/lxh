@@ -31,24 +31,16 @@ def tsutrain(username,name,uptime,status,page,per_page):
         s4=True
     else:
         status=int(status)
-        if status==0:# 用户申请未通过
-            s4=and_(User.checked==1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==0)
-        elif status==1:#用户申请通过
-            s4=and_(User.checked==1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==1)
-        elif status==10:#用户申请未通过但系统发布申请培训过期
-            s4=and_(User.checked==1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==0)
-        elif status==11:#用户申请通过但系统发布申请培训过期
-            s4=and_(User.checked==1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==1)
-        elif status==20:# 用户被删除但用户申请未通过
-            s4=and_(User.checked!=1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==0)
-        elif status==21:# 用户被删除但用户申请通过
-            s4=and_(User.checked!=1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==1)
-        elif status==30:#用户被删除但用户申请未通过但系统发布申请培训过期
-            s4=and_(User.checked!=1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==0)
-        elif status==31:#用户被删除但用户申请通过但系统发布申请培训过期
-            s4=and_(User.checked!=1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==1)
-        elif status==2:#未启用的培训，即被作废的培训
+        if status==4:#未启用的培训，即被作废的培训
             s4=and_(Train.status==1)
+        elif status<10:#用户未删除且系统发布培训未过期0,1,2
+            s4=and_(User.checked==1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==status)#0未通过，1通过，2驳回
+        elif status<20:#用户未删除且系统发布培训过期10,11,12
+            s4=and_(User.checked==1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==status-10)#10未通过，11通过，12驳回
+        elif status<30:#用户被删除且系统发布申报任务未过期20,21,22
+            s4=and_(User.checked!=1,Train.status==0,Train.endtime>datetime.datetime.now(),UTrain.type==status-20)#20未通过，21通过，22驳回
+        elif status<40:#用户被删除且系统发布申报任务过期30,31,32
+            s4=and_(User.checked!=1,Train.status==0,Train.endtime<datetime.datetime.now(),UTrain.type==status-30)#30未通过，31通过，32驳回
     utrain=UTrain.query.join(TUT).join(Train).join(User).filter(and_(s1,s2,s3,s4)).order_by(-UTrain.uptime).paginate(page, per_page, error_out=False)
     return utrain
 
@@ -74,12 +66,6 @@ def searchabilityuser():
         status = request.form.get('status')  # 状态
     page = int(page)
     per_page = int(per_page)
-    print("page=", page)
-    print("per_page=", per_page)
-    print("username=",username)
-    print("name=", name)
-    print("uptime=", uptime)
-    print("status=", status)
     # 连表查询未过期的用户申请培训
     #utrain=UTrain.query.join(TUT).join(Train).filter(Train.endtime>datetime.datetime.now()).order_by(-UTrain.uptime).paginate(page, per_page, error_out=False)
     utrain=tsutrain(username,name,uptime,status,page,per_page)
@@ -98,41 +84,40 @@ def searchabilityuser():
                 if train.endtime > datetime.datetime.now():
                     if items[i].type == 1:
                         status = 1  # 用户申请通过
-                        status_show = '用户申请通过'
-                    else:
+                    elif items[i].type == 0:
                         status = 0  # 用户申请未通过
-                        status_show = '用户申请未通过'
+                    elif items[i].type == 2:
+                        status=2#用户申请被驳回
                 elif items[i].type == 1:
                     status = 11  # 用户申请通过但系统发布申请培训过期
-                    status_show = '用户申请通过但培训已过期'
-                else:
+                elif items[i].type == 0:
                     status = 10  # 用户申请未通过但系统发布申请培训过期
-                    status_show = '用户申请未通过且培训已过期'
+                elif items[i].type == 2:
+                    status=12#用户申请被驳回但系统发布申请培训过期
             else:
-                status=2#未启用的培训，即被作废的培训
-                status_show = '培训已作废'
+                status=4#未启用的培训，即被作废的培训
         else:
             if train.status==0:
                 if train.endtime > datetime.datetime.now():
                     if items[i].type == 1:
                         status = 21  # 用户被删除但用户申请通过
-                        status_show = '用户申请已通过但用户被删除'
-                    else:
+                    elif items[i].type == 0:
                         status = 20  # 用户被删除但用户申请未通过
-                        status_show = '用户申请未通过且用户被删除'
+                    elif items[i].type == 2:
+                        status = 22  # 用户被删除但用户申请被驳回
                 elif items[i].type == 1:
                     status = 31  # 用户被删除但用户申请通过但系统发布申请培训过期
-                    status_show = '用户申请已通过但用户被删除且申请培训已过期'
-                else:
+                elif items[i].type == 0:
                     status = 30  # 用户被删除但用户申请未通过但系统发布申请培训过期
-                    status_show = '用户被删除且用户申请未通过且申请培训已过期'
+                elif items[i].type == 2:
+                    status = 32  # 用户被删除但用户申请被驳回但系统发布申请培训过期
             else:
-                status=2#未启用的培训，即被作废的培训
+                status=4#未启用的培训，即被作废的培训
         # 返回id，用户名，培训名，培训起始时间，结束时间，提交时间，能否点击通过按钮的状态
         # (1通过，0未通过，11用户申请通过但系统发布申请培训过期，10用户申请未通过但系统发布申请培训过期，2未启用的培训，即被作废的培训)
         #（21用户被删除但用户申请通过，20用户被删除但用户申请未通过，31用户被删除但用户申请通过但系统发布申请培训过期，30用户被删除但用户申请未通过但系统发布申请培训过期）
         itemss = {'number': count + i + 1, 'id': items[i].id, 'username': username,'name':train.name,'begintime': str(train.begintime),
-                  'endtime': str(train.endtime), 'uptime': str(items[i].uptime),'status':status,"status_show":status_show}
+                  'endtime': str(train.endtime), 'uptime': str(items[i].uptime),'status':status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、用户申请集合
     data = {'zpage': utrain.pages, 'total': utrain.total, 'dpage': utrain.page, 'item': item}
@@ -175,8 +160,8 @@ def tgabilityuser():
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
-# 驳回用户申请培训
-@main.route('/bhabilityuser',methods=['GET','POST'])
+#驳回用户申请培训
+@main.route('/bhabilityuser', methods=['GET', 'POST'])
 def bhabilityuser():
     if request.method == 'GET':
         id = request.args.get('id')
@@ -184,7 +169,7 @@ def bhabilityuser():
         id = request.form.get('id')
     # 修改申请状态
     utrain = UTrain.query.filter_by(id=id).first()
-    utrain.type=3
+    utrain.type = 2
     db.session.add(utrain)
     db.session.commit()
-    return Response(json.dumps({'status':True}),mimetype='application/json')
+    return Response(json.dumps({'status': True}), mimetype='application/json')

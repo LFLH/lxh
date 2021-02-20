@@ -37,7 +37,13 @@ def manageall():
         #已申报人数
         udeclarecount=UDeclare.query.join(DUDC).join(Declare).join(User).filter(Declare.id==declare.id).count()
         #转保留一位小数的百分比
-        yd,wd=zbfb(udeclarecount,usercount)
+        #yd,wd=zbfb(udeclarecount,usercount)
+        if usercount==0:
+            yd=0.0
+            wd=100.0
+        else:
+            yd=udeclarecount
+            wd=usercount-udeclarecount
     else:
         yd=0.0
         wd=100.0
@@ -63,10 +69,16 @@ def manageall():
         #已报名培训人数
         utraincount=UTrain.query.join(TUT).join(Train).join(User).filter(and_(Train.id==train.id,User.checked==1)).count()
         # 转保留一位小数的百分比
-        yt,wt = zbfb(utraincount, usercount2)
+        #yt,wt = zbfb(utraincount, usercount2)
+        if usercount2==0:
+            yt = 0.0
+            wt = 100.0
+        else:
+            yt=utraincount
+            wt=usercount2-utraincount
     else:
         yt=0.0
-        wt=1.0
+        wt=100.0
     t={"yt":yt,"wt":wt}
     #返回申报百分比，各月提交情况，新培训报名
     return Response(json.dumps({"d":d,"activitycount":activitycount,"t":t}), mimetype='application/json')

@@ -1,9 +1,9 @@
 #/useractivity的后端API
 from flask import request,jsonify,session,redirect,Response
 from app.main import main
-from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System
+from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,DUDC,DU,TUT,Record
 from app import db
-import json,datetime,random,string,os
+import json,datetime,random,string,os,time
 from sqlalchemy import or_,and_
 from werkzeug.utils import secure_filename
 
@@ -15,7 +15,7 @@ def after_request(response):
     return response
 
 #条件检索
-def tshowactivity(name,type,page,per_page,userid):
+def tshowactivity(name,type,status,page,per_page,userid):
     if name!=None:
         s1=(Activity.name==name)
     else:
@@ -24,7 +24,12 @@ def tshowactivity(name,type,page,per_page,userid):
         s2=(Activity.type==type)
     else:
         s2=True
-    activity=Activity.query.filter(and_(s1,s2,Activity.userid==userid,Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    if status is None:
+        s3=True
+    else:
+        status=int(status)
+        s3=(Activity.status==status)
+    activity=Activity.query.filter(and_(s1,s2,s3,Activity.userid==userid,Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     return activity
 
 #列表显示自主活动信息
@@ -36,19 +41,21 @@ def showactivity():
         #检索条件
         name=request.args.get('name')#活动名
         type=request.args.get('type')#活动类型
+        status = request.args.get('status')  # 活动类型
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
         # 检索条件
         name = request.form.get('name')  # 活动名
         type = request.form.get('type')  # 活动类型
+        status = request.form.get('status')  # 活动类型
     user = session.get('user')
     userid = user['userid']
     #根据用户id获取自主活动
     page=int(page)
     per_page=int(per_page)
     #activity = Activity.query.filter(Activity.userid == userid).filter(Activity.status!=3).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
-    activity=tshowactivity(name,type,page,per_page,userid)
+    activity=tshowactivity(name,type,status,page,per_page,userid)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -112,81 +119,169 @@ def create_dir(s):
         os.makedirs(file_dir)
     return file_dir
 
+#创建文件夹树
+def createdirtree(userid):
+    # 创建文件夹树
+    file_dir ={}
+    # 创建基本文件夹data
+    file_dir['base']=create_dir('data')
+    # 创建输出文件夹data/userout
+    file_dir['userout'] = create_dir('data/userout')
+    # 创建用户文件夹
+    user=User.query.filter(User.id==userid).all()[0]
+    file_dir['user'] = create_dir('data/userout/' + user.name)
+    #创建活动文件夹
+    activity=Activity.query.filter(Activity.userid==userid).all()
+    file_dir['activity'] ={}
+    abase=create_dir('data/userout/'+user.name+'/自主活动')#video,music,image,pdf,word
+    activitytype=['video','music','image','pdf','word']
+    file_dir['activity']['base']=abase
+    for a in activity:
+        ai={}
+        ai['base']=create_dir('data/userout/'+user.name+'/自主活动/'+a.name)
+        for type in activitytype:
+            ai[type]=create_dir('data/userout/'+user.name+'/自主活动/'+a.name+'/'+type)
+        file_dir['activity'][str(a.id)]=ai
+    # 创建申报文件夹
+    file_dir['declare'] = {}
+    dbase = create_dir('data/userout/' + user.name + '/申报')#pdf,word
+    file_dir['declare']['base']=dbase
+    declaretype = ['pdf', 'word']
+    #创建用户相关申报文件夹
+    declare=Declare.query.join(DU).join(User).filter(User.id==userid).all()
+    for d in declare:
+        di={}
+        di['base']=create_dir('data/userout/' + user.name + '/申报/'+d.name)
+        udeclare=UDeclare.query.join(DUDC).join(Declare).filter(Declare.id==d.id).all()
+        for ud in udeclare:
+            udi={}
+            udi['base']=create_dir('data/userout/' + user.name + '/申报/'+d.name+'/'+str(ud.id))
+            for type in declaretype:
+                udi[type]=create_dir('data/userout/' + user.name + '/申报/'+d.name+'/'+str(ud.id)+'/'+type)
+            di[str(ud.id)]=udi
+        file_dir['declare'][d.name]=di
+    # 创建培训文件夹
+    file_dir['train'] = {}
+    tbase = create_dir('data/userout/' + user.name + '/培训')#image,pdf,word
+    file_dir['train']['base']=tbase
+    traintype=['image','pdf','word']
+    #创建用户相关培训文件夹
+    train=Train.query.join(TUT).join(UTrain).filter(UTrain.userid==userid).all()
+    for t in train:
+        ti={}
+        ti['base']=('data/userout/' + user.name + '/培训/'+t.name)
+        utrain=UTrain.query.join(TUT).join(Train).filter(Train.id==t.id).all()
+        for ut in utrain:
+            uti={}
+            uti['base']=create_dir('data/userout/' + user.name + '/培训/'+t.name+'/'+str(ut.id))
+            for type in traintype:
+                uti[type]=create_dir('data/userout/' + user.name + '/培训/'+t.name+'/'+str(ut.id)+'/'+type)
+            ti[str(ut.id)]=uti
+        file_dir['train'][t.name]=ti
+    # 创建年度报告文件夹
+    record1 = Record.query.filter(and_(Record.userid == userid, Record.type == '年度')).all()
+    file_dir['ndreport'] = {}
+    ndrbase = create_dir('data/userout/' + user.name + '/年度报告')#mage,pdf,word
+    ndtype=['image','pdf','word']
+    file_dir['ndreport']['base']=ndrbase
+    for nr in record1:
+        ndri={}
+        ndri['base'] = create_dir('data/userout/' + user.name + '/年度报告/' + nr.name)
+        for type in ndtype:
+            ndri[type]=create_dir('data/userout/' + user.name + '/年度报告/' + nr.name+'/'+type)
+        file_dir['ndreport'][str(nr.id)]=ndri
+    # 创建科技周报告文件夹
+    record2 = Record.query.filter(and_(Record.userid == userid, Record.type == '科技周')).all()
+    file_dir['kjzreport'] = {}
+    kjzrbase = create_dir('data/userout/' + user.name + '/科技周报告')#video,image,pdf,word
+    kjztype=['video','image','pdf','word']
+    file_dir['kjzreport']['base']=kjzrbase
+    for kjr in record2:
+        kjzri={}
+        kjzri['base'] = create_dir('data/userout/' + user.name + '/科技周报告/' + kjr.name)
+        for type in kjztype:
+            kjzri[type]=create_dir('data/userout/' + user.name + '/科技周报告/' + kjr.name+'/'+type)
+        file_dir['kjzreport'][str(kjr.id)]=kjzri
+    # 创建zip文件夹
+    file_dir['zip'] = create_dir('data/zip')
+    return file_dir
+
 #修改自主活动信息
 @main.route('/updateactivity',methods=['GET','POST'])
 def updateactivity():
-    # 创建文件夹
-    filelist = ['video', 'music', 'image', 'pdf', 'word']
-    upload_files = {}
-    file_dir = {}
-    file_dir['base'] = create_dir('data')
+    # 检查文件类型及尺寸
+    files = request.files.getlist('files')
     filedata = []
-    for i in range(len(filelist)):
-        filedata.append([])
-        upload_files[filelist[i]] = request.files.getlist(filelist[i])
-        file_dir[filelist[i]] = create_dir('data\\' + filelist[i])
-    # 检查文件类型及大小
-    for i in range(len(filelist)):
-        for file in upload_files[filelist[i]]:
-            filename = secure_filename(file.filename)
-            ext = filename.rsplit('.')
-            ext = ext[len(ext) - 1].lower()
-            type = panduan(ext)
-            filedata[i].append(file.read())
-            j = len(filedata[i]) - 1
-            size = int(len(filedata[i][j]) / 1024 / 1024)
-            if type != filelist[i] or size > 100:
-                return Response(json.dumps({'status': False}), mimetype='application/json')
-    id=request.args.get('id')
+    for file in files:
+        filename = secure_filename(file.filename)
+        ext = filename.rsplit('.')
+        ext = ext[len(ext) - 1].lower()
+        type = panduan(ext)
+        filedata.append(file.read())
+        j = len(filedata) - 1
+        size = int(len(filedata[j]) / 1024 / 1024)
+        if type == 'error' or size > 100:
+            return Response(json.dumps({'status': False, 'code': 500}), mimetype='application/json')
+    #获取活动修改信息
+    id = request.args.get('id')
     name = request.args.get('name')
     begintime = request.args.get('begintime')
     endtime = request.args.get('endtime')
     main = request.args.get('main')
     type = request.args.get('type')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    if begintime != None:
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    if endtime != None:
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     user = session.get('user')
     userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]
     # 根据活动id查找自主活动
-    activity = Activity.query.filter(Activity.id==id).all()[0]
-    #修改活动信息
-    activity.name=name
-    activity.type=type
-    activity.begintime=begintime
-    activity.endtime=endtime
-    activity.main=main
-    activity.updatetime=datetime.datetime.now()
-    #移除活动中的文件
-    datas=activity.datas
-    length=len(datas)
+    activity = Activity.query.filter(Activity.id == id).all()[0]
+    # 修改活动信息
+    if name!=None:
+        activity.name=name
+    if type!=None:
+        activity.type=type
+    if begintime!=None:
+        activity.begintime=begintime
+    if endtime!=None:
+        activity.endtime=endtime
+    if main!=None:
+        activity.main=main
+    activity.updatetime = datetime.datetime.now()
+    # 移除活动中的文件
+    datas = activity.datas
+    length = len(datas)
     for i in range(length):
-        activity.datas.remove(datas[length-i-1])
+        activity.datas.remove(datas[length - i - 1])
     db.session.add(activity)
     db.session.commit()
-    #修改用户操作时间
+    # 修改用户操作时间
     user.updatetime = activity.updatetime
     db.session.add(user)
     db.session.commit()
-    #保存文件
-    for i in range(len(filelist)):
-        upload_file=upload_files[filelist[i]]
-        for j in range(len(upload_file)):
-            file=upload_file[j]
-            filename = secure_filename(file.filename)
-            ext = filename.rsplit('.')
-            ext = ext[len(ext) - 1].lower()  # 获取文件后缀
-            type=filelist[i]
-            new_filename = str(userid) + "_" + str(activity.id) + "_" + str(j+1) + '.' + ext  # 修改了上传的文件名
-            file.save(os.path.join(file_dir[type], new_filename)) # 保存文件到目录
-            file_data = 'data\\' + type + "\\" + new_filename
-            f=open(file_data,'wb')
-            f.write(filedata[i][j])
-            f.close()
-            data = Data(name = file.filename,type=filelist[i],path=file_data,newname=new_filename)
-            db.session.add(data)
-            db.session.commit()
-            activity.datas.append(data)
+    # 创建文件夹树
+    file_dir = createdirtree(userid)
+    # 保存文件
+    for i in range(len(files)):
+        file = files[i]
+        filename = secure_filename(file.filename)
+        ext = filename.rsplit('.')
+        ext = ext[len(ext) - 1].lower()  # 获取文件后缀
+        type = panduan(ext)
+        timestamp = str(time.mktime(time.strptime(str(activity.updatetime), "%Y-%m-%d %H:%M:%S")))
+        new_filename = str(user.username) + "_" + str(activity.name) + "_" + timestamp + "_" + str(i + 1) + '.' + ext  # 修改了上传的文件名
+        path = file_dir['activity'][str(activity.id)][str(type)]  # 保存文件的目录
+        file.save(os.path.join(path, new_filename))  # 保存文件到目录
+        file_data = path + '/' + new_filename
+        f = open(file_data, 'wb')
+        f.write(filedata[i])
+        f.close()
+        data = Data(name=file.filename, type=type, path=file_data, newname=new_filename)
+        db.session.add(data)
+        db.session.commit()
+        activity.datas.append(data)
     db.session.add(activity)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -201,6 +296,7 @@ def deleteactivity():
         # 检索条件
         name = request.args.get('name')  # 活动名
         type = request.args.get('type')  # 活动类型
+        status = request.args.get('status')  # 活动状态
     else:
         id = request.form.get('id')
         page = request.form.get('page')
@@ -208,6 +304,7 @@ def deleteactivity():
         # 检索条件
         name = request.form.get('name')  # 活动名
         type = request.form.get('type')  # 活动类型
+        status = request.form.get('status')  # 活动状态
     page = int(page)
     per_page = int(per_page)
     #根据活动id删除活动
@@ -217,7 +314,7 @@ def deleteactivity():
     db.session.commit()
     #查找用户的活动
     userid=session.get('user')['userid']
-    activity2 = tshowactivity(name,type,page,per_page,userid)
+    activity2 = tshowactivity(name,type,status,page,per_page,userid)
     items = activity2.items
     item = []
     count = (int(page) - 1) * int(per_page)

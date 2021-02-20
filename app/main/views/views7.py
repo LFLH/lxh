@@ -16,7 +16,8 @@ def after_request(response):
 #条件检索
 def tstrain(name,createtime,begintime,endtime,status,page,per_page):
     if name != None:
-        s1=(Train.name==name)
+        #s1=(Train.name==name)
+        s1=(Train.name.contains(name))
     else:
         s1 = True
     if createtime != None:
@@ -125,8 +126,10 @@ def updatetrain():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    if begintime!=None:
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    if endtime!=None:
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     train = Train.query.filter(Train.id == id).all()[0]
     # chatime =datetime.datetime.now()-train.endtime
     # chatime=chatime.days
@@ -137,10 +140,14 @@ def updatetrain():
         return Response(json.dumps({'status': False}), mimetype='application/json')
     #修改培训信息
     else:
-        train.name=name
-        train.begintime=begintime
-        train.endtime=endtime
-        train.main=main
+        if name!=None:
+            train.name=name
+        if begintime!=None:
+            train.begintime=begintime
+        if endtime!=None:
+            train.endtime=endtime
+        if main!=None:
+            train.main=main
         db.session.add(train)
         db.session.commit()
         return Response(json.dumps({'status': True}), mimetype='application/json')

@@ -129,7 +129,7 @@
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">添加新活动</h2>
-            <form id="update" enctype='multipart/form-data'>
+            <form id="update">
                 <div class="form-group">
                     <label for="name" class="col-sm-2 control-label"style="margin-top:10px;">活动名称:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
@@ -160,7 +160,7 @@
                         <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="content" required></textarea>
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label for="exampleInputFileVedio" class="control-label">上传视频:</label>
                     <div class="col-sm-10">
                         <input type="file" multiple="" name="video" id="exampleInputFileVedio" accept="video/*"/>
@@ -190,26 +190,26 @@
                         <input type="file" multiple="" name="word" id="exampleInputFileWord"
                                accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
                     </div>
-                </div>
-                <!--<div class="form-group">
-                    <div class="col-sm-10">
-                        <button type="button" class="layui-btn layui-btn-normal" id="chooseFile">选择文件</button>
-                    </div>
-                    <div class="layui-upload-list col-md-12">
-                        <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
-                            <thead style="text-align: center">
-                            <tr>
-                                <th style="width: 50%">文件名</th>
-                                <th style="width: 10%;text-align: center">大小</th>
-                                <th style="width: 30%;text-align: center">时间</th>
-                                <th style="width: 10%;text-align: center">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="fileList"></tbody>
-                        </table>
-                    </div>
                 </div>-->
-                <div class="form-group" style="margin-top: 35px">
+                <div class="form-group">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 14px" id="chooseFile">选择文件</button>
+                        <div class="layui-upload-list col-md-8">
+                            <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                                <thead style="text-align: center">
+                                <tr>
+                                    <th style="width: 50%">文件名</th>
+                                    <th style="width: 10%;text-align: center">大小</th>
+                                    <th style="width: 30%;text-align: center">时间</th>
+                                    <th style="width: 10%;text-align: center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="fileList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 50px">
                     <div class="col-sm-10">
                     <button class="btn btn-outline-danger" id="cancel">取消</button>
                     <button type="button" class="btn btn-outline-info" id="updateActivity">提交</button>
@@ -225,7 +225,9 @@
         // $("#cancel").on("click", function (){
         //
         // })
-        /*$(function () {
+        $(function () {
+        var formData = new FormData();
+        var files={};
         //获取当前时间
         function fileTime(){
             function getNow(s) {
@@ -253,9 +255,10 @@
                 exts: 'doc|docx|pdf|mp3|mp4|jpg',
                 multiple: true,
                 auto: false,
-                bindAction: '#updateActivity',
+                // bindAction: '#updateActivity',
                 choose: function (obj) {
-                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    // formData.append("files", files);//保存每一个文件
                     var file_time = fileTime();
                     //读取本地文件
                     obj.preview(function (index, file, result) {
@@ -267,47 +270,61 @@
                             , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
                             , '</td>'
                             , '</tr>'].join(''));
-
                         //删除
                         tr.find('.demo-delete').on('click', function () {
                             delete files[index]; //删除对应的文件
                             tr.remove();
                             uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
                         });
-
                         fileListView.append(tr);
                     });
-                     $("#updateActivity").on("click", function () {
-                         let name = $('#name').val();
-                         let begintime = $('#starttime').val();
-                         let endtime = $('#endtime').val();
-                         let main = $('#content').val();
-                         let type = $('#type').val();
-                         s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
-                         // var formData = new FormData($("#update")[0]);
-                         $.ajax({
-                             url: s,
-                             type: "post",
-                             dataType: "json",
-                             async: false,
-                             contentType: 'application/json',
-                             processData: false,
-                             // data: formData,
-                             success: function (result) {
-                                 console.log(result.status);
-                                 if (result.status == true) {
-                                     layer.msg("上传成功！", {icon: 6});
-                                 } else if (result.status == false) {
-                                     layer.msg(result.msg, {icon: 5});
-                                 }
-                             }
-                         })
-                     })
                 },
-            });
+            })
+        });
+        //提交
+        $("#updateActivity").on("click", function () {
+             let name = $('#name').val();
+             let begintime = $('#starttime').val();
+             let endtime = $('#endtime').val();
+             let main = $('#content').val();
+             let type = $('#type').val();
+             s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
+             // var formData = new FormData($("#update")[0]);
+             for(let k in files){
+                formData.append("files",files[k]);
+             }
+             var len = 0;
+             formData.forEach((value, key) => {
+                 console.log("key %s: value %s", key, value);
+                 len = key.length;
+             });
+             console.log(len);
+             console.log(formData);
+             if(len==0){
+                 layer.msg("未选择文件！", {icon: 5});
+             }else {
+                 layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+                 $.ajax({
+                     url: s,
+                     type: 'POST',
+                     data: formData,
+                     contentType: false,
+                     processData: false,
+                     success: function (result) {
+                         console.log(result.code);
+                         if (result.code == 200) {
+                             layer.msg("上传成功！", {icon: 6});
+                             setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
+                         } else if (result.code == 500) {
+                             layer.msg(result.msg, {icon: 5});
+                             setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
+                         }
+                     }
+                 })
+             }
         })
-    })*/
-        $("#update").submit(function(){
+    })
+        /*$("#update").submit(function(){
             let name = $('#name').val();
             let begintime = $('#starttime').val();
             let endtime = $('#endtime').val();
@@ -357,7 +374,7 @@
                 m.style.opacity = '0';
                 setTimeout(function() { document.body.removeChild(m) }, d * 1000);
             });
-        };
+        };*/
     });
 </script>
 </body>
