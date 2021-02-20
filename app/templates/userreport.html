@@ -397,6 +397,8 @@ var recordname;
 var year;
 var type;
 var status;
+var status_num;
+var status_show_;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
         let per_page=10;
@@ -497,12 +499,38 @@ $(document).ready(function(){
                         {#删除按钮：获取id#}
                         let del_id;
                         del_id = data.item[index].id;
+                        {#获取状态num值#}
+                        status_num = data.item[index].status
+                        if(status_num == 0){
+                            status_show_ = "报告未通过";
+                         }
+                        if(status_num == 1){
+                            status_show_ = "报告被驳回";
+                         }
+                        if(status_num == 10){
+                            status_show_ = "过去报告未通过";
+                         }
+                        if(status_num == 11){
+                            status_show_ = "过去报告已通过";
+                         }
+                        if(status_num == 20){
+                            status_show_ = "考核未过报告未通过";
+                         }
+                        if(status_num == 21){
+                            status_show_ = "考核未过报告已通过";
+                         }
+                        if(status_num == 2){
+                            status_show_ = "报告已通过";
+                         }
+                        if(status_num == 3){
+                            status_show_ = "报告已删除";
+                         }
                         str += "<tr><td>" + data.item[index].number +
                             {#"</td><td >" + data.item[index].username +#}
                             "</td><td>" + data.item[index].recordname +
                             "</td><td>" + data.item[index].year +
                             "</td><td>" + data.item[index].type +
-                            "</td><td>" + data.item[index].status +
+                            "</td><td>" + status_show_ +
                             "</td><td>" + "<input type='button' class='btn btn-primary btn-sm' id='look" + acquire_number + "' value=查看>"
                             + "<input type='button' class='btn btn-warning btn-sm' id='update" + update_id + "' value=修改>"
                             + "<input type='button' class='btn btn-danger btn-sm' id='del" + del_id + "' value=删除>" + "</tr>";
@@ -572,12 +600,38 @@ $(document).ready(function(){
                             {#删除按钮：获取id#}
                             let del_id;
                             del_id = data.item[index].id;
+                            {#获取状态num值#}
+                            status_num = data.item[index].status
+                            if(status_num == 0){
+                                status_show_ = "报告未通过";
+                             }
+                            if(status_num == 1){
+                                status_show_ = "报告被驳回";
+                             }
+                            if(status_num == 10){
+                                status_show_ = "过去报告未通过";
+                             }
+                            if(status_num == 11){
+                                status_show_ = "过去报告已通过";
+                             }
+                            if(status_num == 20){
+                                status_show_ = "考核未过报告未通过";
+                             }
+                            if(status_num == 21){
+                                status_show_ = "考核未过报告已通过";
+                             }
+                            if(status_num == 2){
+                                status_show_ = "报告已通过";
+                             }
+                            if(status_num == 3){
+                                status_show_ = "报告已删除";
+                             }
                             str += "<tr><td>" + data.item[index].number +
                             {#"</td><td >" + data.item[index].username +#}
                             "</td><td>" + data.item[index].recordname +
                             "</td><td>" + data.item[index].year +
                             "</td><td>" + data.item[index].type +
-                            "</td><td>" + data.item[index].status +
+                            "</td><td>" + status_show_ +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
                              +"<input type='button' class='btn btn-warning btn-sm' id='update"+update_id+"' value=修改>"
                              +"<input type='button' class='btn btn-danger btn-sm' id='del"+del_id+"' value=删除>"+"</tr>";
@@ -641,12 +695,38 @@ $(document).ready(function(){
                             {#删除按钮：获取id#}
                             let del_id;
                             del_id = data.item[index].id;
+                            {#获取状态num值#}
+                            status_num = data.item[index].status
+                            if(status_num == 0){
+                                status_show_ = "报告未通过";
+                             }
+                            if(status_num == 1){
+                                status_show_ = "报告被驳回";
+                             }
+                            if(status_num == 10){
+                                status_show_ = "过去报告未通过";
+                             }
+                            if(status_num == 11){
+                                status_show_ = "过去报告已通过";
+                             }
+                            if(status_num == 20){
+                                status_show_ = "考核未过报告未通过";
+                             }
+                            if(status_num == 21){
+                                status_show_ = "考核未过报告已通过";
+                             }
+                            if(status_num == 2){
+                                status_show_ = "报告已通过";
+                             }
+                            if(status_num == 3){
+                                status_show_ = "报告已删除";
+                             }
                             str += "<tr><td>" + data.item[index].number +
                             {#"</td><td >" + data.item[index].username +#}
                             "</td><td>" + data.item[index].recordname +
                             "</td><td>" + data.item[index].year +
                             "</td><td>" + data.item[index].type +
-                            "</td><td>" + data.item[index].status +
+                            "</td><td>" + status_show_ +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
                              +"<input type='button' class='btn btn-warning btn-sm' id='update"+update_id+"' value=修改>"
                              +"<input type='button' class='btn btn-danger btn-sm' id='del"+del_id+"' value=删除>"+"</tr>";
@@ -710,12 +790,38 @@ $(document).ready(function(){
                             {#删除按钮：获取id#}
                             let del_id;
                             del_id = data.item[index].id;
+                            {#获取状态num值#}
+                            status_num = data.item[index].status
+                            if(status_num == 0){
+                                status_show_ = "报告未通过";
+                             }
+                            if(status_num == 1){
+                                status_show_ = "报告被驳回";
+                             }
+                            if(status_num == 10){
+                                status_show_ = "过去报告未通过";
+                             }
+                            if(status_num == 11){
+                                status_show_ = "过去报告已通过";
+                             }
+                            if(status_num == 20){
+                                status_show_ = "考核未过报告未通过";
+                             }
+                            if(status_num == 21){
+                                status_show_ = "考核未过报告已通过";
+                             }
+                            if(status_num == 2){
+                                status_show_ = "报告已通过";
+                             }
+                            if(status_num == 3){
+                                status_show_ = "报告已删除";
+                             }
                             str += "<tr><td>" + data.item[index].number +
                             {#"</td><td >" + data.item[index].username +#}
                             "</td><td>" + data.item[index].recordname +
                             "</td><td>" + data.item[index].year +
                             "</td><td>" + data.item[index].type +
-                            "</td><td>" + data.item[index].status +
+                            "</td><td>" + status_show_ +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
                              +"<input type='button' class='btn btn-warning btn-sm' id='update"+update_id+"' value=修改>"
                              +"<input type='button' class='btn btn-danger btn-sm' id='del"+del_id+"' value=删除>"+"</tr>";
