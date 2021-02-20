@@ -79,14 +79,14 @@ def searchmansysactivity():
         #检索条件
         name=request.args.get('name')#活动名
         type=request.args.get('type')#活动类型
-        status=request.args.get('type')#状态
+        status=request.args.get('status')#状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
         # 检索条件
         name = request.form.get('name')  # 活动名
         type = request.form.get('type')  # 活动类型
-        status = request.form.get('type')  # 状态
+        status = request.form.get('status')  # 状态
     page = int(page)
     per_page = int(per_page)
     #获取未删除活动倒叙
@@ -186,6 +186,7 @@ def detailuseractivity():
         id = request.form.get('id')
         #id = request.json.get('id')
     activity=Activity.query.filter(Activity.id==id).all()[0]
+    user=User.query.filter(User.id==activity.userid).all()[0]
     #获取自主活动的文件名
     data=activity.datas
     filedata={'video':[],'music':[],'image':[],'pdf':[],'word':[]}
@@ -193,7 +194,7 @@ def detailuseractivity():
         dataz={'name':datai.name,'path':datai.path,'newname':datai.newname}
         filedata[datai.type].append(dataz)
     #返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、视频、音频、图片、pdf、word
-    da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'video':filedata['video'],'music':filedata['music'],'image':filedata['image'],'pdf':filedata['pdf'],'word':filedata['word']}
+    da={'username':user.username,'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'video':filedata['video'],'music':filedata['music'],'image':filedata['image'],'pdf':filedata['pdf'],'word':filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')
 
 #通过自主活动

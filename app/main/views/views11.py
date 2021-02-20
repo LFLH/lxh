@@ -21,11 +21,13 @@ def getnewuserdeclare():
     userid=user['userid']
     user=User.query.filter(User.id==userid).all()[0]
     udeclare=UDeclare.query.filter(UDeclare.userid==userid).all()
+    #区分初次申报和有申报记录的情况
+    #有申报记录返回截止时间和状态
     if len(udeclare)>0:
-        status=udeclare[0].type
+        data={'endtime':str(user.endtime),'status':udeclare[0].type}
+    #没有申报记录仅返回申报截止时间
     else:
-        status=-1
-    data={'endtime':str(user.endtime),'status':status}
+        data={'endtime':str(user.endtime)}
     return Response(json.dumps(data), mimetype='application/json')
 
 #判断上传文件类型

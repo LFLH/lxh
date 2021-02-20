@@ -58,7 +58,7 @@ def manage():
     else:
         return render_template('manage.html',username=user["username"])
 
-#活动管理
+#自主活动管理
 @main.route('/manageactivity',methods=['GET','POST'])
 def manageactivity():
     user = session.get('user')
@@ -71,6 +71,20 @@ def manageactivity():
             return redirect('/newuser')
     else:
         return render_template('manageactivity.html',username=user["username"])
+
+#系统活动管理
+@main.route('/manageactivityadd',methods=['GET','POST'])
+def manageactivityadd():
+    user = session.get('user')
+    if user == None:
+        return redirect('/login')
+    elif user['usertype'] != 'sysadmin':
+        if user['checked'] == 1:
+            return redirect('/olduser')
+        else:
+            return redirect('/newuser')
+    else:
+        return render_template('manageactivityadd.html',username=user["username"])
 
 #申报用户管理
 @main.route('/managedeclareuser',methods=['GET','POST'])

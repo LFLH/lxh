@@ -42,6 +42,5 @@ def userlogin():
             data = {'status': False}
     else:#错误登录
         data = {'status': False}
-    print(data)
     return Response(json.dumps(data), mimetype='application/json')
 

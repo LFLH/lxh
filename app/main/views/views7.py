@@ -16,7 +16,8 @@ def after_request(response):
 #条件检索
 def tstrain(name,createtime,begintime,endtime,status,page,per_page):
     if name != None:
-        s1=(Train.name==name)
+        #s1=(Train.name==name)
+        s1=(Train.name.contains(name))
     else:
         s1 = True
     if createtime != None:

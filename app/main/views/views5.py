@@ -16,7 +16,8 @@ def after_request(response):
 #条件检索
 def tsdeclare(name,createtime,begintime,endtime,status,page,per_page):
     if name!=None:
-        s1=(Declare.name==name)
+        #s1=(Declare.name==name)
+        s1=(Declare.name.contains(name))
     else:
         s1=True
     if createtime!=None:
