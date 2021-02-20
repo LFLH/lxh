@@ -14,21 +14,22 @@ def after_request(response):
     return response
 
 #条件检索
+#添加模糊查询
 def tsdeclare(name,createtime,begintime,endtime,status,page,per_page):
     if name!=None:
-        s1=(Declare.name==name)
+        s1=(Declare.name.contains(name))
     else:
         s1=True
     if createtime!=None:
-        s2=(Declare.createtime==createtime)
+        s2=(Declare.createtime.ilike('%'+createtime+'%'))
     else:
         s2=True
     if begintime!=None:
-        s3=(Declare.begintime==begintime)
+        s3=(Declare.begintime.ilike('%'+begintime+'%'))
     else:
         s3=True
     if endtime!=None:
-        s4=(Declare.endtime==endtime)
+        s4=(Declare.endtime.ilike('%'+endtime+'%'))
     else:
         s4=True
     if status is None:
@@ -155,8 +156,8 @@ def updatedeclare():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    # begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    # endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     declare = Declare.query.filter(Declare.id == id).all()[0]
      # chatime =datetime.datetime.now()-declare.endtime
     # chatime=chatime.days

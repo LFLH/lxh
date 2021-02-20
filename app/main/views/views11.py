@@ -19,11 +19,38 @@ def after_request(response):
 def getnewuserdeclare():
     user=session.get('user')
     userid=user['userid']
-    user=User.query.filter(User.id==userid).all()[0]
-    # 用户名,科普基地单位名称,邮箱,联系电话,地址,密码
-    endtime=str(user.endtime)
-    return Response(json.dumps(endtime), mimetype='application/json')
+    # user=User.query.join(UDeclare).filter(User.id==userid).all()[0]
+    user = User.query.filter(User.id == userid).all()[0]
+    #判断是否有申报记录
+    udeclare_userid = db.session.query(UDeclare).filter(UDeclare.userid == userid).count()
+    print("userid:", userid)
+    print("udeclare_userid:",udeclare_userid)
+    #区分初次申报和有申报记录的情况
+    #有申报记录返回截止时间和状态
+    if (udeclare_userid!=0):
+        udeclare = UDeclare.query.filter(UDeclare.userid == userid).order_by(-UDeclare.uptime).all()[0]
+        # print("udeclare:", udeclare)
+        data = {'endtime': str(user.endtime), 'status': udeclare.type}
+    #没有申报记录仅返回申报截止时间
+    else:
+        data = {'endtime': str(user.endtime)}
+    return Response(json.dumps(data), mimetype='application/json')
 
+#申报成功修改申报状态为等待审核
+@main.route('/changeStatus',methods=['GET', 'POST'])
+def changeStatus():
+    if request.method == "GET":
+        status = request.args.get('status')
+    else:
+        status = request.form.get('status')
+    user = session.get('user')
+    userid = user['userid']
+    udeclare = UDeclare.query.filter(UDeclare.userid == userid).all()[0]
+    # 修改申报状态
+    udeclare.type = status
+    db.session.add(udeclare)
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #判断上传文件类型
 def panduan(ext):
