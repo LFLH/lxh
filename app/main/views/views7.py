@@ -14,6 +14,7 @@ def after_request(response):
     return response
 
 #条件检索
+#添加模糊查询
 def tstrain(name,createtime,begintime,endtime,status,page,per_page):
     if name != None:
         s1=(Train.name.contains(name))

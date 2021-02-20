@@ -25,6 +25,7 @@ def getnewuserdeclare():
     udeclare_userid = db.session.query(UDeclare).filter(UDeclare.userid == userid).count()
     print("userid:", userid)
     print("udeclare_userid:",udeclare_userid)
+    #区分初次申报和有申报记录的情况
     #有申报记录返回截止时间和状态
     if (udeclare_userid!=0):
         udeclare = UDeclare.query.filter(UDeclare.userid == userid).order_by(-UDeclare.uptime).all()[0]
