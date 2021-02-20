@@ -13,21 +13,63 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#条件检索
+def tsdeclare(name,createtime,begintime,endtime,status,page,per_page):
+    if name!=None:
+        s1=(Declare.name.contains(name))
+    else:
+        s1=True
+    if createtime!=None:
+        s2=(Declare.createtime.ilike('%'+createtime+'%'))
+    else:
+        s2=True
+    if begintime!=None:
+        s3=(Declare.begintime.ilike('%'+begintime+'%'))
+    else:
+        s3=True
+    if endtime!=None:
+        s4=(Declare.endtime.ilike('%'+endtime+'%'))
+    else:
+        s4=True
+    if status is None:
+        s5=True
+    else:
+        status=int(status)
+        if status==0:#申报未过期
+            s5=and_(Declare.status==0,Declare.endtime>datetime.datetime.now())
+        elif status==1:#申报过期
+            s5=and_(Declare.status==0,Declare.endtime<datetime.datetime.now())
+        elif status==2:#未启用的申报，即被作废的申报
+            s5=(Declare.status==1)
+    declare=Declare.query.filter(and_(s1,s2,s3,s4,s5)).order_by(-Declare.createtime).paginate(page, per_page, error_out=False)
+    return declare
+
 #列表显示申报任务
 @main.route('/searchdeclare',methods=['GET','POST'])
 def searchdeclare():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        name = request.args.get('name')  # 申报名
+        createtime = request.args.get('createtime')  # 申报创建时间
+        begintime = request.args.get('begintime')  # 申报开始时间
+        endtime = request.args.get('endtime')  # 申报结束时间
+        status = request.args.get('status')  # 申报状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        name = request.form.get('name')  # 申报名
+        createtime = request.form.get('createtime')  # 申报创建时间
+        begintime = request.form.get('begintime')  # 申报开始时间
+        endtime = request.form.get('endtime')  # 申报结束时间
+        status = request.form.get('status')  # 申报状态
     #倒叙：在排序的时候使用这个字段的字符串名字，然后在前面加一个负号
     page=int(page)
     per_page = int(per_page)
-    declare=Declare.query.order_by(-Declare.createtime).paginate(page, per_page, error_out=False)
+    #declare=Declare.query.order_by(-Declare.createtime).paginate(page, per_page, error_out=False)
+    declare=tsdeclare(name,createtime,begintime,endtime,status,page,per_page)
     items = declare.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -46,6 +88,36 @@ def searchdeclare():
     # 返回总页数、活动总数、当前页、用户集合
     data = {'zpage': declare.pages, 'total': declare.total, 'dpage': declare.page, 'item': item}
     return Response(json.dumps(data), mimetype='application/json')
+
+#需申报的用户
+@main.route('/getnewuser',methods=['GET','POST'])
+def getnewuser():
+    user=User.query.filter(and_(User.type=='user',User.checked!=1)).all()
+    userz = []
+    for u in user:
+        userz.append({'name':u.name,'username':u.username,'userid':u.id})
+    return Response(json.dumps({'userz': userz}), mimetype='application/json')
+
+#新增申报的用户
+@main.route('/addnewuser',methods=['GET','POST'])
+def addnewuser():
+    if request.method == "GET":
+        id = request.args.get('id')
+    else:
+        #id = request.json.get('id')
+        id=request.form.get('id')
+    userz = request.values.getlist('userz[]')
+    declare=Declare.query.filter(Declare.id==id).all()[0]
+    for u in userz:
+        user=User.query.filter(User.id==u).all()[0]
+        declare.users.append(user)
+        user.checked=0
+        user.endtime=declare.endtime
+        db.session.add(user)
+        db.session.commit()
+    db.session.add(declare)
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #查看详细申报任务
 @main.route('/detaildeclare',methods=['GET','POST'])
@@ -103,7 +175,7 @@ def updatedeclare():
         db.session.add(declare)
         db.session.commit()
         # 设置新用户提交时间
-        user = User.query.filter(and_(User.checked == 0, User.type == 'user', User.endtime == edtime)).all()
+        user = declare.user
         for i in range(len(user)):
             user[i].endtime = endtime
             db.session.add(user[i])
@@ -156,12 +228,4 @@ def adddeclare():
     declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(declare)
     db.session.commit()
-    #设置新用户提交时间
-    maxdate = '9999-12-31 23:59:59'
-    maxdate = datetime.datetime.strptime(maxdate, '%Y-%m-%d %H:%M:%S')
-    user=User.query.filter(and_(User.checked==0,User.type=='user',User.endtime==maxdate)).all()
-    for i in range(len(user)):
-        user[i].endtime=endtime
-        db.session.add(user[i])
-        db.session.commit()
     return Response(json.dumps({'status':True}), mimetype='application/json')

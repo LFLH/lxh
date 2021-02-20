@@ -14,23 +14,41 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#条件检索
+def tshowactivity(name,type,page,per_page,userid):
+    if name!=None:
+        s1=(Activity.name==name)
+    else:
+        s1=True
+    if type!=None:
+        s2=(Activity.type==type)
+    else:
+        s2=True
+    activity=Activity.query.filter(and_(s1,s2,Activity.userid==userid,Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    return activity
+
 #列表显示自主活动信息
 @main.route('/showactivity',methods=['GET', 'POST'])
 def showactivity():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        name=request.args.get('name')#活动名
+        type=request.args.get('type')#活动类型
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        name = request.form.get('name')  # 活动名
+        type = request.form.get('type')  # 活动类型
     user = session.get('user')
     userid = user['userid']
     #根据用户id获取自主活动
     page=int(page)
     per_page=int(per_page)
-    activity = Activity.query.filter(Activity.userid == userid).filter(Activity.status!=3).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    #activity = Activity.query.filter(Activity.userid == userid).filter(Activity.status!=3).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    activity=tshowactivity(name,type,page,per_page,userid)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -180,14 +198,16 @@ def deleteactivity():
         id = request.args.get('id')
         page = request.args.get('page')  # 当前页
         per_page = request.args.get('per_page')  # 平均页数
+        # 检索条件
+        name = request.args.get('name')  # 活动名
+        type = request.args.get('type')  # 活动类型
     else:
-        
         id = request.form.get('id')
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #id = request.json.get('id')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        name = request.form.get('name')  # 活动名
+        type = request.form.get('type')  # 活动类型
     page = int(page)
     per_page = int(per_page)
     #根据活动id删除活动
@@ -197,7 +217,7 @@ def deleteactivity():
     db.session.commit()
     #查找用户的活动
     userid=session.get('user')['userid']
-    activity2 = Activity.query.filter(Activity.userid == userid).filter(Activity.status!=3).order_by(-Activity.updatetime).paginate(page, per_page,error_out=False)
+    activity2 = tshowactivity(name,type,page,per_page,userid)
     items = activity2.items
     item = []
     count = (int(page) - 1) * int(per_page)

@@ -15,13 +15,16 @@ def after_request(response):
 
 #计算百分比保留一位小数
 def zbfb(a,b):
-    m=a/b*1000
-    mi=int(m)
-    km=m-mi
-    if km>0.5:
-        mi=mi+1
-    k=mi/10
-    return k,100-k
+    if b!=0:
+        m=a/b*1000
+        mi=int(m)
+        km=m-mi
+        if km>0.5:
+            mi=mi+1
+        k=mi/10
+        return k,100-k
+    else:
+        return 0.0,100.0
 
 # 获取用户提交活动数、系统要求参与数、各月提交数、被驳回的活动信息，培训申请状态，新活动发布，新培训发布，活动报名截止，培训报名截止
 @main.route('/olduserall',methods=['GET','POST'])

@@ -1,8 +1,20 @@
 <title>账户信息设置</title>
 {% extends "base_Txx_olduser.html" %}
 
+{% block css %}
+    #img {
+        width: 25px;
+        height: 25px;
+{#        position: absolute;#}
+{#        right: 10px;#}
+{#        margin-top: 12px;#}
+{#        top: 5px;#}
+{#        text-align: center;#}
+    }
+{% endblock %}
+
 {% block content %}
-    <div class="container" >
+    <div class="container" style="position: center" >
         <h2 style="padding-top: 20px">账户信息设置</h2>
         <br>
         <table style="margin: 0 0 0 0; table-layout: fixed; border-collapse:separate; border-spacing:10px 30px;">
@@ -14,9 +26,11 @@
             <tr>
                 <td> <label style="font-size: large; margin-right: 10px;">密码：</label></td>
                 <td>
-                    <div class="password bgImg">
-                        <input type="password" id="password" style="font-size:large;">
-                        <button id="show">显示</button>
+                    <div style="display: inline">
+{#                        <input type="password" id="password" style="font-size:large; background-image: url(../static/img/eyes.png);background-repeat: no-repeat; background-position: right; background-size: 25px 25px">#}
+                        <input type="password" id="password" style="font-size:large; float: left">
+                        <img id="img" style="float: left;padding-left: 5px" onclick="document.hideShowPsw()" src="../static/img/eyes.png" alt="显示/隐藏密码">
+{#                        <button id="show" class="btn btn-xs"></button>#}
                     </div>
                 </td>
             </tr>
@@ -64,17 +78,39 @@
                   $('#address').val(users.address);
               }
           };
-          $("#show").click(function () {
+{#          $("#show").click(function () {#}
+{#              let input = document.getElementById("password");#}
+{#              var btn = document.getElementById("show");#}
+{#              if(input.type=="password"){#}
+{#                  input.type = 'text';#}
+{#                  btn.innerHTML = '隐藏';#}
+{#              }else {#}
+{#                  input.type = 'password';#}
+{#                  btn.innerHTML = '显示';#}
+{#              }#}
+{#          });#}
+{#        添加登录密码明文、密文切换功能#}
+          $("#img").click(function () {
               let input = document.getElementById("password");
-              var btn = document.getElementById("show");
+              var img = document.getElementById("img");
               if(input.type=="password"){
                   input.type = 'text';
-                  btn.innerHTML = '隐藏';
+                  img.src = "../static/img/eyes1.png"; //闭眼图片
               }else {
                   input.type = 'password';
-                  btn.innerHTML = '显示';
+                  img.src = "../static/img/eyes.png"; //睁眼图片
               }
           });
+
+{#          function hideShowPsw() {#}
+{#              if (PWD.type == "password") {#}
+{#                  PWD.type = "text";#}
+{#                  demoImg.src = "../static/img/eyes1.png"; //闭眼图片#}
+{#              } else {#}
+{#                  PWD.type = "password";#}
+{#                  demoImg.src = "../static/img/eyes.png"; // 睁眼图片#}
+{#              }#}
+{#          };#}
 
           $("#cancel").click(function () {
               $("#name").val('');

@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+{#    <div class="container">#}
         <h2 style="padding-top: 20px">申报任务记录</h2>
         <br>
             <button type="button"  class="btn btn-link" id="add" style="display: inline; margin-left: 26px; font-size: large">+&nbsp;添加申报任务</button>
@@ -24,7 +24,7 @@
              <div class="form-group">
                      <div class="input-group col-xs-12">
                          <div class="input-group-btn">
-                            <select name="type" class="form-control" style="width: auto;">
+                            <select id="select" name="type" class="form-control" style="width: auto;">
                                 <option>名称</option>
                                 <option>创建时间</option>
                                 <option>开始时间</option>
@@ -34,13 +34,11 @@
                          </div>
                             <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" id="search" type="submit">搜索</button>
+                                <button class="btn btn-primary" id="search" type="button">搜索</button>
                             </span>
                         </div>
              <br>
              </div>
-             <p style="color: grey">（状态栏各数字代表的申报任务状态：0表示正常进行，1表示已过期，2表示已撤销）</p>
-                <br>
             <div class="form-group">
                     <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
                         <thead style="text-align: center">
@@ -62,7 +60,7 @@
                     </nav>
             </div>
         </form>
-    </div>
+{#    </div>#}
 
 {% endblock %}
 
@@ -71,12 +69,10 @@
         $("#add").on("click", function () {
                  window.location.href = '/managedeclareadd_new'
         });
-    });
-    var acquire=new Array(10);
-    var pass;
-    {#前后端交互：从后端数据库获取列表数据以及分页处理#}
-    $(document).ready(function(){
-    {#dpage：应该是表示第几页
+        var acquire=new Array(10);
+        var pass;
+        {#前后端交互：从后端数据库获取列表数据以及分页处理#}
+        {#dpage：应该是表示第几页
         pages：应该是表示总共的页数
         d_per_page:总共有多少条数据
         idz:存储每条数据的id#}
@@ -106,16 +102,26 @@
                    let acquire_number;
                    acquire_number = data.item[index].number;
                    acquire[acquire_number]=data.item[index].id;
+                   let status = '';
+                   if(data.item[index].status==0){
+                        status = "进行中"
+                   }
+                   if(data.item[index].status==1){
+                        status = "已过期"
+                   }
+                   if(data.item[index].status==2){
+                        status = "已删除"
+                   }
                    str += "<tr><td>" + data.item[index].number +
                             "</td><td >" + data.item[index].name +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
                             "</td><td>" + data.item[index].createtime +
-                            "</td><td>" + data.item[index].status +
+                            "</td><td>" + status +
                             {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
                             {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
-                            "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=撤销>"+"</tr>";
+                            "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                             +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=删除>"+"</tr>";
 {#                             +"<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+"</tr>";#}
                 }
                 $("#tableText").html(str);
@@ -137,6 +143,316 @@
                 }
             }
         });
+        $("#search").on("click", function () {
+             let name = '';
+             let createtime = '';
+             let begintime = '';
+             let endtime = '';
+             let status = '';
+             let data = {};
+             console.log($("#select  option:selected").text());
+             console.log($("#keyword").val());
+             if ($("#select  option:selected").text()=="名称"){
+                 name = $("#keyword").val();
+                 data = {name:name, 'page':1,'per_page':per_page};
+             };
+             if ($("#select  option:selected").text()=="创建时间"){
+                 createtime = $("#keyword").val();
+                 data = {createtime:createtime, 'page':1,'per_page':per_page};
+             };
+             if ($("#select  option:selected").text()=="开始时间"){
+                 begintime = $("#keyword").val();
+                 data = {begintime:begintime, 'page':1,'per_page':per_page};
+             };
+             if ($("#select  option:selected").text()=="结束时间"){
+                 endtime = $("#keyword").val();
+                 data = {endtime:endtime, 'page':1,'per_page':per_page};
+             };
+             if ($("#select  option:selected").text()=="状态"){
+                 if($("#keyword").val()=="进行中"){
+                    status = 0;
+                 }
+                 else if($("#keyword").val()=="已过期"){
+                    status = 1;
+                 }
+                 else if($("#keyword").val()=="已删除"){
+                    status = 2;
+                 }else{
+                    alert("请输入正确的状态：进行中、已过期、已删除");
+                 }
+                 data = {status:status, 'page':1,'per_page':per_page};
+             };
+            $.ajax({
+                type:'GET',
+                url:'./searchdeclare',
+                data: data,
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str="";
+                    d_per_page=data.item.length;
+                    for (let index = 0; index < data.item.length; index++) {
+                       idz[index]=data.item[index].id;
+                       {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                       let acquire_number;
+                       acquire_number = data.item[index].number;
+                       acquire[acquire_number]=data.item[index].id;
+                       let status = '';
+                       if(data.item[index].status==0){
+                            status = "进行中"
+                       }
+                       if(data.item[index].status==1){
+                            status = "已过期"
+                       }
+                       if(data.item[index].status==2){
+                            status = "已删除"
+                       }
+                       str += "<tr><td>" + data.item[index].number +
+                                "</td><td >" + data.item[index].name +
+                                "</td><td>" + data.item[index].begintime +
+                                "</td><td>" + data.item[index].endtime +
+                                "</td><td>" + data.item[index].createtime +
+                                "</td><td>" + status +
+                                {#"</td><td>"+ "<button class='btn btn-danger btn-sm' id='del"+index+"'>查看</button>"#}
+                                {# +"<button class='btn btn-primary btn-sm' id='del"+index+"'>通过</button>"+ "</tr>";#}
+                                "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                                 +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=删除>"+"</tr>";
+    {#                             +"<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+"</tr>";#}
+                    }
+                    $("#tableText").html(str);
+                    let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
+                    strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>";
+                    for(let index=2;index<=pages;index++){
+                        strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
+                    }
+                    strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>";
+                    $("#page-li").html(strli);
+                    let s="#li"+dpage;
+                    $(s).css("border-color","blue");
+                    if(dpage < pages){
+                        let r=dpage+1;
+                        let rs="#li"+r;
+                        $(rs).css("border-left-color","blue");
+                    }else{
+                        $("#next").css("border-left-color","blue");
+                    }
+                }
+            });
+            $("#prev").click(function(){
+                $('.box').css('display','none');
+                if(dpage==1){
+                    alert("该页是第一页！");
+                }else{
+                    let s="#li"+dpage;
+                    $(s).css("border-color","");
+                    if(dpage < pages){
+                        let r2=dpage+1;
+                        let rs2="#li"+r2;
+                        $(rs2).css("border-left-color","");
+                    }else{
+                        $("#next").css("border-left-color","");
+                    }
+                    $.ajax({
+                        type:'GET',
+                        url:'./searchdeclare',
+                        data:{'page':dpage-1,'per_page':per_page},
+                        dataType:'json',
+                        async: false,
+                        cache: false,
+                        contentType: 'application/json',
+                        success:function(data){
+                            pages = data.zpage;
+                            let total = data.total;
+                            dpage = data.dpage;
+                            let activity = data.item;
+                            let str="";
+                            d_per_page=data.item.length;
+                            for (let index = 0; index < d_per_page; index++) {
+                                idz[index]=data.item[index].id;
+                                {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                                let acquire_number;
+                                acquire_number = data.item[index].number;
+                                acquire[acquire_number]=data.item[index].id;
+                                let status = '';
+                               if(data.item[index].status==0){
+                                    status = "进行中"
+                               }
+                               if(data.item[index].status==1){
+                                    status = "已过期"
+                               }
+                               if(data.item[index].status==2){
+                                    status = "已删除"
+                               }
+                               str += "<tr><td>" + data.item[index].number +
+                                "</td><td >" + data.item[index].name +
+                                "</td><td>" + data.item[index].begintime +
+                                "</td><td>" + data.item[index].endtime +
+                                "</td><td>" + data.item[index].createtime +
+                                "</td><td>" + status +
+                                "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                                 +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=删除>"+"</tr>";
+    {#                             +<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+ "</tr>";#}
+                            }
+                            $("#tableText").html(str);
+                            let s="#li"+dpage;
+                            $(s).css("border-color","blue");
+                            if(dpage < pages){
+                                let r=dpage+1;
+                                let rs="#li"+r;
+                                $(rs).css("border-left-color","blue");
+                            }else{
+                                $("#next").css("border-left-color","blue");
+                            }
+                        }
+                    });
+                }
+            });
+            $("#next").click(function(){
+                $('.box').css('display','none');
+                if(dpage==pages){
+                    alert("该页是最后一页！");
+                }else{
+                    let s="#li"+dpage;
+                    $(s).css("border-color","");
+                    if(dpage < pages){
+                        let r2=dpage+1;
+                        let rs2="#li"+r2;
+                        $(rs2).css("border-left-color","");
+                    }else{
+                        $("#next").css("border-left-color","");
+                    }
+                    $.ajax({
+                        type:'GET',
+                        url:'./searchdeclare',
+                        data:{'page':dpage+1,'per_page':per_page},
+                        dataType:'json',
+                        async: false,
+                        cache: false,
+                        contentType: 'application/json',
+                        success:function(data){
+                            pages = data.zpage;
+                            let total = data.total;
+                            dpage = data.dpage;
+                            let activity = data.item;
+                            let str="";
+                            d_per_page=data.item.length;
+                            for (let index = 0; index < d_per_page; index++) {
+                                idz[index]=data.item[index].id;
+                                {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                                let acquire_number;
+                                acquire_number = data.item[index].number;
+                                acquire[acquire_number]=data.item[index].id;
+                                let status = '';
+                               if(data.item[index].status==0){
+                                    status = "进行中"
+                               }
+                               if(data.item[index].status==1){
+                                    status = "已过期"
+                               }
+                               if(data.item[index].status==2){
+                                    status = "已删除"
+                               }
+                               str += "<tr><td>" + data.item[index].number +
+                                "</td><td >" + data.item[index].name +
+                                "</td><td>" + data.item[index].begintime +
+                                "</td><td>" + data.item[index].endtime +
+                                "</td><td>" + data.item[index].createtime +
+                                "</td><td>" + status +
+                                "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                                 +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=删除>"+"</tr>";
+    {#                             +<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+ "</tr>";#}
+                            }
+                            $("#tableText").html(str);
+                            let s="#li"+dpage;
+                            $(s).css("border-color","blue");
+                            if(dpage < pages){
+                                let r=dpage+1;
+                                let rs="#li"+r;
+                                $(rs).css("border-left-color","blue");
+                            }else{
+                                $("#next").css("border-left-color","blue");
+                            }
+                        }
+                    });
+                }
+            });
+            {#点击那一页就显示哪一页的数据#}
+            for(let index=1;index<=pages;index++){
+                let s="#li"+index;
+                $(s).click(function() {
+                    $('.box').css('display', 'none');
+                    let s2 = "#li" + dpage;
+                    $(s2).css("border-color", "");
+                    if (dpage < pages) {
+                        let r2 = dpage + 1;
+                        let rs2 = "#li" + r2;
+                        $(rs2).css("border-left-color", "");
+                    } else {
+                        $("#next").css("border-left-color", "");
+                    }
+                    $.ajax({
+                        type: 'GET',
+                        url: './searchdeclare',
+                        data: {'page': index, 'per_page': per_page},
+                        dataType: 'json',
+                        async: false,
+                        cache: false,
+                        contentType: 'application/json',
+                        success: function (data) {
+                            pages = data.zpage;
+                            let total = data.total;
+                            dpage = data.dpage;
+                            let activity = data.item;
+                            let str = "";
+                            d_per_page = data.item.length;
+                            for (let index = 0; index < data.item.length; index++) {
+                                idz[index] = data.item[index].id;
+                                {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                                let acquire_number;
+                                acquire_number = data.item[index].number;
+                                acquire[acquire_number] = data.item[index].id;
+                                let status = '';
+                               if(data.item[index].status==0){
+                                    status = "进行中"
+                               }
+                               if(data.item[index].status==1){
+                                    status = "已过期"
+                               }
+                               if(data.item[index].status==2){
+                                    status = "已删除"
+                               }
+                                str += "<tr><td>" + data.item[index].number +
+                                    "</td><td >" + data.item[index].name +
+                                    "</td><td>" + data.item[index].begintime +
+                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + data.item[index].createtime +
+                                    "</td><td>" + status +
+                                    "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                                 +"<input type='button' class='btn btn-warning btn-sm'  id='"+acquire_number+"' value=删除>"+"</tr>";
+    {#                             +<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+"</tr>";#}
+                                $("#tableText").html(str);
+                                let s = "#li" + dpage;
+                                $(s).css("border-color", "blue");
+                                if (dpage < pages) {
+                                    let r = dpage + 1;
+                                    let rs = "#li" + r;
+                                    $(rs).css("border-left-color", "blue");
+                                } else {
+                                    $("#next").css("border-left-color", "blue");
+                                }
+                            }
+                        }
+
+                    });
+                })
+            }
+        });
         $("#prev").click(function(){
             $('.box').css('display','none');
             if(dpage==1){
@@ -153,7 +469,7 @@
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchtrain',
+                    url:'./searchdeclare',
                     data:{'page':dpage-1,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -172,14 +488,24 @@
                             let acquire_number;
                             acquire_number = data.item[index].number;
                             acquire[acquire_number]=data.item[index].id;
+                            let status = '';
+                           if(data.item[index].status==0){
+                                status = "进行中"
+                           }
+                           if(data.item[index].status==1){
+                                status = "已过期"
+                           }
+                           if(data.item[index].status==2){
+                                status = "已删除"
+                           }
                            str += "<tr><td>" + data.item[index].number +
                             "</td><td >" + data.item[index].name +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
                             "</td><td>" + data.item[index].createtime +
-                            "</td><td>" + data.item[index].status +
-                            "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=撤销>"+"</tr>";
+                            "</td><td>" + status +
+                            "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                             +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=删除>"+"</tr>";
 {#                             +<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+ "</tr>";#}
                         }
                         $("#tableText").html(str);
@@ -212,7 +538,7 @@
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchtrain',
+                    url:'./searchdeclare',
                     data:{'page':dpage+1,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -231,14 +557,24 @@
                             let acquire_number;
                             acquire_number = data.item[index].number;
                             acquire[acquire_number]=data.item[index].id;
+                            let status = '';
+                           if(data.item[index].status==0){
+                                status = "进行中"
+                           }
+                           if(data.item[index].status==1){
+                                status = "已过期"
+                           }
+                           if(data.item[index].status==2){
+                                status = "已删除"
+                           }
                            str += "<tr><td>" + data.item[index].number +
                             "</td><td >" + data.item[index].name +
                             "</td><td>" + data.item[index].begintime +
                             "</td><td>" + data.item[index].endtime +
                             "</td><td>" + data.item[index].createtime +
-                            "</td><td>" + data.item[index].status +
-                            "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=撤销>"+"</tr>";
+                            "</td><td>" + status +
+                            "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                             +"<input type='button' class='btn btn-warning btn-sm' id='"+acquire_number+"' value=删除>"+"</tr>";
 {#                             +<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+ "</tr>";#}
                         }
                         $("#tableText").html(str);
@@ -271,7 +607,7 @@
                 }
                 $.ajax({
                     type: 'GET',
-                    url: './searchtrain',
+                    url: './searchdeclare',
                     data: {'page': index, 'per_page': per_page},
                     dataType: 'json',
                     async: false,
@@ -290,14 +626,24 @@
                             let acquire_number;
                             acquire_number = data.item[index].number;
                             acquire[acquire_number] = data.item[index].id;
+                            let status = '';
+                           if(data.item[index].status==0){
+                                status = "进行中"
+                           }
+                           if(data.item[index].status==1){
+                                status = "已过期"
+                           }
+                           if(data.item[index].status==2){
+                                status = "已删除"
+                           }
                             str += "<tr><td>" + data.item[index].number +
                                 "</td><td >" + data.item[index].name +
                                 "</td><td>" + data.item[index].begintime +
                                 "</td><td>" + data.item[index].endtime +
                                 "</td><td>" + data.item[index].createtime +
-                                "</td><td>" + data.item[index].status +
-                                "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-warning btn-sm'  id='"+acquire_number+"' value=撤销>"+"</tr>";
+                                "</td><td>" + status +
+                                "</td><td style='text-align: center'>"+ "<input type='button' class='btn btn-info btn-sm' style='margin-right: 20px' id='"+acquire_number+"' value=编辑>"
+                             +"<input type='button' class='btn btn-warning btn-sm'  id='"+acquire_number+"' value=删除>"+"</tr>";
 {#                             +<input type='button' class='btn btn-success btn-sm' id='"+acquire_number+"' value=恢复>"+"</tr>";#}
                             $("#tableText").html(str);
                             let s = "#li" + dpage;
@@ -333,7 +679,7 @@
                 success:function(result){
                     console.log(result.status)
                     Flush(result.status);
-                    window.location.reload()
+{#                    window.location.reload()#}
                 }
             });
             function Flush(status){
@@ -341,7 +687,7 @@
                     alert("该申报任务已成功撤销！")
                 }
                 if(status==false){
-                    alert("该申报任务已过期！")
+                    alert("该申报任务已过期或已删除！")
                 }
             }
         });
@@ -355,6 +701,6 @@
             var id = jQuery.trim(acquire_user_id);
             var newUrl = encodeURI("declare_details/id=" + id); //使用encodeURI编码
             window.open(newUrl);
-        })
+        });
     })
 {% endblock %}

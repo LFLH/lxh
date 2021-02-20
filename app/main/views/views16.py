@@ -4,7 +4,7 @@ from app.main import main
 from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,AU,TUT
 from app import db
 import json,datetime,random,string,os
-from sqlalchemy import or_,and_
+from sqlalchemy import or_,and_,not_
 from werkzeug.utils import secure_filename
 
 @main.after_app_request
@@ -14,22 +14,54 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#条件检索
+def tstrain(name,status,page,per_page,userid):
+    if name!=None:
+        s1=(Train.name==name)
+    else:
+        s1=True
+    if status is None:
+        s2=True
+    else:
+        status=int(status)
+        if status==1:#已过期
+            s2=(Train.endtime<datetime.datetime.now())
+        elif status==2:#已报名
+            tc=Train.query.join(TUT).join(UTrain).filter(and_(UTrain.userid==userid,Train.status==0))
+            tid=[]
+            for t in tc:
+                tid.append(t.id)
+            s2=and_(Train.id in tid,Train.endtime>datetime.datetime.now())
+        elif status==0:#未报名
+            tc = Train.query.join(TUT).join(UTrain).filter(and_(UTrain.userid == userid, Train.status == 0))
+            tid = []
+            for t in tc:
+                tid.append(t.id)
+            s2=and_(not_(Train.id in tid),Train.endtime>datetime.datetime.now())
+    train=Train.query.filter(and_(s1,s2,Train.status==0)).order_by(-Train.endtime).paginate(page, per_page, error_out=False)
+    return train
+
 # 列表查看系统能力提升培训
 @main.route('/searchsystrain',methods=['GET','POST'])
 def searchsystrain():
     if request.method == "GET":
         page = request.args.get('page')#当前页
         per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        name=request.args.get('name')#培训任务名
+        status=request.args.get('status')#报名情况
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
-        #page = request.json.get('page')
-        #per_page = request.json.get('per_page')
+        # 检索条件
+        name = request.form.get('name')  # 培训任务名
+        status = request.form.get('status')  # 报名情况
     page=int(page)
     per_page=int(per_page)
     user = session.get('user')
     userid = user['userid']
-    train = Train.query.order_by(-Train.endtime).paginate(page, per_page, error_out=False)
+    #train = Train.query.order_by(-Train.endtime).paginate(page, per_page, error_out=False)
+    train=tstrain(name,status,page,per_page,userid)
     items = train.items
     item = []
     count = (int(page) - 1) * int(per_page)

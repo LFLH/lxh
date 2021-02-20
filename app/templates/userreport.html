@@ -13,6 +13,10 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
         .table>tbody>tr>td {
             vertical-align: middle;
@@ -33,46 +37,24 @@
             position: absolute;
             background: #FFF;
             display: none;
-            top: 20%;
-            left:30%;
+            top: 15%;
+            left:20%;
             overflow:scroll;
 
-        }
-        .update_ndreport{
-            width: 600px;
-            height: 500px;
-            border:1px solid black;
-            position: absolute;
-            background: #FFF;
-            display: none;
-            top: 20%;
-            left:30%;
-            overflow:scroll;
-        }
-        .update_kjzreport{
-            width: 600px;
-            height: 500px;
-            border:1px solid black;
-            position: absolute;
-            background: #FFF;
-            display: none;
-            top: 20%;
-            left:30%;
-            overflow:scroll;
         }
     </style>
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #222">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: #9d9d9d">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: #9d9d9d">欢迎您：{{ username }} </a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: #9d9d9d;padding-left: 15px">用户中心 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
                             <li><a href="#" style="color: #9d9d9d;font-size: 10px"><i class="fa fa-user-md" aria-hidden="true"></i> 用户类型：管理员</a></li>
                             <li role="separator" class="divider"></li>
@@ -90,77 +72,98 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 sidebar">
-          <div id="accordion">
-              <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manage')}}">首页</a>
-                    </div>
-                </div>
-              <div class="card">
-                    <div class="card-header">
-                        <a class="collapsed card-link"  href="{{url_for('main.manageactivity')}}">活动管理</a>
-                    </div>
-              </div>
+        <div class="col-md-2">
+            <div class="nav sidebar nav-sidebar" style="padding: 0 0 0 20px; width: 15%">
+               <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{url_for('main.olduser')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                              首页
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              活动报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.usertrainregister')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                              培训报名
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.useractivity')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交活动
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userupdata')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                             已提交报告
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userndreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              年度总结提交
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.userkjzreport')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              科技周报提交
+                            </a>
+                        </li>
 
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">申报管理</a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">已申报用户</a>
-                      <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">申报任务添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">能力提升管理</a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                          <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">已申请培训用户</a>
-                          <a class="nav-link" href="{{url_for('main.manageabilityadd')}}">能力提升培训添加</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                      <a class="collapsed card-link" href="{{url_for('main.manageexamine')}}">考核管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.manageuser')}}">用户管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managereportuser')}}">报告管理</a>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <a class="collapsed card-link" href="{{url_for('main.managesystem')}}">账户信息</a>
-                  </div>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.user_setting')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                             账户信息设置
+                            </a>
+                        </li>
+                    </ul>
+               </div>
             </div>
         </div>
 
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">提交报告列表</h2>
+            <br>
             <form action="" method="POST">
+                {#添加搜索栏#}
+                <div class="form-group">
+                     <div class="input-group col-xs-12">
+                         <div class="input-group-btn">
+                            <select name="type" class="form-control" style="width: auto;">
+                                <option>报告名称</option>
+                                <option>年份</option>
+                                <option>报告类型</option>
+                                <option>报告状态</option>
+                            </select>
+                         </div>
+                            <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
+                            <span class="input-group-btn">
+                                <button class="btn btn-dark" id="search" type="submit">搜索</button>
+                            </span>
+                        </div>
+                   <br>
+                </div>
+
                 <div class="table-responsive">
                     <form action="/"></form>
                     <table class="table table-bordered table-hover" id="table">
                         <thead>
-                            <tr>
+                            <tr class="table-info">
                                 <th>序号</th>
                                 <th>用户名</th>
                                 <th>报告名称</th>
@@ -179,122 +182,181 @@
                     </nav>
                 </div>
             </form>
-           {#查看按钮的div悬浮框#}
-            <div class="box">
-                <h2 style="margin-top: 5px;text-align: center">报告详情</h2>
-                <div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">报告名：</label>
-                    <p id="report_name" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">报告类型：</label>
-                    <p id="report_type" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">报告年份：</label>
-                    <p id="report_year" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">PDF文件：</label>
-                    <p id="report_pdf" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">word文件：</label>
-                    <p id="report_word" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">video文件：</label>
-                    <p id="report_video" style="display: inline;width: 450px"></p>
-                    </div>
-                    <div>
-                    <label style="font-size: 20px;display: inline;width:50px">image文件：</label>
-                    <p id="report_image" style="display: inline;width: 450px"></p>
-                    </div>
-                </div>
-                <div id="div_butt">
-                </div>
-            </div>
-           {# 修改按钮的div悬浮框#}
-            <div class="update_ndreport">
-                <h2 class="sub-header" style="margin-top: 5px;text-align: center">修改报告内容</h2>
-                    <form id="update_nd" enctype='multipart/form-data'>
-                        <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label" style="font-size: 20px;display: inline;width:50px">报告名:</label>
-                            <div class="col-sm-5" style="padding-left: 20px;">
-                                <input class="form-control" id="name_nd" placeholder="请输入名称" required>
-                            </div>
+            <!-- 查看模态框 #lookModal -->
+            <div class="modal fade" id="look_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="text-align: center;font-size: 30px">报告详情</h4>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputFilePDF" class="control-label" style="font-size: 20px;display: inline;width:50px;margin-left: 15px">修改PDF文件:</label>
-                            <div class="col-sm-10">
-                                <input type="file" multiple="" name="pdf" id="exampleInputFilePDF" accept="application/pdf"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputFileWord" class="control-label" style="font-size: 20px;display: inline;width:50px;margin-left: 15px">修改word文件:</label>
-                            <div class="col-sm-10">
-                                <input type="file" multiple="" name="word" id="exampleInputFileWord" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
-            "/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputFileImage" class="control-label" style="font-size: 20px;display: inline;width:50px;margin-left: 15px">修改图片:</label>
-                            <div class="col-sm-10">
-                                <input type="file" multiple="" name="image" id="exampleInputFileImage" accept="image/*"/>
-                            </div>
-                        </div>
-                            <div class="form-group" style="margin-top: 120px">
-                                <div class="col-sm-10">
-                                    <button id="del_window_nd" class="btn btn-outline-dark btn-lg" style="margin-left: 40px">关闭窗口</button>
-                                    <button id='del_txt' class="btn btn-outline-dark btn-lg" style="margin-left: 40px">取消已选内容</button>
-                                    <button id="submit" type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 29px ;float: right">修改</button>
+                        <div class="modal-body">
+                            <form id="show" enctype='multipart/form-data'>
+                                <div class="form-group">
+                                    <label for="content" class="col-sm-2 control-label">报告名:</label>
+                                    <div class="col-sm-5" style="padding-left: 20px;">
+                                        <p id="report_name" style="display: inline;width: 450px"></p>
+                                    </div>
                                 </div>
-                            </div>
-                    </form>
+                                <div class="form-group">
+                                    <label for="begintime" class="col-sm-3 control-label">报告类型:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="report_type" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">报告年份:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="report_year" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">PDF文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                        <p id="report_pdf" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">word文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_word" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">video文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_video" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endtime" class="col-sm-3 control-label">image文件:</label>
+                                    <div class="col-sm-4" style="padding-left: 20px;">
+                                       <p id="report_image" style="display: inline;width: 450px"></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer" id="div_butt">
+{#                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>#}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="update_kjzreport">
-                <h2 class="sub-header" style="margin-top: 5px;text-align: center">修改报告内容</h2>
-                <form id="update_kjz" enctype='multipart/form-data'>
-                    <div class="form-group">
-                        <label for="name" class="col-sm-2 control-label" style="font-size: 20px;display: inline;width:50px">报告名:</label>
-                        <div class="col-sm-5" style="padding-left: 20px;">
-                            <input class="form-control" id="name_kjz" placeholder="请输入名称" required>
+           {#修改按钮的div悬浮框（年度报告）#}
+            <!-- 修改模态框 #update_ndreport_modal_div -->
+            <div class="modal fade" id="update_ndreport_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="text-align: center;font-size: 30px">修改报告内容</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="update_nd" enctype='multipart/form-data'>
+                                <div class="form-group">
+                                    <label for="name_nd" class="col-sm-2 control-label" style="font-size: 20px;display: inline;width:50px">报告名:</label>
+                                    <br>
+                                    <div class="col-sm-5" style="padding-left: 20px;">
+                                        <input class="form-control" id="name_nd" placeholder="请输入名称" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="layui-upload" id="div_nd">
+                                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_nd">选择PDF文件、Word文件、图片</button>
+{#                                          <button id="submit" type="submit" class="layui-btn layui-btn-normal" style="margin-left: 15px">文件上传</button>#}
+                                          <br>
+                                          <br>
+                                    </div>
+                                    <div class="layui-upload-list col-md-12">
+                                        <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                                            <thead style="text-align: center">
+                                            <tr>
+                                                <th style="width: 45%">文件名</th>
+                                                <th style="width: 15%">大小</th>
+                                                 <th style="width: 25%">时间</th>
+                                                <th style="width: 15%">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="VIEWList_nd"></tbody>
+                                        </table>
+                                    </div>
+                               </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="del_window_nd" class="btn btn-default btn-lg" style="margin-left: 40px">关闭</button>
+                            <button id="submit_nd" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px ;float: right">修改提交</button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputFilePDF" class="control-label" style="font-size: 20px;display: inline;width:50px;margin-left: 15px">修改PDF文件:</label>
-                        <div class="col-sm-10">
-                            <input type="file" multiple="" name="pdf" id="exampleInputFilePDF" accept="application/pdf"/>
+                </div>
+            </div>
+           {#修改按钮的div悬浮框（科技周报告）#}
+            <!-- 修改模态框 #update_kjzreport_modal_div -->
+            <div class="modal fade" id="update_kjzreport_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="text-align: center;font-size: 30px">修改报告内容</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="update_kjz" enctype='multipart/form-data'>
+                                <div class="form-group">
+                                    <label for="name_kjz" class="col-sm-2 control-label" style="font-size: 20px;display: inline;width:50px">报告名:</label>
+                                    <br>
+                                    <div class="col-sm-5" style="padding-left: 20px;">
+                                        <input class="form-control" id="name_kjz" placeholder="请输入名称" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="layui-upload" id="div_kjz">
+{#                                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_kjz">选择PDF文件、Word文件、图片、视频</button>#}
+{#                                          <button id="submit" type="submit" class="layui-btn layui-btn-normal" style="margin-left: 15px">文件上传</button>#}
+                                          <br>
+                                          <br>
+                                    </div>
+                                    <div class="layui-upload-list col-md-12">
+                                        <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                                            <thead style="text-align: center">
+                                            <tr>
+                                                <th style="width: 45%">文件名</th>
+                                                <th style="width: 15%">大小</th>
+                                                 <th style="width: 25%">时间</th>
+                                                <th style="width: 15%">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="VIEWList_kjz"></tbody>
+                                        </table>
+                                    </div>
+                               </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                             <button id="del_window_kjz" class="btn btn-default btn-lg" style="margin-left: 40px">关闭</button>
+                            <button id="submit_kjz" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px;float: right">修改提交</button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputFileWord" class="control-label" style="font-size: 20px;display: inline;width:50px;margin-left: 15px">修改word文件:</label>
-                        <div class="col-sm-10">
-                            <input type="file" multiple="" name="word" id="exampleInputFileWord" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
-    "/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputFileImage" class="control-label" style="font-size: 20px;display: inline;width:50px;margin-left: 15px">修改图片:</label>
-                        <div class="col-sm-10">
-                            <input type="file" multiple="" name="image" id="exampleInputFileImage" accept="image/*"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputFileVedio" class="control-label" style="font-size: 20px;display: inline;width:50px;margin-left: 15px">修改视频:</label>
-                        <div class="col-sm-10">
-                            <input type="file" multiple="" name="video" id="exampleInputFileVedio" accept="video/*"/>
-                        </div>
-                    </div>
-                        <div class="form-group" style="margin-top: 120px">
-                            <div class="col-sm-10">
-                                <button id="del_window_kjz" class="btn btn-outline-dark btn-lg" style="margin-left: 40px">关闭窗口</button>
-                                <button id="del_txt" class="btn btn-outline-dark btn-lg" style="margin-left: 40px">取消已选内容</button>
-                                <button type="submit" class="btn btn-outline-dark btn-lg" style="margin-left: 29px;float: right">修改</button>
+                </div>
+            </div>
+            {#modal模式框：当用户点击删除按钮时再次确认#}
+            <div class="modal fade" id="del_modal_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定删除？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="del_modal_list_sure" data-dismiss="modal">删除</button>
                             </div>
                         </div>
-                </form>
+                    </div>
+            </div>
+            <div class="modal fade" id="del_modal_div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">确定删除？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-default" id="del_modal_div_sure" data-dismiss="modal">删除</button>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
         </div>
@@ -302,81 +364,94 @@
 <script type="text/javascript">
 
 var acquire=new Array(100);
-var pass;
+var upd;
+var del;
 var acquire_update_type=new Array(100);
+var acquire_div_update_type=new Array(100);
+var dpage;
+var pages;
+var report_pdf = "";
+var report_word = "";
+var report_video = "";
+var report_image = "";
+var new_ac_id;
+var up_type;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
        {#dpage：应该是表示第几页
         pages：应该是表示总共的页数
         d_per_page:总共有多少条数据
         idz:存储每条数据的id#}
-        {#a_name = JSON.parse($.cookie("a_name"));#}
-        {#a_name = $.cookie('a_name');#}
-        let dpage=1;
-        let pages=1;
+        {#let dpage=1;#}
+        {#let pages=1;#}
         let per_page=10;
         let d_per_page=10;
         let idz=new Array(10);
-        $.ajax({
-            type:'GET',
-            url:'./searchrecord',
-            data:{'page':1,'per_page':per_page},
-            dataType:'json',
-            async: false,
-            cache: false,
-            contentType: 'application/json',
-            success:function(data){
-                pages = data.zpage;
-                let total = data.total;
-                dpage = data.dpage;
-                let activity = data.item;
-                let str="";
-                d_per_page=data.item.length;
-                for (let index = 0; index < data.item.length; index++) {
-                   idz[index]=data.item[index].id;
-                   {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
-                   let acquire_number;
-                   acquire_number = data.item[index].number;
-                   acquire_number_look = 'look'+acquire_number;
-                   acquire[acquire_number_look]=data.item[index].id;
-                   {#修改按钮：获取报告的type类型#}
-                   let update_id;
-                   update_id = data.item[index].id;
-                   acquire_update_id = 'update'+update_id;
-                   acquire_update_type[acquire_update_id] = data.item[index].type;
-                   str += "<tr><td>" + data.item[index].number +
+        init()
+        function init() {
+            $.ajax({
+                type: 'GET',
+                url: './showrecord',
+                data: {'page': 1, 'per_page': per_page},
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success: function (data) {
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str = "";
+                    d_per_page = data.item.length;
+                    for (let index = 0; index < data.item.length; index++) {
+                        idz[index] = data.item[index].id;
+                        {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
+                        let acquire_number;
+                        acquire_number = data.item[index].number;
+                        let acquire_number_look = 'look' + acquire_number;
+                        acquire[acquire_number_look] = data.item[index].id;
+                        {#修改按钮：获取报告的type类型#}
+                        let update_id;
+                        update_id = data.item[index].id;
+                        let acquire_update_id = 'update' + update_id;
+                        acquire_update_type[acquire_update_id] = data.item[index].type;
+                        {#获取查看弹窗中的修改按钮的type类型#}
+                        acquire_div_update_type[update_id] = data.item[index].type;
+                        {#删除按钮：获取id#}
+                        let del_id;
+                        del_id = data.item[index].id;
+                        str += "<tr><td>" + data.item[index].number +
                             "</td><td >" + data.item[index].username +
                             "</td><td>" + data.item[index].recordname +
                             "</td><td>" + data.item[index].year +
                             "</td><td>" + data.item[index].type +
                             "</td><td>" + data.item[index].status +
-                            "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
-                             +"<input type='button' class='btn btn-warning btn-sm' id='update"+update_id+"' value=修改>"
-                             +"<input type='button' class='btn btn-info btn-sm' id='' value=驳回>"
-                             +"<input type='button' class='btn btn-success btn-sm' id='' value=通过>"
-                             +"<input type='button' class='btn btn-danger btn-sm' id='' value=删除>"+"</tr>";
+                            "</td><td>" + "<input type='button' class='btn btn-primary btn-sm' id='look" + acquire_number + "' value=查看>"
+                            + "<input type='button' class='btn btn-warning btn-sm' id='update" + update_id + "' value=修改>"
+                            + "<input type='button' class='btn btn-danger btn-sm' id='del" + del_id + "' value=删除>" + "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    let strli = "<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
+                    strli += "<li class='page-item'><a id=li" + 1 + " href='#' class='page-link'>" + 1 + "</a></li>";
+                    for (let index = 2; index <= pages; index++) {
+                        strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link'>" + index + "</a></li>"
+                    }
+                    strli += "<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>";
+                    $("#page-li").html(strli);
+                    let s = "#li" + dpage;
+                    $(s).css("border-color", "blue");
+                    if (dpage < pages) {
+                        let r = dpage + 1;
+                        let rs = "#li" + r;
+                        $(rs).css("border-left-color", "blue");
+                    } else {
+                        $("#next").css("border-left-color", "blue");
+                    }
                 }
-                $("#tableText").html(str);
-                let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>";
-                strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link'>"+1+"</a></li>";
-                for(let index=2;index<=pages;index++){
-                    strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link'>"+index+"</a></li>"
-                }
-                strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>";
-                $("#page-li").html(strli);
-                let s="#li"+dpage;
-                $(s).css("border-color","blue");
-                if(dpage<pages){
-                    let r=dpage+1;
-                    let rs="#li"+r;
-                    $(rs).css("border-left-color","blue");
-                }else{
-                    $("#next").css("border-left-color","blue");
-                }
-            }
-        });
+            })
+        }
         $('#page-li').on('click',"#prev",function(){
-            $('.box').css('display','none');
             if(dpage==1){
                 alert("该页是第一页！");
             }else{
@@ -391,7 +466,7 @@ $(document).ready(function(){
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchrecord',
+                    url:'./showrecord',
                     data:{'page':dpage-1,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -409,13 +484,18 @@ $(document).ready(function(){
                             {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
                             let acquire_number;
                             acquire_number = data.item[index].number;
-                            acquire_number_look = 'look'+acquire_number;
+                            let acquire_number_look = 'look'+acquire_number;
                             acquire[acquire_number_look]=data.item[index].id;
                             {#修改按钮：获取报告的type类型#}
                             let update_id;
                             update_id = data.item[index].id;
-                            acquire_update_id = 'update'+update_id;
+                            let acquire_update_id = 'update'+update_id;
                             acquire_update_type[acquire_update_id] = data.item[index].type;
+                            {#获取查看弹窗中的修改按钮的type类型#}
+                            acquire_div_update_type[update_id] = data.item[index].type;
+                            {#删除按钮：获取id#}
+                            let del_id;
+                            del_id = data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
                             "</td><td >" + data.item[index].username +
                             "</td><td>" + data.item[index].recordname +
@@ -424,9 +504,7 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
                              +"<input type='button' class='btn btn-warning btn-sm' id='update"+update_id+"' value=修改>"
-                             +"<input type='button' class='btn btn-info btn-sm' id='' value=驳回>"
-                             +"<input type='button' class='btn btn-success btn-sm' id='' value=通过>"
-                             +"<input type='button' class='btn btn-danger btn-sm' id='' value=删除>"+"</tr>";
+                             +"<input type='button' class='btn btn-danger btn-sm' id='del"+del_id+"' value=删除>"+"</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -443,7 +521,6 @@ $(document).ready(function(){
             }
         });
         $('#page-li').on('click',"#next",function(){
-            $('.box').css('display','none');
             if(dpage==pages){
                 alert("该页是最后一页！");
             }else{
@@ -458,7 +535,7 @@ $(document).ready(function(){
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchrecord',
+                    url:'./showrecord',
                     data:{'page':dpage+1,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -476,13 +553,18 @@ $(document).ready(function(){
                             {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
                             let acquire_number;
                             acquire_number = data.item[index].number;
-                            acquire_number_look = 'look'+acquire_number;
+                            let acquire_number_look = 'look'+acquire_number;
                             acquire[acquire_number_look]=data.item[index].id;
                             {#修改按钮：获取报告的type类型#}
                             let update_id;
                             update_id = data.item[index].id;
-                            acquire_update_id = 'update'+update_id;
+                            let acquire_update_id = 'update'+update_id;
                             acquire_update_type[acquire_update_id] = data.item[index].type;
+                            {#获取查看弹窗中的修改按钮的type类型#}
+                            acquire_div_update_type[update_id] = data.item[index].type;
+                            {#删除按钮：获取id#}
+                            let del_id;
+                            del_id = data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
                             "</td><td >" + data.item[index].username +
                             "</td><td>" + data.item[index].recordname +
@@ -491,9 +573,7 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
                              +"<input type='button' class='btn btn-warning btn-sm' id='update"+update_id+"' value=修改>"
-                             +"<input type='button' class='btn btn-info btn-sm' id='' value=驳回>"
-                             +"<input type='button' class='btn btn-success btn-sm' id='' value=通过>"
-                             +"<input type='button' class='btn btn-danger btn-sm' id='' value=删除>"+"</tr>";
+                             +"<input type='button' class='btn btn-danger btn-sm' id='del"+del_id+"' value=删除>"+"</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -513,7 +593,6 @@ $(document).ready(function(){
         for(let index=1;index<=pages;index++){
             let s="#li"+index;
             $('#page-li').on('click',s,function(){
-                $('.box').css('display','none');
                 let s2="#li"+dpage;
                 $(s2).css("border-color","");
                 if(dpage<pages){
@@ -525,7 +604,7 @@ $(document).ready(function(){
                 }
                 $.ajax({
                     type:'GET',
-                    url:'./searchrecord',
+                    url:'./showrecord',
                     data:{'page':index,'per_page':per_page},
                     dataType:'json',
                     async: false,
@@ -543,13 +622,18 @@ $(document).ready(function(){
                             {#查看按钮：获取列表中的序号number,将列表中的number作为acquire数组的index#}
                             let acquire_number;
                             acquire_number = data.item[index].number;
-                            acquire_number_look = 'look'+acquire_number;
+                            let acquire_number_look = 'look'+acquire_number;
                             acquire[acquire_number_look]=data.item[index].id;
                             {#修改按钮：获取报告的type类型#}
                             let update_id;
                             update_id = data.item[index].id;
-                            acquire_update_id = 'update'+update_id;
+                            let acquire_update_id = 'update'+update_id;
                             acquire_update_type[acquire_update_id] = data.item[index].type;
+                            {#获取查看弹窗中的修改按钮的type类型#}
+                            acquire_div_update_type[update_id] = data.item[index].type;
+                            {#删除按钮：获取id#}
+                            let del_id;
+                            del_id = data.item[index].id;
                             str += "<tr><td>" + data.item[index].number +
                             "</td><td >" + data.item[index].username +
                             "</td><td>" + data.item[index].recordname +
@@ -558,9 +642,7 @@ $(document).ready(function(){
                             "</td><td>" + data.item[index].status +
                             "</td><td>"+ "<input type='button' class='btn btn-primary btn-sm' id='look"+acquire_number+"' value=查看>"
                              +"<input type='button' class='btn btn-warning btn-sm' id='update"+update_id+"' value=修改>"
-                             +"<input type='button' class='btn btn-info btn-sm' id='' value=驳回>"
-                             +"<input type='button' class='btn btn-success btn-sm' id='' value=通过>"
-                             +"<input type='button' class='btn btn-danger btn-sm' id='' value=删除>"+"</tr>";
+                             +"<input type='button' class='btn btn-danger btn-sm' id='del"+del_id+"' value=删除>"+"</tr>";
                         }
                         $("#tableText").html(str);
                         let s="#li"+dpage;
@@ -578,15 +660,7 @@ $(document).ready(function(){
             });
 
         }
-    });
-{#操作实现#}
-var report_pdf = "";
-var report_word = "";
-var report_video = "";
-var report_image = "";
-var new_ac_id;
-$(document).ready(function () {
-   {# 实现查看按钮#}
+    {# 实现查看按钮#}
    $(document).on("click",".btn-primary",function() {
         $("#report_pdf").html('');
         $("#report_word").html('');
@@ -596,28 +670,20 @@ $(document).ready(function () {
         let user_number = $(this).attr('id');
         {#获取传递给后端的id#}
         let acquire_user_id = acquire[user_number];
-        {#为了将查看中的id传递给悬浮框中的通过键#}
-        pass = acquire_user_id;
-         {#给div悬浮框添加取消和通过按钮#}
+        console.log("acquire_user_id=",acquire_user_id)
+        {#为了将查看中的id传递给悬浮框中的修改键#}
+        upd = acquire_user_id;
+        {#为了将查看中的id传递给悬浮框中的删除键#}
+        del = acquire_user_id;
+        {#给div悬浮框添加取消和通过按钮#}
         let str_div = "";
-        str_div +="<button class='btn btn-outline-dark btn-lg open_delete' id='close_delete' style='margin-left: 200px; margin-top: 140px'>取消</button>"
-            +"<button type='submit' class='btn btn-outline-dark btn-lg open_pass' id='pass"+pass+"' style='margin-left: 80px;margin-top: 140px'>通过</button>";
+        str_div +="<button class='btn btn-default btn-lg ' id='close_delete' style='margin-left: 80px'>取消</button>"
+                +"<button type='submit' class='btn btn-default btn-lg open_update' id='upd_two"+upd+"' style='margin-left: 80px'>修改</button>"
+            +"<button type='submit' class='btn btn-default btn-lg open_del' id='del_two"+del+"' style='margin-left: 80px'>删除</button>";
         $('#div_butt').html(str_div);
-         {#判断div悬浮框中通过键是否应该是disabled状态#}
-        {#pass_id = $(".open_pass").attr('id')#}
-        {#pass_id = '#'+pass_id#}
-        {#for(let i =0;i<get_b_pass.length;i++) {#}
-        {#    let get_b_pass_sp = get_b_pass[i].split('#');#}
-        {#    get_b_pass_sp = get_b_pass_sp.pop()#}
-        {#    let pass_sp = parseInt(get_b_pass_sp)#}
-        {#    pass_a = '#pass'+ pass_sp#}
-        {#    if (pass_a == pass_id) {#}
-        {#        $(pass_a).attr('disabled', "true")#}
-        {#    }#}
-
          $.ajax({
             type:'GET',
-            url:'./detailrecord',
+            url:'./detailuserrecord',
             data:{'id':acquire_user_id},
             dataType:'json',
             async: false,
@@ -681,14 +747,175 @@ $(document).ready(function () {
                 }
             }
         });
-        $('.box').show();
+        $("#look_modal_div").modal('show')
         return false;
     });
+  //获取当前时间
+    function fileTime(){
+        function getNow(s) {
+            return s < 10 ? '0' + s : s;
+        }
+        var myDate = new Date;
+        var year = myDate.getFullYear(); //获取当前年
+        var mon = myDate.getMonth() + 1; //获取当前月
+        var date = myDate.getDate(); //获取当前日
+        var h = myDate.getHours();//获取当前小时数(0-23)
+        var m = myDate.getMinutes();//获取当前分钟数(0-59)
+        var s = myDate.getSeconds();//获取当前秒
+        var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "&nbsp;" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
+        return res
+    }
+    {#选择多文件-年度周报告#}
+   function mutifiles_nd(){
+       layui.use('upload', function () {
+            var $ = layui.jquery;
+            var upload = layui.upload;
+            {#动态生成Button解决choose函数只触发一次的问题#}
+            $("#div_nd").html('<button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_nd">选择PDF文件、Word文件、图片</button>');
+            //多文件选择
+            var VIEWList_nd = $('#VIEWList_nd'),
+                upload_nd_Ins = upload.render({
+                    elem: '#exampleInput_nd',
+                    url: '',
+                    accept: 'file,images',
+                    exts: 'doc|docx|pdf|jpg|png',
+                    multiple: true,
+                    auto: false,
+                    bindAction: '#submit',
+                    choose: function (obj) {
+                        var files_nd = obj.pushFile(); //选择文件赋给files
+                        var file_nd_time = fileTime();
+                        //读取本地文件
+                        obj.preview(function (index, file, result) {
+                            var tr = $(['<tr id="upload-' + index + '">'
+                                , '<td>' + file.name + '</td>'
+                                , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                , '<td>' + file_nd_time + '</td>'
+                                , '<td>'
+                                , '<button class="layui-btn layui-btn-xs layui-btn-danger file_nd_delete">删除</button>'
+                                , '</td>'
+                                , '</tr>'].join(''));
+                            VIEWList_nd.append(tr);
+                            //删除文件按钮
+                            tr.find('.file_nd_delete').on('click', function () {
+                                delete files_nd[index]; //删除对应的文件
+                                tr.remove();
+                                upload_nd_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                            })
+
+                        });
+                    {#done: function(res, index, upload){#}
+                    {#    console.log("res=",res)#}
+
+                }
+            })
+       {#return false;#}
+        })
+   }
+   {#选择多文件--科技周报告#}
+   function mutifiles_kjz() {
+       layui.use('upload', function () {
+           var $ = layui.jquery;
+           var upload = layui.upload;
+           {#动态生成Button解决choose函数只触发一次的问题#}
+           $("#div_kjz").html('<button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_kjz">选择PDF文件、Word文件、图片、视频</button>');
+           //多文件选择
+           var VIEWList_kjz = $('#VIEWList_kjz'),
+               upload_kjz_Ins = upload.render({
+                   elem: '#exampleInput_kjz',
+                   url: '',
+                   accept: 'file,images,video',
+                   exts: 'doc|docx|pdf|jpg|png|mp4',
+                   multiple: true,
+                   auto: false,
+                   bindAction: '#submit',
+                   choose: function (obj) {
+                       var files_kjz = obj.pushFile(); //选择文件赋给files
+                       var file_kjz_time = fileTime();
+                       //读取本地文件
+                       obj.preview(function (index, file, result) {
+                           var tr = $(['<tr id="upload-' + index + '">'
+                               , '<td>' + file.name + '</td>'
+                               , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                               , '<td>' + file_kjz_time + '</td>'
+                               , '<td>'
+                               , '<button class="layui-btn layui-btn-xs layui-btn-danger file_kjz_delete">删除</button>'
+                               , '</td>'
+                               , '</tr>'].join(''));
+                           VIEWList_kjz.append(tr);
+                           //删除文件按钮
+                           tr.find('.file_kjz_delete').on('click', function () {
+                               delete files_kjz[index]; //删除对应的文件
+                               tr.remove();
+                               upload_kjz_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                           })
+
+                       });
+                       {#done: function(res, index, upload){#}
+                       {#    console.log("res=",res)#}
+                   }
+               })
+       })
+
+   }
+
+   {#操作实现#}
    {#查看按钮div悬浮框的取消按钮#}
    $(document).on("click","#close_delete",function() {
-        $('.box').css('display','none');
+        $("#look_modal_div").modal('hide')
         return false;
     });
+   {#查看按钮div悬浮框的修改按钮#}
+    $(document).on("click",".open_update",function () {
+        let ac_id = $(this).attr("id")
+        ac_id = ac_id.split('upd_two')
+        ac_id = ac_id.pop()
+        {#将id传给需要提交的内容#}
+        new_ac_id = ac_id
+        let ac_type = acquire_div_update_type[ac_id]
+        $("#look_modal_div").modal('hide')
+        if(ac_type=='年度'){
+           $("#update_ndreport_modal_div").modal('show')
+           up_type = '年度'
+           mutifiles_nd()
+           return false;
+       }
+       else{
+           $("#update_kjzreport_modal_div").modal('show')
+           up_type = '科技周'
+           mutifiles_kjz()
+           return false;
+       }
+       return false;
+    });
+   {#查看按钮div悬浮框的删除按钮打开模式框#}
+    $(document).on("click",".open_del",function () {
+        $("#del_modal_div_sure").attr("data-id",del)
+        $("#del_modal_div").modal('show')
+    });
+   {#查看按钮div悬浮框的模式框确认后实现删除操作#}
+    $(document).on("click","#del_modal_div_sure",function () {
+        let del_id = $(this).attr("data-id")
+        $.ajax({
+            type: 'GET',
+            url: './deleterecord',
+            data: {'id': del_id},
+            dataType: 'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success: function (result) {
+                console.log('result', result)
+                $("#look_modal_div").modal('hide')
+                {#刷新页面#}
+                init();
+                Toast_del(result.status);
+
+            }
+        })
+
+    });
+
    {#实现修改按钮#}
    $(document).on("click",".btn-warning",function () {
        let ac_id = $(this).attr("id")
@@ -697,68 +924,124 @@ $(document).ready(function () {
        new_ac_id =  ac_id.split('update')
        new_ac_id = new_ac_id.pop()
        if(ac_type=='年度'){
-           $('.update_ndreport').show();
-           return false;
-       }
+           $("#update_ndreport_modal_div").modal('show')
+           up_type = '年度'
+           mutifiles_nd()
+           return false
+
+        }
        else{
-           $('.update_kjzreport').show();
-           return false;
+           $("#update_kjzreport_modal_div").modal('show')
+           up_type = '科技周'
+           mutifiles_kjz()
+           return false
        }
    });
    {#修改按钮div悬浮框的关闭窗口按钮#}
    $(document).on("click","#del_window_nd",function () {
-       $('.update_ndreport').css('display','none');
+       $("#update_ndreport_modal_div").modal('hide')
+       {#$('#VIEWList_nd').empty()#}
+       $("#name_nd").val("")
        return false;
    });
    $(document).on("click","#del_window_kjz",function () {
-       $('.update_kjzreport').css('display','none');
+       $("#update_kjzreport_modal_div").modal('hide')
+       {#Flush_kjz()#}
+       {#$('#VIEWList_kjz').empty()#}
+       $("#name_kjz").val("")
        return false;
    })
-{# 修改按钮向后盾传入修改数据#}
-    $("#update_nd").submit(function(){
-        let name = $('#name_nd').val();
+
+  {# 修改按钮div悬浮框向后端传入修改数据#}
+  {#  $("#update_nd").submit(function(){#}
+  {#      let name = $('#name_nd').val();#}
+  {#      let str_url='./updaterecord?name='+name+'&id='+new_ac_id;#}
+        {#定义一个formData对象，FormData类中上传表单#}
+  {#      var formData = new FormData($("#update_nd")[0]);#}
+  {#      $.ajax({#}
+  {#          type: "POST",#}
+  {#          data: formData,#}
+  {#          url: str_url,#}
+  {#          contentType: false,#}
+  {#          processData: false,#}
+  {#          success: function (result) {#}
+  {#              console.log("result=", result);#}
+  {#              Flush_nd();#}
+                {#$('.update_ndreport').css('display', 'none');#}
+  {#              $("#update_ndreport_modal_div").modal('hide');#}
+  {#              Toast(result.status);#}
+  {#          }#}
+  {#      })#}
+  {#      return false;#}
+  {#  });#}
+  {#  $("#update_kjz").submit(function(){#}
+  {#      let name = $('#name_kjz').val();#}
         {#s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type#}
-        str_url='./updaterecord?name='+name+'&id='+new_ac_id;
+  {#      str_url='./updaterecord?name='+name+'&id='+new_ac_id;#}
         {#str_url='./bmsystrain?id='+3;#}
         {#定义一个formData对象，FormData类中上传表单#}
-        var formData = new FormData($("#update")[0]);
-        $.ajax({
-            type: "POST",
-            data: formData,
-            url: str_url,
-            contentType: false,
-            processData: false,
-            success:function(result){
-                console.log("result=",result);
-                Flush();
-                $('.update_ndreport').css('display','none');
-                Toast(result.status);
-           }
-        });
-        return false;
+  {#      var formData = new FormData($("#update_kjz")[0]);#}
+  {#      $.ajax({#}
+  {#          type: "POST",#}
+  {#          data: formData,#}
+  {#          url: str_url,#}
+  {#          contentType: false,#}
+  {#          processData: false,#}
+  {#          success: function (result) {#}
+  {#              console.log("result=", result);#}
+  {#              Flush_kjz();#}
+                {#$('.update_kjzreport').css('display', 'none');#}
+  {#              $("#update_kjzreport_modal_div").modal('hide')#}
+  {#              Toast(result.status);#}
+  {#          }#}
+  {#      })#}
+  {#      return false;#}
+  {#  });#}
+  {##}
+
+  {#实现删除按钮的模式框打开操作#}
+    $(document).on("click",".btn-danger",function () {
+        let del_id = $(this).attr("id")
+        del_id = del_id.split("del")
+        del_id = del_id.pop()
+        $("#del_modal_list_sure").attr("data-id",del_id)
+        $("#del_modal_list").modal('show')
     });
-    function Flush(){
-        $('#name').val('');
-        $('#exampleInputFilePDF').val('');
-        $('#exampleInputFileWord').val('');
-        $('#exampleInputFileImage').val('');
-    }
-    function Toast(status){
-        if(status==true){
-            msg="修改成功！";
-        }else{
-            msg="修改失败！";
+  {#模式框确认删除后删除该内容#}
+  $(document).on("click","#del_modal_list_sure",function () {
+      let del_id = $(this).attr("data-id")
+      $.ajax({
+          type: 'GET',
+          url: './deleterecord',
+          data: {'id': del_id},
+          dataType: 'json',
+          async: false,
+          cache: false,
+          contentType: 'application/json',
+          success: function (result) {
+              console.log('result', result)
+              {#刷新页面#}
+              init();
+              Toast_del(result.status);
+
+          }
+      })
+
+  });
+  function Toast_del(status) {
+        if (status == true) {
+            msg = "删除成功！";
+        } else {
+            msg = "删除失败！";
         }
         {#创建一个div，显示msg，显示后再移除该div#}
-        $(document).ready(function(){
-            setTimeout(function(){
+        $(document).ready(function () {
+            setTimeout(function () {
                 alert(msg)
-            },2000)
-      });
-
+            }, 2000)
+        });
     }
+    });
 
-
-})
 </script>
 </body>

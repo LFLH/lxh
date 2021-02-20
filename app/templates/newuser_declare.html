@@ -54,7 +54,7 @@
             <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
-                    <li><a href="#" style="color: whitesmoke">欢迎：{{ name }}</a></li>
+                    <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: whitesmoke;padding-left: 15px">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu" style="margin-top: 12px;right: -30px;left: unset;">
@@ -124,6 +124,7 @@
 <script>
     $(function () {
         var form = new FormData();
+        var files={};
         //获取当前时间
         function fileTime(){
             function getNow(s) {
@@ -153,8 +154,8 @@
                 auto: false,
                 {#bindAction: '#testListAction',#}
                 choose: function (obj) {
-                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                    form.append("files", files);//保存每一个文件
+                    files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    //form.append("files", files);//保存每一个文件
                     var file_time = fileTime();//获取上传文件的时间
                     //读取本地文件
                     obj.preview(function (index, file, result) {
@@ -183,6 +184,10 @@
         //文件上传
         $("#testListAction").on("click", function () {
             {#console.log(form);#}
+
+            for(let k in files){
+                form.append("files",files[k]);
+            }
             var len = 0;
             form.forEach((value, key) => {
              console.log("key %s: value %s", key, value);
