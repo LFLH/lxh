@@ -111,6 +111,48 @@ def detailtrain():
           'begintime': str(train.begintime), 'endtime': str(train.endtime), 'main': train.main, 'user': user}
     return Response(json.dumps(da), mimetype='application/json')
 
+#详细培训任务页的条件检索
+def tjsearchdetailtrain(id,username,name,status):
+    if username!=None:
+        s1=(User.username.contains(username))
+    else:
+        s1=True
+    if name!=None:
+        s2=(User.name.contains(name))
+    else:
+        s2=True
+    if status is None:
+        s3=True
+    else:
+        status=int(status)
+        s3=(UTrain.type==status)
+    utrain=UTrain.query.join(User).join(TUT).join(Train).filter(and_(s1,s2,s3,Train.id==id)).all()
+    return utrain
+
+#详细培训任务页的列表展示
+@main.route('/detailtrainsearch',methods=['GET','POST'])
+def detailtrainsearch():
+    if request.method == "GET":
+        id=request.args.get('id')#培训id
+        #检索条件
+        username=request.args.get('username')#账户
+        name=request.args.get('name')#用户名
+        status=request.args.get('status')#状态
+    else:
+        id = request.form.get('id')  # 培训id
+        # 检索条件
+        username = request.form.get('username')  # 账户
+        name = request.form.get('name')  # 用户名
+        status = request.form.get('status')  # 状态
+    utrain=tjsearchdetailtrain(id,username,name,status)
+    user = []
+    for ut in utrain:
+        userud = User.query.filter(User.id == ut.userid).all()[0]
+        # 用户名，申请时间，申请状态
+        user.append({'username': userud.name, 'uptime': str(ut.uptime), 'status': ut.type})
+    da = {'user': user}
+    return Response(json.dumps(da), mimetype='application/json')
+
 #修改培训任务
 @main.route('/updatetrain',methods=['GET','POST'])
 def updatetrain():

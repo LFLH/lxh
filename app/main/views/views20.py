@@ -106,7 +106,7 @@ def detailrecord():
         dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
         filedata[datai.type].append(dataz)
     # 返回报告名、报告类型、视频、图片、pdf、word
-    da = {'name': record.name, 'type': record.type, 'year': record.year,
+    da = {'username':user.username,'name': record.name, 'type': record.type, 'year': record.year,
           'video': filedata['video'], 'image': filedata['image'], 'pdf': filedata['pdf'],'word': filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')
 
@@ -223,13 +223,14 @@ def detailuserrecord():
         #id = request.json.get('id')
         id = request.form.get('id')
     record = Record.query.filter(Record.id == id).all()[0]
+    user=User.query.filter(User.id==record.userid).all()[0]
     data = record.datas
     filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
         dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
         filedata[datai.type].append(dataz)
     # 返回报告名、报告类型、视频、图片、pdf、word
-    da = {'name': record.name, 'type': record.type, 'year': record.year,
+    da = {'username':user.username,'name': record.name, 'type': record.type, 'year': record.year,
           'video': filedata['video'], 'image': filedata['image'], 'pdf': filedata['pdf'], 'word': filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')
 
