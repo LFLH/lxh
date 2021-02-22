@@ -14,6 +14,71 @@ def after_request(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
 
+#条件检索活动
+def tsactivity(name,type,status,page,per_page):
+    if name!=None:
+        s1=(Activity.name==name)
+    else:
+        s1=True
+    if type!=None:
+        s2=(Activity.type==type)
+    else:
+        s2=True
+    if status!=None:
+        status=int(status)
+        if status<10:
+            s3=(Activity.status==status)
+        else:
+            k=status-10
+            s3=and_(Activity.status==k,User.checked!=1)
+    else:
+        s3=True
+    #activity=Activity.query.join(User).filter(and_(s1,s2,s3,Activity.typeuser=='系统')).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    activity=Activity.query.join(User).filter(and_(s1,s2,s3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    return activity
+
+#列表显示活动
+@main.route('/searchactivity',methods=['GET', 'POST'])
+def searchactivity():
+    if request.method == "GET":
+        page = request.args.get('page')#当前页
+        per_page=request.args.get('per_page')#平均页数
+        #检索条件
+        name=request.args.get('name')#活动名
+        type=request.args.get('type')#活动类型
+        status=request.args.get('status')#状态
+    else:
+        page = request.form.get('page')
+        per_page = request.form.get('per_page')
+        # 检索条件
+        name = request.form.get('name')  # 活动名
+        type = request.form.get('type')  # 活动类型
+        status = request.form.get('status')  # 状态
+    page = int(page)
+    per_page = int(per_page)
+    #获取未删除活动倒叙
+    activity=tsactivity(name,type,status,page,per_page)
+    #activity = Activity.query.order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    items = activity.items
+    item = []
+    count = (int(page) - 1) * int(per_page)
+    for i in range(len(items)):
+        if items[i].typeuser=='自主':
+            user=User.query.filter(User.id==items[i].userid).all()[0]
+            if user.checked==1:
+                status=items[i].status
+            else:
+                status=10+items[i].status
+        else:
+            status=items[i].status
+        #number，活动id号，活动名，活动类别，活动类型，开始时间，结束时间，状态（0创建，1驳回，2通过，3删除，10+0，1，2，3因用户考核被删除的记录）
+        itemss = {'number': count + i + 1, 'id': items[i].id, 'activityname': items[i].name, 'typeuser':items[i].typeuser,'type': items[i].type,
+                  'begintime': str(items[i].begintime), "endtime": str(items[i].endtime),'status':status}
+        item.append(itemss)
+    #返回总页数、活动总数、当前页、活动集合
+    data = {'zpage': activity.pages, 'total': activity.total, 'dpage': activity.page, 'item': item}
+    return Response(json.dumps(data), mimetype='application/json')
+
 #添加系统活动
 @main.route('/addsysactivity', methods=['GET', 'POST'])
 def addsysactivity():
@@ -68,6 +133,7 @@ def tsactivity1(name,type,status,page,per_page):
     else:
         s3=True
     activity=Activity.query.join(User).filter(and_(s1,s2,s3,Activity.typeuser=='系统')).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    #activity=Activity.query.join(User).filter(and_(s1,s2,s3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     return activity
 
 #列表显示系统活动

@@ -71,7 +71,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%;">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
@@ -273,8 +273,8 @@
                             result.a.wa=0
                         }
                     pieOption.series[0].data = [
-                        {value: result.a.ya/10, name: '已提交'},
-                        {value: result.a.wa/10, name: '未提交'}
+                        {value: result.a.ya, name: '已提交'},
+                        {value: result.a.wa, name: '未提交'}
                     ]
                     // pieOption.series[0].label.normal.formatter = '({d}%)',
                containerPieChart.setOption(pieOption);

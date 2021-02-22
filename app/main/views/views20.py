@@ -79,26 +79,12 @@ def searchrecord():
         if user.checked==1:
             if items[i].year==datetime.datetime.now().year:
                 status=items[i].status#1通过0未通过
-                if(items[i].status == 0):
-                    status_show = "未通过"
-                else:
-                    status_show = "已通过"
             else:
                 status = 10+items[i].status  # 过去报告1通过0未通过
-                if(items[i].status == 0):
-                    status_show = "以往报告且未通过"
-                else:
-                    status_show = "以往报告已通过"
-
         else:
             status = 20 + items[i].status  # 用户考核未过报告1通过0未通过
-            if(items[i].status == 0):
-                status_show = "考核报告未通过"
-            else:
-                status_show = "考核报告已通过"
-
         itemss = {'number': count + i + 1, 'id': items[i].id, 'recordname': items[i].name,'year':items[i].year,'type':items[i].type,
-                  'username':user.username, 'status': status,'status_show':status_show}
+                  'username':user.username, 'status': status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、活动集合
     data = {'zpage': record.pages, 'total': record.total, 'dpage': record.page, 'item': item}
@@ -114,15 +100,13 @@ def detailrecord():
         #id = request.json.get('id')
         id = request.form.get('id')
     record =Record.query.filter(Record.id == id).all()[0]
-    # 查找用户
-    user = User.query.filter(record.userid == User.id).all()[0]
     data=record.datas
     filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
         dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
         filedata[datai.type].append(dataz)
     # 返回报告名、报告类型、视频、图片、pdf、word
-    da = {'name': record.name, 'type': record.type, 'year': record.year,'username':user.username,
+    da = {'username':user.username,'name': record.name, 'type': record.type, 'year': record.year,
           'video': filedata['video'], 'image': filedata['image'], 'pdf': filedata['pdf'],'word': filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')
 
@@ -217,25 +201,13 @@ def showrecord():
         if user.checked == 1:
             if items[i].year == datetime.datetime.now().year:
                 status = items[i].status  # 1通过0未通过
-                if (items[i].status == 0):
-                    status_show = "未通过"
-                else:
-                    status_show = "已通过"
             else:
                 status = 10 + items[i].status  # 过去报告1通过0未通过
-                if (items[i].status == 0):
-                    status_show = "以往报告且未通过"
-                else:
-                    status_show = "以往报告已通过"
         else:
             status = 20 + items[i].status  # 用户考核未过报告1通过0未通过
-            if (items[i].status == 0):
-                status_show = "考核报告未通过"
-            else:
-                status_show = "考核报告已通过"
         itemss = {'number': count + i + 1, 'id': items[i].id, 'recordname': items[i].name, 'year': items[i].year,
                   'type': items[i].type,
-                  'username': user.username, 'status': status,"status_show":status_show}
+                  'username': user.username, 'status': status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、活动集合
     data = {'zpage': record.pages, 'total': record.total, 'dpage': record.page, 'item': item}
@@ -251,13 +223,14 @@ def detailuserrecord():
         #id = request.json.get('id')
         id = request.form.get('id')
     record = Record.query.filter(Record.id == id).all()[0]
+    user=User.query.filter(User.id==record.userid).all()[0]
     data = record.datas
     filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
         dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
         filedata[datai.type].append(dataz)
     # 返回报告名、报告类型、视频、图片、pdf、word
-    da = {'name': record.name, 'type': record.type, 'year': record.year,
+    da = {'username':user.username,'name': record.name, 'type': record.type, 'year': record.year,
           'video': filedata['video'], 'image': filedata['image'], 'pdf': filedata['pdf'], 'word': filedata['word']}
     return Response(json.dumps(da), mimetype='application/json')
 

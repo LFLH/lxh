@@ -249,6 +249,7 @@ def updateactivity():
         activity.endtime=endtime
     if main!=None:
         activity.main=main
+    activity.status=0
     activity.updatetime = datetime.datetime.now()
     # 移除活动中的文件
     datas = activity.datas
