@@ -14,22 +14,22 @@ def after_request(response):
     return response
 
 #条件检索
-#添加模糊查询
 def tsdeclare(name,createtime,begintime,endtime,status,page,per_page):
     if name!=None:
+        #s1=(Declare.name==name)
         s1=(Declare.name.contains(name))
     else:
         s1=True
     if createtime!=None:
-        s2=(Declare.createtime.ilike('%'+createtime+'%'))
+        s2=(Declare.createtime==createtime)
     else:
         s2=True
     if begintime!=None:
-        s3=(Declare.begintime.ilike('%'+begintime+'%'))
+        s3=(Declare.begintime==begintime)
     else:
         s3=True
     if endtime!=None:
-        s4=(Declare.endtime.ilike('%'+endtime+'%'))
+        s4=(Declare.endtime==endtime)
     else:
         s4=True
     if status is None:
@@ -156,8 +156,10 @@ def updatedeclare():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    # begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    # endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    if begintime!=None:
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+    if endtime!=None:
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
     declare = Declare.query.filter(Declare.id == id).all()[0]
      # chatime =datetime.datetime.now()-declare.endtime
     # chatime=chatime.days
@@ -168,11 +170,14 @@ def updatedeclare():
         return Response(json.dumps({'status': False}), mimetype='application/json')
     #修改申报信息
     else:
-        edtime=declare.endtime
-        declare.name=name
-        declare.begintime=begintime
-        declare.endtime=endtime
-        declare.main=main
+        if name!=None:
+            declare.name=name
+        if begintime!=None:
+            declare.begintime=begintime
+        if endtime!=None:
+            declare.endtime=endtime
+        if main!=None:
+            declare.main=main
         db.session.add(declare)
         db.session.commit()
         # 设置新用户提交时间
@@ -182,7 +187,6 @@ def updatedeclare():
             db.session.add(user[i])
             db.session.commit()
         return Response(json.dumps({'status': True}), mimetype='application/json')
-
 
 #删除申报任务
 @main.route('/deletedeclare',methods=['GET','POST'])

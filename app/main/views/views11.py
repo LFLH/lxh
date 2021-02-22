@@ -3,7 +3,7 @@ from flask import request,jsonify,session,redirect,Response
 from app.main import main
 from app.models.models import User,Activity,AD,Data,Declare,UDeclare,Train,UTrain,Score,System,DUDC,DU,TUT,Record
 from app import db
-import json,datetime,random,string,os
+import json,datetime,random,string,os,time
 from sqlalchemy import or_,and_
 from werkzeug.utils import secure_filename
 
@@ -19,38 +19,16 @@ def after_request(response):
 def getnewuserdeclare():
     user=session.get('user')
     userid=user['userid']
-    # user=User.query.join(UDeclare).filter(User.id==userid).all()[0]
-    user = User.query.filter(User.id == userid).all()[0]
-    #判断是否有申报记录
-    udeclare_userid = db.session.query(UDeclare).filter(UDeclare.userid == userid).count()
-    print("userid:", userid)
-    print("udeclare_userid:",udeclare_userid)
+    user=User.query.filter(User.id==userid).all()[0]
+    udeclare=UDeclare.query.filter(UDeclare.userid==userid).order_by(-UDeclare.uptime).all()
     #区分初次申报和有申报记录的情况
     #有申报记录返回截止时间和状态
-    if (udeclare_userid!=0):
-        udeclare = UDeclare.query.filter(UDeclare.userid == userid).order_by(-UDeclare.uptime).all()[0]
-        # print("udeclare:", udeclare)
-        data = {'endtime': str(user.endtime), 'status': udeclare.type}
+    if len(udeclare)>0:
+        data={'endtime':str(user.endtime),'status':udeclare[0].type}
     #没有申报记录仅返回申报截止时间
     else:
-        data = {'endtime': str(user.endtime)}
+        data={'endtime':str(user.endtime)}
     return Response(json.dumps(data), mimetype='application/json')
-
-#申报成功修改申报状态为等待审核
-@main.route('/changeStatus',methods=['GET', 'POST'])
-def changeStatus():
-    if request.method == "GET":
-        status = request.args.get('status')
-    else:
-        status = request.form.get('status')
-    user = session.get('user')
-    userid = user['userid']
-    udeclare = UDeclare.query.filter(UDeclare.userid == userid).all()[0]
-    # 修改申报状态
-    udeclare.type = status
-    db.session.add(udeclare)
-    db.session.commit()
-    return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #判断上传文件类型
 def panduan(ext):
@@ -199,14 +177,15 @@ def adduserdeclare():
         ext = filename.rsplit('.')
         ext = ext[len(ext) - 1].lower()  # 获取文件后缀
         type = panduan(ext)
-        new_filename = str(userid) + "_" + str(udeclare.id) + "_" + str(i + 1) + '.' + ext  # 修改了上传的文件名
+        timestamp = str(time.mktime(time.strptime(str(udeclare.uptime), "%Y-%m-%d %H:%M:%S")))
+        new_filename = str(user.username) + "_" + str(declare.name) +"_"+timestamp+ "_" + str(i + 1) + '.' + ext  # 修改了上传的文件名
         path=file_dir['declare'][declare.name][str(udeclare.id)][str(type)]#保存文件的目录
         file.save(os.path.join(path, new_filename))  # 保存文件到目录
         file_data=path+'/'+new_filename
         f=open(file_data,'wb')
         f.write(filedata[i])
         f.close()
-        data=Data(name=file.filename,type=type,path=path,newname=new_filename)
+        data=Data(name=file.filename,type=type,path=file_data,newname=new_filename)
         db.session.add(data)
         db.session.commit()
         udeclare.datas.append(data)

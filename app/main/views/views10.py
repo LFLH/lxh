@@ -32,7 +32,8 @@ def updatesystem():
         main = request.form.get('main')
     #修改系统信息
     system=System.query.filter(System.type==type).all()[0]
-    system.main=main
+    if main!=None:
+        system.main=main
     db.session.add(system)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')

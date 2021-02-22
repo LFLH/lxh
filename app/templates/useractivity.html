@@ -120,7 +120,30 @@
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">自主活动列表</h2>
-            <div class="table-responsive">
+            <div class="form-group" style="margin-top: 10px">
+                 <div class="input-group col-xs-12" style="float: right">
+                     <div class="input-group-btn">
+                        <select name="selectType" class="form-control" style="width: auto;" id="selectType">
+                            <option>活动类型</option>
+                            <option>会议</option>
+                        </select>
+                     </div>
+                     <div class="input-group-btn" style="padding-left: 10px">
+                        <select name="selectSta" class="form-control" style="width: auto;" id="selectSta">
+                            <option>状态</option>
+                            <option>审核中</option>
+                            <option>通过</option>
+                            <option>驳回</option>
+                        </select>
+                     </div>
+                     <input type="text" name="activityName" id="activityName" class="form-control" style="margin-left: 7px" placeholder="请输入活动名">
+                     <span class="input-group-btn">
+                         <button class="btn btn-outline-info" id="search" type="submit" style="margin-left: 7px">搜索</button>
+                     </span>
+                 </div>
+                 <br>
+            </div>
+            <div class="table-responsive" style="padding-top: 10px">
                 <table class="table table-bordered table-hover" id="mytable">
                     <thead>
                     <tr class="table-info">
@@ -289,6 +312,26 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 14px" id="chooseFile">选择文件</button>
+                            <br>
+                            <br>
+                            <label style="font-size: small;color: grey">（仅支持doc、docx、pdf、mp4、mp3 和 jpg格式的文件）</label>
+                            <div class="layui-upload-list col-md-11">
+                                <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                                    <thead style="text-align: center">
+                                    <tr>
+                                        <th style="width: 45%">文件名</th>
+                                        <th style="width: 15%;text-align: center">大小</th>
+                                        <th style="width: 10%;text-align: center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="fileList"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="form-group">
                         <label for="editInputFileVedio" class="control-label">上传视频:</label>
                         <div class="col-sm-10" >
                             <a id="FileVedio" href=""></a>
@@ -323,12 +366,12 @@
                             <input type="file" multiple="" name="word" id="editInputFileWord"
                                    accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
                         </div>
-                    </div>
+                    </div>-->
                 </form>
             </div>
             <div class="modal-footer" id="save-foot">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" id="save">保存</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="save">保存</button>
             </div>
         </div>
     </div>
@@ -366,7 +409,7 @@
         var d_per_page = per_page
         // var idz = new Array(10);
         init();
-         function init(){
+        function init(){
             $.ajax({
             type: 'GET',
             url: './showactivity',
@@ -531,7 +574,9 @@
             });
         })
         // 修改活动
+        var files={};
         $("#mytable").on("click", ".user-active-modify", function () {
+            console.log(11,$(this).data('id'))
             var status = $(this).parent().parent().find("td").eq(5).text()
             if (status=='审核中'){
                 alert('该活动已在审核中')
@@ -552,52 +597,76 @@
                         $("#editModal").find("#editbegintime").attr('value',data.begintime.split(' ')[0])
                         $("#editModal").find("#editendtime").attr('value',data.endtime.split(' ')[0])
                         $("#editModal").find("#editcontent").val(data.main)
+
+                        var count=0;
+                        var str = '';
                         var videoStr = ''
                         if(data.video.length >0){
                             for(var i=0;i<data.video.length;i++){
                                 videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
+                                str += "<tr><td>" + videoStr +
+                                "</td><td>" + "<button data-id='"+ count+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete'>删除</button> " +"</tr>";
+                                console.log('data-id',count)
+                                count++;
                             }
-                            $("#editModal").find("#FileVedio").html(videoStr)
+                            // $("#editModal").find("#FileVedio").append(videoStr)
                         }else {
-                            $("#editModal").find("#FileVedio").html(videoStr)
+                            // $("#editModal").find("#FileVedio").append(videoStr)
                         }
                         var audioStr = ''
                         if(data.music.length >0){
                             for(var i=0;i<data.music.length;i++){
                                 audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
+                                str += "<tr><td>" + audioStr +
+                                "</td><td>" + "<button data-id='"+ count+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete'>删除</button> " +"</tr>";
+                                console.log('data-id',count)
+                                count++;
                             }
-                            $("#editModal").find("#FileAudio").html(audioStr)
+                            // $("#editModal").find("#FileAudio").html(audioStr)
                         }else {
-                            $("#editModal").find("#FileAudio").html(audioStr)
+                            // $("#editModal").find("#FileAudio").html(audioStr)
                         }
                         var imageStr = ''
                         if(data.music.length >0){
                             for(var i=0;i<data.image.length;i++){
                                 imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
+                                str += "<tr><td>" + imageStr +
+                                "</td><td>" + "<button data-id='"+ count+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete'>删除</button> " +"</tr>";
+                                console.log('data-id',count)
+                                count++;
                             }
-                            $("#editModal").find("#FileImage").html(imageStr)
+                            // $("#editModal").find("#FileImage").html(imageStr)
                         }else {
-                            $("#editModal").find("#FileImage").html(imageStr)
+                            // $("#editModal").find("#FileImage").html(imageStr)
                         }
                         var pdfStr = ''
                         if(data.pdf.length >0){
                             for(var i=0;i<data.pdf.length;i++){
                                 pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
+                                str += "<tr><td>" + pdfStr +
+                                "</td><td>" + "<button data-id='"+ count+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete'>删除</button> " +"</tr>";
+                                console.log('data-id',count)
+                                count++;
                             }
-                            $("#editModal").find("#FilePDF").html(pdfStr)
+                            // $("#editModal").find("#FilePDF").html(pdfStr)
                         }else {
-                            $("#editModal").find("#FilePDF").html(pdfStr)
+                            // $("#editModal").find("#FilePDF").html(pdfStr)
                         }
                         var wordStr = ''
                         if(data.word.length >0){
                             for(var i=0;i<data.pdf.length;i++){
                                 wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
+                                str += "<tr><td>" + wordStr +
+                                "</td><td>" + "<button data-id='"+ count+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete'>删除</button> " +"</tr>";
+                                console.log('data-id',count)
+                                count++;
                             }
-                            $("#editModal").find("#FileWord").html(wordStr)
+                            // $("#editModal").find("#FileWord").html(wordStr)
                             // $("#editModal").find("#FileWord").prepend(wordStr)
                         }else {
-                            $("#editModal").find("#FileWord").html(wordStr)
+                            // $("#editModal").find("#FileWord").html(wordStr)
                         }
+                        $("#fileList").html(str);
                         // $("#editModal").find("#FileVedio").text(data.video[0].name)
                         // $("#editModal").find("#FileVedio").attr('href',data.video[0].path)
                         // $("#editModal").find("#FileAudio").text(data.music[0].name)
@@ -612,9 +681,92 @@
                         $("#editModal").modal('show')
                     }
                 });
-                $("#save").click(function() {
-                    console.log(1111)
-                    var id = $(this).data("id");
+                $(function () {
+                    var formData = new FormData();
+
+                    layui.use('upload', function () {
+                    var $ = layui.jquery,
+                        upload = layui.upload;
+                    //多文件列表示例
+                    var fileListView = $('#fileList'),
+                        uploadListIns = upload.render({
+                            elem: '#chooseFile',
+                            accept: 'file',
+                            exts: 'doc|docx|pdf|jpg|mp3|mp4',
+                            multiple: true,
+                            auto: false,
+                            choose: function (obj) {
+                                files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                                // formData.append("files", files);//保存每一个文件
+                                //读取本地文件
+                                obj.preview(function (index, file, result) {
+                                    var tr = $(['<tr id="upload-' + index + '">'
+                                        , '<td style="width: 65%">' + file.name + '</td>'
+                                        , '<td style="width: 10%">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                        , '<td style="width: 10%">'
+                                        , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                        , '</td>'
+                                        , '</tr>'].join(''));
+                                    console.log(index)
+                                    //删除
+                                    tr.find('.demo-delete').on('click', function () {
+                                        delete files[index]; //删除对应的文件
+                                        tr.remove();
+                                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                    });
+                                    fileListView.append(tr);
+                                });
+                            },
+                        })
+                    });
+                    //提交
+                    $("#save").on("click", function () {
+                        console.log(formData);
+                        for(let k in files){
+                            formData.append("files",files[k]);
+                        }
+                        var len = 0;
+                        formData.forEach((value, key) => {
+                        console.log("key %s: value %s", key, value);
+                        len = key.length;
+                        });
+                        console.log(len);
+                        if(len==0){
+                            layer.msg("未选择文件！", {icon: 5});
+                        }else{
+                            var id = $(this).data("id");
+                            let name = $('#editname').val();
+                            let begintime = $('#editbegintime').val();
+                            let endtime = $('#editendtime').val();
+                            let main = $('#editcontent').val();
+                            let type = $('#edittype').val();
+                            s='./updateactivity?id='+id+'&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
+                            layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+                            $.ajax({
+                                url: s,
+                                type: "POST",
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                success: function (result) {
+                                    console.log(result);
+                                    if (result.code == 200) {
+                                        layer.msg("上传成功！", {icon: 6});
+                                        setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
+                                    } else if (result.code == 500) {
+                                        layer.msg(result.msg, {icon: 5});
+                                        setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
+                                    }
+                                    init();
+                                }
+                            })
+                        }
+                    });
+                })
+                /*$("#save").unbind('click').click(function() {
+                    var id = $("#save").attr("data-id");
+                    // var id = $(this).data("id");
+                    console.log(1111,id)
                     let name = $('#editname').val();
                     let begintime = $('#editbegintime').val();
                     let endtime = $('#editendtime').val();
@@ -637,11 +789,6 @@
                         });
                 })
                 function Flush(){
-                    $('#editname').val('');
-                    $('#editbegintime').val('');
-                    $('#editendtime').val('');
-                    $('#editcontent').val('');
-                    $('#edittype').val('');
                     $('#editInputFileVedio').val('');
                     $('#editInputFileAudio').val('');
                     $('#editInputFileImage').val('');
@@ -664,21 +811,15 @@
                     m.style.opacity = '0';
                     setTimeout(function() { document.body.removeChild(m) }, d * 1000);
                 });
-            };
+            };*/
             }
-
-            // $.ajax({
-            //     type:'GET',
-            //     url:'./updateactivity',
-            //     data:{},
-            //     dataType:'json',
-            //     async: false,
-            //     cache: false,
-            //     contentType: 'application/json',
-            //     success:function(data){
-            //         $("#showModal").modal('show')
-            //     }
-            // });
+        })
+        //删除文件
+        $("#fileList").on("click", ".demo-delete", function () {
+            var id = $(this).data("id");
+            console.log(id)
+            $(this).parent().parent().remove();
+            delete files[id]
         })
         $("#page-li").on("click", "#prev", function () {
             if (dpage == 1) {
@@ -858,6 +999,88 @@
                         // }
                     }
                 });
+        })
+        // 条件检索
+        $("#search").on('click', function () {
+            if (document.getElementById('activityName').value){
+                var name = document.getElementById('activityName').value
+            }
+            if (document.getElementById('selectType').value!='活动类型'){
+                var type = document.getElementById('selectType').value
+            }
+            switch (document.getElementById('selectSta').value)
+            {
+                case '审核中':
+                    var status = 0;
+                    break;
+                case '驳回':
+                    var status = 1;
+                    break;
+                case '通过':
+                    var status = 2;
+                    break;
+            }
+            $.ajax({
+                type: 'GET',
+                url: './showactivity',
+                data:{
+                    page:dpage,
+                    per_page:per_page,
+                    name:name,
+                    type:type,
+                    status:status
+                },
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success: function (data) {
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str = ""
+                    for (let index = 0; index < data.item.length; index++) {
+                        switch(data.item[index].status) {
+                                 case 0:
+                                    var sta = '审核中';
+                                    break;
+                                 case 1:
+                                    var sta = '驳回';
+                                    break;
+                                 case 2:
+                                    var sta = '通过';
+                                    break;
+                                }
+                        str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].activityname +
+                            "</td><td>" + data.item[index].type +
+                            "</td><td>" + data.item[index].begintime +
+                            "</td><td>" + data.item[index].endtime +
+                            "</td><td>" + sta +
+                            "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
+                            "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button> " +
+                            "<button data-toggle='modal' class='btn btn-danger btn-sm user-active-delete' data-id='" + data.item[index].id + "'>删除</button>" + "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    let strli = "<li class='page-item'><a class='page-link' href='#' id='prev'>前一页</a></li>"
+                    strli += "<li class='page-item'><a id=li" + 1 + " href='#' class='page-link page-num'>" + 1 + "</a></li>"
+                    for (let index = 2; index <= pages; index++) {
+                        strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link page-num'>" + index + "</a></li>"
+                    }
+                    strli += "<li class='page-item'><a class='page-link' href='#' id='next'>后一页</a></li>"
+                    $("#page-li").html(strli);
+                    let s = "#li" + dpage
+                    $(s).css("border-color", "blue");
+                    if (dpage < pages) {
+                        let r = dpage + 1
+                        let rs = "#li" + r
+                        $(rs).css("border-left-color", "blue");
+                    } else {
+                        $("#next").css("border-left-color", "blue");
+                    }
+                }
+            });
         })
     });
 </script>

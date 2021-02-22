@@ -205,6 +205,8 @@
                     contentType: false,
                     processData: false,
                     success: function (result) {
+                        //关闭加载层
+                        layer.closeAll('loading'); 
                         console.log(result);
                         if (result.code == 200) {
                             layer.msg("上传成功！", {icon: 6});

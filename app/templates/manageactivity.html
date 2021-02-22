@@ -86,6 +86,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('main.manageactivityadd')}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                              活动发布
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{url_for('main.manageactivity')}}">
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                               活动管理
@@ -146,10 +152,42 @@
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">活动列表</h2>
-            <button type="button" class="layui-btn layui-btn-normal" data-toggle="modal"
-                    data-target="#addModal" style="height: 30px; margin-top: 10px;padding: 0px 17px;line-height: 30px">添加</button>
-<!--            <form>-->
-            <div class="table-responsive", style="padding-top: 10px">
+            <!--<button type="button" class="layui-btn layui-btn-normal" data-toggle="modal"
+                    data-target="#addModal" style="height: 30px; margin-top: 10px;padding: 0px 17px;line-height: 30px">添加</button>-->
+            <div class="form-group" style="margin-top: 10px">
+                 <div class="input-group col-xs-12" style="float: right">
+                     <div class="input-group-btn">
+                        <select name="selectTypeuser" class="form-control" style="width: auto;" id="selectTypeuser">
+                            <option>活动类别</option>
+                            <option>自主</option>
+                            <option>系统</option>
+                        </select>
+                     </div>
+                     <div class="input-group-btn" style="padding-left: 10px">
+                        <select name="selectType" class="form-control" style="width: auto;" id="selectType">
+                            <option>活动类型</option>
+                            <option>会议</option>
+                            <option>交流</option>
+                            <option>培训</option>
+                        </select>
+                     </div>
+                     <div class="input-group-btn" style="padding-left: 10px">
+                        <select name="selectStatus" class="form-control" style="width: auto;" id="selectStatus">
+                            <option>活动状态</option>
+                            <option>审核中</option>
+                            <option>通过</option>
+                            <option>驳回</option>
+                            <option>取消</option>
+                        </select>
+                     </div>
+                     <input type="text" name="selectName" id="selectName" class="form-control" style="margin-left: 7px" placeholder="请输入活动名">
+                     <span class="input-group-btn">
+                         <button class="btn btn-outline-info" id="search" type="submit" style="margin-left: 7px">搜索</button>
+                     </span>
+                 </div>
+                 <br>
+            </div>
+            <div class="table-responsive" style="padding-top: 10px">
                 <table class="table table-bordered table-hover" id="mytable">
                     <thead>
                         <tr>
@@ -187,7 +225,6 @@
                     </ul>
                 </nav>
             </div>
-<!--            </form>-->
         </div>
     </div>
 </div>
@@ -377,9 +414,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="attenduser" class="col-sm-3 control-label">参加用户:</label>
+                    <label for="attenduser" class="col-sm-3 control-label">报名用户:</label>
                     <div class="col-md-7" style="padding: 3px 0 0 20px;">
                         <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="attenduser" disabled></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signuser" class="col-sm-3 control-label">签到用户:</label>
+                    <div class="col-md-7" style="padding: 3px 0 0 20px;">
+                        <textarea cols="15" rows="5" aria-label="textarea" class="form-control" id="signuser" disabled></textarea>
                     </div>
                 </div>
         </div>
@@ -456,9 +499,9 @@
         </div>
         <div class="modal-body" id="sign-body" name="sign">
             <form>
-            全部<input type="checkbox" id="selectAll"/>
-            音乐<input type="checkbox" value=""/> <br>
-            代码<input type="checkbox" value=""/>
+            全部<input type="checkbox" id="selectAll">
+<!--            音乐<input type="checkbox" value=""> <br>-->
+<!--            代码<input type="checkbox" value="">-->
                 </form>
         </div>
         <div class="modal-footer" id="sign-foot">
@@ -558,7 +601,7 @@
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
-                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + data.item[index].endtime.split(' ')[0] +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
@@ -572,7 +615,7 @@
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
-                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + data.item[index].endtime.split(' ')[0] +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
@@ -600,7 +643,7 @@
                                     "</td><td>" + data.item[index].typeuser +
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
-                                    "</td><td>" + data.item[index].endtime +
+                                    "</td><td>" + data.item[index].endtime.split(' ')[0] +
                                     "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
@@ -628,7 +671,7 @@
                 });
         }
         //确认添加按钮
-        $('#add').click(function (){
+        /*$('#add').click(function (){
             $.ajax({
                 url:'./addsysactivity',
                 type:'get',
@@ -647,7 +690,7 @@
                     init();
             }
             })
-        })
+        })*/
         //确认驳回按钮
         $("#refuse-foot").on('click', '.refuse', function () {
             var id = $(this).attr("id");
@@ -752,7 +795,7 @@
                                         "</td><td>" + data.item[index].type +
                                         "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + '通过' +
+                                        "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
                                         "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
@@ -765,7 +808,7 @@
                                         "</td><td>" + data.item[index].type +
                                         "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + '通过' +
+                                        "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
                                         "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
@@ -851,7 +894,7 @@
                                         "</td><td>" + data.item[index].type +
                                         "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + '通过' +
+                                        "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
                                         "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
@@ -864,7 +907,7 @@
                                         "</td><td>" + data.item[index].type +
                                         "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                         "</td><td>" + data.item[index].endtime +
-                                        "</td><td>" + '通过' +
+                                        "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                         "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
                                         "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
@@ -939,7 +982,7 @@
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + '通过' +
+                                    "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
                                     "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
@@ -953,7 +996,7 @@
                                     "</td><td>" + data.item[index].type +
                                     "</td><td>" + data.item[index].begintime.split(' ')[0] +
                                     "</td><td>" + data.item[index].endtime +
-                                    "</td><td>" + '通过' +
+                                    "</td><td>" + sta +
                                     "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
                                     "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
                                     "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
@@ -1051,12 +1094,13 @@
                         $("#showModal").find("#showstarttime").val(data.begintime)
                         $("#showModal").find("#showendtime").val(data.endtime)
                         $("#showModal").find("#showcontent").val(data.main)
-                        $("#showModal").find("#attenduser").val(data.user)
                         var videoStr = ''
                         if(data.video.length >0){
                             for(var i=0;i<data.video.length;i++){
                                 videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
                             }
+                            $("#showModal").find("#InputFileVedio").html(videoStr)
+                        }else {
                             $("#showModal").find("#InputFileVedio").html(videoStr)
                         }
                         var audioStr = ''
@@ -1064,6 +1108,8 @@
                             for(var i=0;i<data.music.length;i++){
                                 audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
                             }
+                            $("#showModal").find("#InputFileAudio").html(audioStr)
+                        }else {
                             $("#showModal").find("#InputFileAudio").html(audioStr)
                         }
                         // $("#showModal").find("#InputFileAudio").text(data.music[0].name)
@@ -1074,6 +1120,8 @@
                                 imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
                             }
                             $("#showModal").find("#InputFileImage").html(imageStr)
+                        }else {
+                            $("#showModal").find("#InputFileImage").html(imageStr)
                         }
                         // $("#showModal").find("#InputFileImage").text(data.image[0].name)
                         // $("#showModal").find("#InputFileImage").attr('href',data.image[0].path)
@@ -1083,6 +1131,8 @@
                                 pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
                             }
                             $("#showModal").find("#InputFilePDF").html(pdfStr)
+                        }else {
+                            $("#showModal").find("#InputFilePDF").html(pdfStr)
                         }
                         // $("#showModal").find("#InputFilePDF").text(data.pdf[0].name)
                         // $("#showModal").find("#InputFilePDF").attr('href',data.pdf[0].path)
@@ -1091,6 +1141,8 @@
                             for(var i=0;i<data.pdf.length;i++){
                                 wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
                             }
+                            $("#showModal").find("#InputFileWord").html(wordStr)
+                        }else {
                             $("#showModal").find("#InputFileWord").html(wordStr)
                         }
                         // $("#showModal").find("#InputFileWord").text(data.word[0].name)
@@ -1116,6 +1168,7 @@
                     $("#showModal2").find("#showendtime2").val(data.endtime)
                     $("#showModal2").find("#showcontent2").val(data.main)
                     $("#showModal2").find("#attenduser").val(data.user)
+                    $("#showModal2").find("#signuser").val(data.user2)
                     $("#export-foot").empty()
                     var strPass = '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
                       +'<button type="button" class="btn btn-success exportExcel" data-dismiss="modal" data-id="' + id + '">导出报名表</button>'
@@ -1129,10 +1182,12 @@
         // 修改活动
         $("#mytable").on("click", ".user-active-modify", function () {
             $("#save").attr("data-id",$(this).data('id'));
+            console.log($(this).data('id'))
+            var id= $(this).data('id')
             $.ajax({
                 type:'GET',
                 url:'./detailsysactivity',
-                data:{'id':$(this).data('id')},
+                data:{'id':id},
                 dataType:'json',
                 async: false,
                 cache: false,
@@ -1149,8 +1204,8 @@
                 }
             });
             $("#save").click(function() {
-                console.log(1111)
-                var id = $(this).data("id");
+                var id = $("#save").attr("data-id");
+                console.log(1111,id)
                 let name = $('#editname').val();
                 let stoptime = $('#editstoptime').val();
                 let begintime = $('#editbegintime').val();
@@ -1219,6 +1274,7 @@
         $("#mytable").on("click", ".user-active-sign", function () {
             $("#sign").attr("data-activityid",$(this).data('id'));
             var activityid = $(this).data('id');
+            console.log(activityid)
             s='./websignuser?activityid='+activityid
             $.ajax({
                 type:'get',
@@ -1229,44 +1285,14 @@
                 contentType: 'application/json',
                 success:function(data){
                     console.log('websignuser',data)
-                    var strSign = '<input type="checkbox" id="selectAll"/>全部 <br>'
+                    var strSign = '<input type="checkbox" id="selectAll">全部 <br>'
                         for(var i=0;i<data.userz.length;i++){
-                            strSign+= '<input type="checkbox" name="checkbox" class="userCheckbox" data-userid='+ data.userz[i].userid +'/>'+ data.userz[i].name+ '<br>'
+                            strSign+= '<input type="checkbox" name="checkbox" class="userCheckbox" data-userid='+ data.userz[i].userid +'>'+ data.userz[i].name+ '<br>'
                         }
                     $("#sign-body").html(strSign);
                     $("#signModal").modal('show')
                 }
             });
-            $("#sign").click(function() {
-                var checkeduser = [];
-                if($("input[name=checkbox]:checked").length<1){
-                    alert("请至少选择一个用户");
-                    return false
-                }
-                $("input[name=checkbox]:checked").each(function(i){
-                  checkeduser[i] = $(this).data("userid");
-                });
-                console.log(checkeduser,'id')
-                var activityid = $(this).data("activityid");
-                s='./websign?activityid='+activityid
-                $.ajax({
-                    type: "POST",
-                    url: s,
-                    data:{
-                        userz:checkeduser
-                    },
-                    contentType: false,
-                    processData: false,
-                    success:function(re){
-                        init();
-                        if (re.status==1){
-                            alert('签到成功')
-                        }else {
-                            alert('签到失败')
-                        }
-                    }
-                });
-            })
             $("#selectAll").click(function (){
                 //id=all是全选/反选的checkbox，判断是选中还是没选中
                 var isChecked=$("#selectAll").is(':checked');
@@ -1283,15 +1309,15 @@
                     });
                 }
             })
-            $("#sign-body").on('click', '.userCheckbox', function () {
+            $("#sign-body").off('click').on('click','.userCheckbox', function () {
                 var userid = $('.userCheckbox:checked').data('userid');
                 console.log(userid,11)
                 if (userid){
                     var all = true;
-                    var checkedArrs=$("input[type='checkbox']");
-                    console.log(checkedArrs)
-                    for(var i=1;i<checkedArrs.length;i++){
-                       if(!checkedArrs[i].checked){
+                    checkArrs=$("input[type='checkbox']");
+                    console.log(checkArrs)
+                    for(var i=1;i<checkArrs.length;i++){
+                       if(!checkArrs[i].checked){
                            all = false;
                            break;
                        }
@@ -1301,6 +1327,170 @@
                     document.getElementById('selectAll').checked = false;
                 }
             })
+
+            $("#sign").unbind('click').click(function() {
+                var checkeduser = [];
+                if($("input[name=checkbox]:checked").length<1){
+                    alert("请至少选择一个用户");
+                    return false
+                }else {
+                    $("input[name=checkbox]:checked").each(function(i){
+                        checkeduser[i] = $(this).data("userid");
+                    });
+                }
+                console.log(checkeduser,'id')
+                var activityid = $("#sign").attr("data-activityid");
+                console.log(activityid)
+                s='./websign?activityid='+activityid
+                $.ajax({
+                    type: 'get',
+                    url: s,
+                    data:{
+                        'userz':checkeduser
+                    },
+                    // processData: false,
+                    dataType:'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function(re){
+                        if (re.status==1){
+                            alert('签到成功')
+                        }else {
+                            alert('签到失败')
+                        }
+                        init();
+                    }
+                });
+            })
+        })
+        // 条件检索
+        $("#search").on('click', function () {
+            if (document.getElementById('selectName').value){
+                var name = document.getElementById('selectName').value
+            }
+            if (document.getElementById('selectTypeuser').value!='活动类别'){
+                var typeuser = document.getElementById('selectTypeuser').value
+            }
+            if (document.getElementById('selectType').value!='活动类型'){
+                var type = document.getElementById('selectType').value
+            }
+            switch (document.getElementById('selectStatus').value)
+            {
+                case '审核中':
+                    var status = 0;
+                    break;
+                case '驳回':
+                    var status = 1;
+                    break;
+                case '通过':
+                    var status = 2;
+                    break;
+                case '取消':
+                    var status = 3;
+                    break;
+            }
+            $.ajax({
+                type:'GET',
+                url:'./searchactivity',
+                data:{
+                    page:dpage,
+                    per_page:per_page,
+                    name:name,
+                    typeuser:typeuser,
+                    type:type,
+                    status:status
+                },
+                dataType:'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function(data){
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str=""
+                    d_per_page=data.item.length
+                    for (let index = 0; index < data.item.length; index++) {
+                    idz[index]=data.item[index].id
+                    if(data.item[index].typeuser === '系统'){
+                        if (data.item[index].status==3){
+                            var sta = '取消';
+                            str += "<tr><td>" + data.item[index].number +
+                                // "</td><td>" + data.item[index].username +
+                                "</td><td>" + data.item[index].activityname +
+                                "</td><td>" + data.item[index].typeuser +
+                                "</td><td>" + data.item[index].type +
+                                "</td><td>" + data.item[index].begintime.split(' ')[0] +
+                                "</td><td>" + data.item[index].endtime.split(' ')[0] +
+                                "</td><td>" + sta +
+                                "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>修改</button>" +
+                                "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px' disabled>签到</button>" +
+                                "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px' disabled>取消</button>" +"</tr>";
+                        }else {
+                            var sta = '通过';
+                            str += "<tr><td>" + data.item[index].number +
+                                // "</td><td>" + data.item[index].username +
+                                "</td><td>" + data.item[index].activityname +
+                                "</td><td>" + data.item[index].typeuser +
+                                "</td><td>" + data.item[index].type +
+                                "</td><td>" + data.item[index].begintime.split(' ')[0] +
+                                "</td><td>" + data.item[index].endtime.split(' ')[0] +
+                                "</td><td>" + sta +
+                                "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "' style='margin-left: 5px'>修改</button>" +
+                                "<button class='btn btn-success btn-sm user-active-sign' data-id='" + data.item[index].id + "' style='margin-left: 5px'>签到</button>" +
+                                "<button class='btn btn-danger btn-sm' id='del"+index+"' style='margin-left: 5px'>取消</button>" +"</tr>";
+                        }
+                    }else {
+                        switch(data.item[index].status) {
+                         case 0:
+                            var sta = '审核中';
+                            break;
+                         case 1:
+                            var sta = '驳回';
+                            break;
+                         case 2:
+                            var sta = '通过';
+                            break;
+                         case 3:
+                            var sta = '取消';
+                            break;
+                        }
+                        str += "<tr><td>" + data.item[index].number +
+                                // "</td><td>" + data.item[index].username +
+                                "</td><td>" + data.item[index].activityname +
+                                "</td><td>" + data.item[index].typeuser +
+                                "</td><td>" + data.item[index].type +
+                                "</td><td>" + data.item[index].begintime.split(' ')[0] +
+                                "</td><td>" + data.item[index].endtime.split(' ')[0] +
+                                "</td><td>" + sta +
+                                "</td><td>"+ "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button>" +
+                                "<button class='btn btn-success btn-sm' id='pass"+index+"' style='margin-left: 5px'>通过</button>" +
+                                "<button class='btn btn-danger btn-sm' id='ref"+index+"' style='margin-left: 5px'>驳回</button>" +"</tr>";
+                    }
+                    } //for
+                    $("#tableText").html(str);
+                    let strli="<li class='page-item'><a href='#' class='page-link' id='prev'>前一页</a></li>"
+                    strli+="<li class='page-item'><a id=li"+1+" href='#' class='page-link page-num'>"+1+"</a></li>"
+                    for(let index=2;index<=pages;index++){
+                        strli+="<li class='page-item'><a id=li"+index+" href='#' class='page-link page-num'>"+index+"</a></li>"
+                    }
+                    strli+="<li class='page-item'><a href='#' class='page-link' id='next'>后一页</a></li>"
+                    $("#page-li").html(strli);
+                    let s="#li"+dpage
+                    $(s).css("border-color","blue");
+                    if(dpage<pages){
+                        let r=dpage+1
+                        let rs="#li"+r
+                        $(rs).css("border-left-color","blue");
+                    }else{
+                        $("#next").css("border-left-color","blue");
+                    }
+                }
+            });
         })
     });
 </script>
