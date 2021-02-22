@@ -35,7 +35,7 @@ def manageall():
         declare=declare[0]
         usercount=len(declare.users)
         #已申报人数
-        udeclarecount=UDeclare.query.join(DUDC).join(Declare).join(User).filter(Declare.id==declare.id).count()
+        udeclarecount=UDeclare.query.join(DUDC).join(Declare).join(User).filter(Declare.id==declare.id,UDeclare.type!=2).count()
         #转保留一位小数的百分比
         #yd,wd=zbfb(udeclarecount,usercount)
         if usercount==0:
@@ -59,7 +59,7 @@ def manageall():
     activitycount=[]
     for i in range(12):
         #按月查询
-        activity=Activity.query.filter(and_(Activity.updatetime>=month[i],Activity.updatetime<month[i+1],Activity.typeuser=='自主',Activity.status!=3)).count()
+        activity=Activity.query.filter(and_(Activity.updatetime>=month[i],Activity.updatetime<month[i+1],Activity.typeuser=='自主',Activity.status!=3,Activity.status!=2)).count()
         activitycount.append(activity)
     #需要报名人数
     train=Train.query.filter(and_(Train.status==0,Train.endtime>datetime.datetime.now())).order_by(-Train.id).all()
@@ -67,7 +67,7 @@ def manageall():
         train=train[0]
         usercount2=User.query.filter(and_(User.checked==1,User.type=='user')).count()
         #已报名培训人数
-        utraincount=UTrain.query.join(TUT).join(Train).join(User).filter(and_(Train.id==train.id,User.checked==1)).count()
+        utraincount=UTrain.query.join(TUT).join(Train).join(User).filter(and_(Train.id==train.id,User.checked==1,UTrain.type!=2)).count()
         # 转保留一位小数的百分比
         #yt,wt = zbfb(utraincount, usercount2)
         if usercount2==0:

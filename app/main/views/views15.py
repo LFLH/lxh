@@ -31,13 +31,13 @@ def tssysactivity(activityname,status,page,per_page,uesrid):
             aid=[]
             for a in au:
                 aid.append(a.id)
-            s2=and_(Activity.id in aid,Activity.stoptime>datetime.datetime.now())
+            s2=and_(Activity.id.in_(aid),Activity.stoptime>datetime.datetime.now())
         elif status==0:#未报名
             au = Activity.query.join(AU).filter(and_(Activity.typeuser=="系统",Activity.status!=3,AU.userid==uesrid,Activity.stoptime>datetime.datetime.now())).all()
             aid = []
             for a in au:
                 aid.append(a.id)
-            s2 = and_(not_(Activity.id in aid),Activity.stoptime>datetime.datetime.now())
+            s2 = and_(not_(Activity.id.in_(aid)),Activity.stoptime>datetime.datetime.now())
     activity=Activity.query.filter(and_(s1,s2,Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     return activity
 

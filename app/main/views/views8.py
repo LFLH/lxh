@@ -47,7 +47,7 @@ def tsscore(username,activitycount,onys,twys,thys,page,per_page):
             ac=Activity.query.filter(and_(Activity.userid == items[i].id, Activity.updatetime > Year)).count()
             if ac==activitycount:
                 u.append(items[i].id)
-        s5=(User.id in u)
+        s5=(User.id.in_(u))
     user=User.query.join(Score).filter(and_(s1,s2,s3,s4,s5,User.checked == 1,User.type != 'sysadmin')).order_by(-User.updatetime).paginate(page, per_page, error_out=False)
     return user
 

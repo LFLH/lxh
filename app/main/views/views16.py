@@ -31,13 +31,13 @@ def tstrain(name,status,page,per_page,userid):
             tid=[]
             for t in tc:
                 tid.append(t.id)
-            s2=and_(Train.id in tid,Train.endtime>datetime.datetime.now())
+            s2=and_(Train.id.in_(tid),Train.endtime>datetime.datetime.now())
         elif status==0:#未报名
             tc = Train.query.join(TUT).join(UTrain).filter(and_(UTrain.userid == userid, Train.status == 0))
             tid = []
             for t in tc:
                 tid.append(t.id)
-            s2=and_(not_(Train.id in tid),Train.endtime>datetime.datetime.now())
+            s2=and_(not_(Train.id.in_(tid)),Train.endtime>datetime.datetime.now())
     train=Train.query.filter(and_(s1,s2,Train.status==0)).order_by(-Train.endtime).paginate(page, per_page, error_out=False)
     return train
 
