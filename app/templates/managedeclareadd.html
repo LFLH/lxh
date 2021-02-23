@@ -65,6 +65,7 @@
 {% endblock %}
 
 {% block js %}
+    document.getElementById("declare").style.display="";
     $(function () {
         $("#add").on("click", function () {
                  window.location.href = '/managedeclareadd_new'

@@ -275,4 +275,5 @@ def adddeclare():
     declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(declare)
     db.session.commit()
-    return Response(json.dumps({'status':True}), mimetype='application/json')
+    id = declare.id
+    return Response(json.dumps({'status':True, 'id':id}), mimetype='application/json')
