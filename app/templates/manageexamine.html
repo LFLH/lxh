@@ -293,8 +293,6 @@ $(document).ready(function(){
         }
         else{
             input_content = input_content.split(",")
-            console.log("input_content=",input_content)
-            console.log("select_content=",select_content)
             for(let i=0;i<select_content.length;i++){
                 let content = select_content[i]
                 if(content == "用户名"){
@@ -313,8 +311,9 @@ $(document).ready(function(){
                     thys = input_content[i]
                 }
             }
-        console.log("activitycount=",activitycount)
-            console.log("onys=",onys)
+        console.log("onys=",onys)
+        console.log("twys=",twys)
+            console.log("thys=",thys)
         }
         {#刷新页面#}
         init();

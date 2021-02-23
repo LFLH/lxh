@@ -96,7 +96,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
                                       活动报名
@@ -119,7 +119,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.userupdata')}}">
                                       活动提交
@@ -149,7 +149,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.useractivity')}}">
                                      已提交活动
@@ -277,10 +277,22 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="layui-upload" id="div_nd">
-                                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_nd">选择PDF文件、Word文件、图片</button>
+{#                                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_nd">选择PDF文件、Word文件、图片</button>#}
 {#                                          <button id="submit" type="submit" class="layui-btn layui-btn-normal" style="margin-left: 15px">文件上传</button>#}
-                                          <br>
-                                          <br>
+{#                                        <div>#}
+{#                                            <div style="display:inline; text-align: center;  padding-right: 400px">#}
+{#                                                <button type="button" class="btn btn-info " style="margin-left: 30px" id="add_file_nd">#}
+{#                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">#}
+{#                                                      <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"></path>#}
+{#                                                      <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"></path>#}
+{#                                                    </svg>添加文件#}
+{#                                                </button>#}
+{#                                                <label style="font-size: small;color: grey;float: left">（仅支持doc、docx、pdf、jpg和png格式的文件）</label>#}
+{#                                            </div>#}
+{#                                            <div style="display:inline; text-align: center;">#}
+{#                                                 <button type="button" class="layui-btn layui-hide" id="ViewListAction_nd" style="float: right;margin-right: 20px">上传</button>#}
+{#                                            </div>#}
+{#                                        </div>#}
                                     </div>
                                     <div class="layui-upload-list col-md-12">
                                         <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
@@ -300,7 +312,7 @@
                         </div>
                         <div class="modal-footer">
                             <button id="del_window_nd" class="btn btn-default btn-lg" style="margin-left: 40px">关闭</button>
-                            <button id="submit_nd" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px ;float: right">修改提交</button>
+{#                            <button id="submit_nd" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px ;float: right">修改提交</button>#}
                         </div>
                     </div>
                 </div>
@@ -326,8 +338,23 @@
                                     <div class="layui-upload" id="div_kjz">
 {#                                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_kjz">选择PDF文件、Word文件、图片、视频</button>#}
 {#                                          <button id="submit" type="submit" class="layui-btn layui-btn-normal" style="margin-left: 15px">文件上传</button>#}
-                                          <br>
-                                          <br>
+{#                                         <div>#}
+{#                                            <div style="display:inline; text-align: center;  padding-right: 400px">#}
+{#                                                <button type="button" class="btn btn-info " style="margin-left: 30px" id="add_file_kjz">#}
+{#                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">#}
+{#                                                      <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"></path>#}
+{#                                                      <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"></path>#}
+{#                                                    </svg>添加文件#}
+{#                                                </button>#}
+{#                                                <br>#}
+{#                                                <br>#}
+{#                                                <label style="font-size: small;color: grey;float: left">（仅支持doc、docx、pdf、jpg、png和mp4格式的文件）</label>#}
+{#                                                <div style="display:inline; text-align: center;float: right">#}
+{#                                                 <button type="button" class="layui-btn layui-hide" id="ViewListAction_kjz" style="float: right;margin-right: 20px">上传</button>#}
+{#                                                <br>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
                                     </div>
                                     <div class="layui-upload-list col-md-12">
                                         <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
@@ -347,7 +374,7 @@
                         </div>
                         <div class="modal-footer">
                              <button id="del_window_kjz" class="btn btn-default btn-lg" style="margin-left: 40px">关闭</button>
-                            <button id="submit_kjz" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px;float: right">修改提交</button>
+{#                            <button id="submit_kjz" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px;float: right">修改提交</button>#}
                         </div>
                     </div>
                 </div>
@@ -400,6 +427,10 @@ var status;
 var status_num;
 var status_show_;
 var status_;
+var form_nd = new FormData();
+var files_nd={};
+var form_kjz = new FormData();
+var files_kjz={};
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
         let per_page=10;
@@ -408,8 +439,9 @@ $(document).ready(function(){
         init();
         {#菜单栏#}
         $(".a").click(function(){
-            $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-        }).next("ul").hide();
+            $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide()
+            {#$(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();#}
+        })
        {#dpage：应该是表示第几页
         pages：应该是表示总共的页数
         d_per_page:总共有多少条数据
@@ -934,8 +966,9 @@ $(document).ready(function(){
                 else{
                     for(var i=0;i<data_pdf.length;i++){
                         report_pdf = data_pdf[i].newname;
-                        $("#report_pdf").append("<a href='/data/pdf/"+report_pdf+"'>"+report_pdf+"</a>");
-                        $("#report_pdf").append("  ");
+                        {#$("#report_pdf").append("<a href='/data/pdf/"+report_pdf+"'>"+report_pdf+"</a>");#}
+                        $("#report_pdf").append("<a href='"+data_pdf[i].path+"'>"+report_pdf+"</a>");
+                        $("#report_pdf").append("<p></p>");
                      }
 
                 }
@@ -945,8 +978,9 @@ $(document).ready(function(){
                 else{
                    for(var j=0;j<data_word.length;j++){
                         report_word =  data_word[j].newname;
-                        $("#report_word").append("<a href='/data/word/"+report_word+"'>"+report_word+"</a>");
-                        $("#report_word").append("  ");
+                        {#$("#report_word").append("<a href='/data/word/"+report_word+"'>"+report_word+"</a>");#}
+                        $("#report_word").append("<a href='"+data_word[j].path+"/"+report_word+"'>"+report_word+"</a>");
+                        $("#report_word").append("<p></p>");
                      }
 
                 }
@@ -956,8 +990,9 @@ $(document).ready(function(){
                 else{
                    for(var k=0;k<data_video.length;k++){
                         report_video =  data_video[k].newname;
-                        $("#report_video").append("<a href='/data/video/"+report_video+"'>"+report_video+"</a>");
-                        $("#report_video").append("  ");
+                        {#$("#report_video").append("<a href='/data/video/"+report_video+"'>"+report_video+"</a>");#}
+                        $("#report_video").append("<a href='"+data_video[k].path+"'>"+report_video+"</a>");
+                        $("#report_video").append("<p></p>");
                      }
 
                 }
@@ -967,8 +1002,9 @@ $(document).ready(function(){
                 else{
                    for(var m=0;m<data_image.length;m++){
                         report_image =  data_image[m].newname;
-                        $("#report_image").append("<a href='/data/image/"+report_image+"'>"+report_image+"</a>");
-                        $("#report_image").append("  ");
+                        {#$("#report_image").append("<a href='/data/image/"+report_image+"'>"+report_image+"</a>");#}
+                        $("#report_image").append("<a href='"+data_image[m].path+"/"+report_image+"'>"+report_image+"</a>");
+                        $("#report_image").append("<p></p>");
                      }
 
                 }
@@ -998,19 +1034,33 @@ $(document).ready(function(){
             var $ = layui.jquery;
             var upload = layui.upload;
             {#动态生成Button解决choose函数只触发一次的问题#}
-            $("#div_nd").html('<button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_nd">选择PDF文件、Word文件、图片</button>');
+            $("#div_nd").html('<div>\n' +
+                '                  <div style="display:inline; text-align: center;  padding-right: 400px">\n' +
+                '                      <button type="button" class="btn btn-info " style="margin-left: 30px" id="add_file_nd">\n' +
+                '                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">\n' +
+                '                            <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"></path>\n' +
+                '                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"></path>\n' +
+                '                          </svg>添加文件\n' +
+                '                      </button>\n' +
+                '                     <br>\n' +
+                '                     <br>\n' +
+                '                      <label style="font-size: small;color: grey;float: left">（仅支持doc、docx、pdf、jpg和png格式的文件）</label>\n' +
+                '                    <button type="button" class="layui-btn layui-hide" id="ViewListAction_nd" style="float: right;margin-right: 20px">上传</button>\n' +
+                '                     <br>\n' +
+                '                   </div>\n' +
+                '               </div>');
             //多文件选择
             var VIEWList_nd = $('#VIEWList_nd'),
                 upload_nd_Ins = upload.render({
-                    elem: '#exampleInput_nd',
-                    url: '',
+                    elem: '#add_file_nd',
+                    {#url: '',#}
                     accept: 'file,images',
                     exts: 'doc|docx|pdf|jpg|png',
                     multiple: true,
                     auto: false,
-                    bindAction: '#submit',
+                    {#bindAction: '#submit',#}
                     choose: function (obj) {
-                        var files_nd = obj.pushFile(); //选择文件赋给files
+                        files_nd = obj.pushFile(); //选择文件赋给files
                         var file_nd_time = fileTime();
                         //读取本地文件
                         obj.preview(function (index, file, result) {
@@ -1020,45 +1070,105 @@ $(document).ready(function(){
                                 , '<td>' + file_nd_time + '</td>'
                                 , '<td>'
                                 , '<button class="layui-btn layui-btn-xs layui-btn-danger file_nd_delete">删除</button>'
-                                , '<button class="layui-btn layui-btn-xs layui-btn-primary file_delete">文件上传</button>'
                                 , '</td>'
                                 , '</tr>'].join(''));
+                            //将每次选择的文件追加到文件队列
                             VIEWList_nd.append(tr);
+                            if ($('#VIEWList_nd tr').length != 0) {
+                                $("#ViewListAction_nd").removeClass('layui-hide'); //显示上传
+                            }
                             //删除文件按钮
                             tr.find('.file_nd_delete').on('click', function () {
                                 delete files_nd[index]; //删除对应的文件
                                 tr.remove();
                                 upload_nd_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                {#若文件列表无数据，隐藏上传按钮#}
+                                if ($('#VIEWList_nd tr').length == 0) {
+                                       $("#ViewListAction_nd").addClass('layui-hide'); //隐藏上传
+                                }
                             })
-
                         });
-                    {#done: function(res, index, upload){#}
-                    {#    console.log("res=",res)#}
-
                 }
             })
-       {#return false;#}
         })
    }
+//文件上传（年度报告）
+{#文件上传二次确认#}
+$(document).on("click","#ViewListAction_nd",function () {
+    var flag = confirm("上传之后不可更改，确定上传吗？");
+    if(flag == false){
+        return false
+    }else {
+        for (let i in files_nd) {
+            form_nd.append("files", files_nd[i]);
+        }
+        var len = 0;
+        form_nd.forEach((value, key) => {
+            console.log("key %s: value %s", key, value);
+            len = key.length;
+        });
+        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        let name_nd = $('#name_nd').val();
+        $.ajax({
+            url: './updaterecord?name=' + name_nd + '&id=' + new_ac_id,
+            type: "POST",
+            data: form_nd,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                console.log(result);
+                if (result.code == 200) {
+                    layer.msg("上传成功！", {icon: 6});
+                    setTimeout(function () {
+                        layer.closeAll('loading');
+                    }, 2000);//关闭加载风格
+                    $('#VIEWList_nd tr').remove(); //移除列表中上传的内容
+                    $("#ViewListAction_nd").addClass('layui-hide'); //隐藏上传按钮
+                    {#files_nd = {};//初始化上传文件和data，避免重复上传#}
+                    {#form_nd = new FormData();#}
+                } else if (result.code == 500) {
+                    layer.msg(result.msg, {icon: 5});
+                    setTimeout(function () {
+                        layer.closeAll('loading');
+                    }, 2000);//关闭加载风格
+                }
+            }
+        })
+    }
+})
    {#选择多文件--科技周报告#}
    function mutifiles_kjz() {
        layui.use('upload', function () {
            var $ = layui.jquery;
            var upload = layui.upload;
            {#动态生成Button解决choose函数只触发一次的问题#}
-           $("#div_kjz").html('<button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInput_kjz">选择PDF文件、Word文件、图片、视频</button>');
+           $("#div_kjz").html('<div>\n' +
+               '                 <div style="display:inline; text-align: center;  padding-right: 400px">\n' +
+               '                     <button type="button" class="btn btn-info " style="margin-left: 30px" id="add_file_kjz">\n' +
+               '                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">\n' +
+               '                        <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"></path>\n' +
+               '                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"></path>\n' +
+               '                        </svg>添加文件\n' +
+               '                     </button>\n' +
+               '                     <br>\n' +
+               '                     <br>\n' +
+               '                     <label style="font-size: small;color: grey;float: left">（仅支持doc、docx、pdf、jpg、png和mp4格式的文件）</label>\n' +
+               '                     <button type="button" class="layui-btn layui-hide" id="ViewListAction_kjz" style="float: right;margin-right: 20px">上传</button>\n' +
+               '                     <br>\n' +
+               '                  </div>\n' +
+               '              </div>');
            //多文件选择
            var VIEWList_kjz = $('#VIEWList_kjz'),
                upload_kjz_Ins = upload.render({
-                   elem: '#exampleInput_kjz',
-                   url: '',
+                   elem: '#add_file_kjz',
+                   {#url: '',#}
                    accept: 'file,images,video',
                    exts: 'doc|docx|pdf|jpg|png|mp4',
                    multiple: true,
                    auto: false,
-                   bindAction: '#submit',
+                   {#bindAction: '#submit',#}
                    choose: function (obj) {
-                       var files_kjz = obj.pushFile(); //选择文件赋给files
+                       files_kjz = obj.pushFile(); //选择文件赋给files
                        var file_kjz_time = fileTime();
                        //读取本地文件
                        obj.preview(function (index, file, result) {
@@ -1068,26 +1178,74 @@ $(document).ready(function(){
                                , '<td>' + file_kjz_time + '</td>'
                                , '<td>'
                                , '<button class="layui-btn layui-btn-xs layui-btn-danger file_kjz_delete">删除</button>'
-                               , '<button class="layui-btn layui-btn-xs layui-btn-primary file_delete">文件上传</button>'
                                , '</td>'
                                , '</tr>'].join(''));
+                           //将每次选择的文件追加到文件队列
                            VIEWList_kjz.append(tr);
+                           if ($('#VIEWList_kjz tr').length != 0) {
+                                $("#ViewListAction_kjz").removeClass('layui-hide'); //显示上传
+                            }
                            //删除文件按钮
                            tr.find('.file_kjz_delete').on('click', function () {
                                delete files_kjz[index]; //删除对应的文件
                                tr.remove();
                                upload_kjz_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                               {#若文件列表无数据，隐藏上传按钮#}
+                                if ($('#VIEWList_kjz tr').length == 0) {
+                                    $("#ViewListAction_kjz").addClass('layui-hide'); //隐藏上传
+                                }
                            })
 
                        });
-                       {#done: function(res, index, upload){#}
-                       {#    console.log("res=",res)#}
+
                    }
                })
        })
-
    }
-
+//文件上传(科技周报告)
+{#文件上传二次确认#}
+$(document).on("click","#ViewListAction_kjz",function () {
+    var flag = confirm("上传之后不可更改，确定上传吗？");
+    if(flag == false){
+        return false
+    }else {
+        for (let i in files_kjz) {
+            form_kjz.append("files", files_kjz[i]);
+        }
+        var len = 0;
+        form_kjz.forEach((value, key) => {
+            console.log("key %s: value %s", key, value);
+            len = key.length;
+        });
+        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        let name_kjz = $('#name_kjz').val();
+        $.ajax({
+            url: './updaterecord?name=' + name_kjz + '&id=' + new_ac_id,
+            type: "POST",
+            data: form_kjz,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                console.log(result);
+                if (result.code == 200) {
+                    layer.msg("上传成功！", {icon: 6});
+                    setTimeout(function () {
+                        layer.closeAll('loading');
+                    }, 2000);//关闭加载风格
+                    $('#VIEWList_kjz tr').remove(); //移除列表中上传的内容
+                    $("#ViewListAction_kjz").addClass('layui-hide'); //隐藏上传按钮
+                    {#files_kjz = {};//初始化上传文件和data，避免重复上传#}
+                    {#form_kjz = new FormData();#}
+                } else if (result.code == 500) {
+                    layer.msg(result.msg, {icon: 5});
+                    setTimeout(function () {
+                        layer.closeAll('loading');
+                    }, 2000);//关闭加载风格
+                }
+            }
+        })
+    }
+});
    {#操作实现#}
    {#查看按钮div悬浮框的取消按钮#}
    $(document).on("click","#close_delete",function() {
@@ -1095,28 +1253,28 @@ $(document).ready(function(){
         return false;
     });
    {#查看按钮div悬浮框的修改按钮#}
-    $(document).on("click",".open_update",function () {
-        let ac_id = $(this).attr("id")
-        ac_id = ac_id.split('upd_two')
-        ac_id = ac_id.pop()
+   {# $(document).on("click",".open_update",function () {#}
+   {#     let ac_id = $(this).attr("id")#}
+   {#     ac_id = ac_id.split('upd_two')#}
+   {#     ac_id = ac_id.pop()#}
         {#将id传给需要提交的内容#}
-        new_ac_id = ac_id
-        let ac_type = acquire_div_update_type[ac_id]
-        $("#look_modal_div").modal('hide')
-        if(ac_type=='年度'){
-           $("#update_ndreport_modal_div").modal('show')
-           up_type = '年度'
-           mutifiles_nd()
-           return false;
-       }
-       else{
-           $("#update_kjzreport_modal_div").modal('show')
-           up_type = '科技周'
-           mutifiles_kjz()
-           return false;
-       }
-       return false;
-    });
+   {#     new_ac_id = ac_id#}
+   {#     let ac_type = acquire_div_update_type[ac_id]#}
+   {#     $("#look_modal_div").modal('hide')#}
+   {#     if(ac_type=='年度'){#}
+   {#        $("#update_ndreport_modal_div").modal('show')#}
+   {#        up_type = '年度'#}
+   {#        mutifiles_nd()#}
+   {#        return false;#}
+   {#    }#}
+   {#    else{#}
+   {#        $("#update_kjzreport_modal_div").modal('show')#}
+   {#        up_type = '科技周'#}
+   {#        mutifiles_kjz()#}
+   {#        return false;#}
+   {#    }#}
+   {#    return false;#}
+   {# });#}
 
    {#实现修改按钮#}
    $(document).on("click",".btn-warning",function () {
@@ -1130,7 +1288,6 @@ $(document).ready(function(){
            up_type = '年度'
            mutifiles_nd()
            return false
-
         }
        else{
            $("#update_kjzreport_modal_div").modal('show')

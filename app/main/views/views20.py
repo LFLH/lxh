@@ -100,6 +100,7 @@ def detailrecord():
         #id = request.json.get('id')
         id = request.form.get('id')
     record =Record.query.filter(Record.id == id).all()[0]
+    user = User.query.filter(User.id == record.userid).all()[0]
     data=record.datas
     filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
@@ -408,7 +409,7 @@ def updaterecord():
         ext = filename.rsplit('.')
         ext = ext[len(ext) - 1].lower()  # 获取文件后缀
         type = panduan(ext)
-        timestamp = str(time.mktime(time.strptime(str(record.updatetime), "%Y-%m-%d %H:%M:%S")))
+        timestamp = str(time.mktime(time.strptime(str(user.updatetime), "%Y-%m-%d %H:%M:%S")))
         new_filename = str(user.username) + "_" + str(record.name) + "_" + timestamp + "_" + str(i + 1) + '.' + ext  # 修改了上传的文件名
         if record.type=='科技周':
             status='kjzreport'
