@@ -297,6 +297,7 @@ var dpage;
 var pages;
 var status_num;
 var status_show_;
+var status_;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
         let per_page=10;
@@ -322,6 +323,15 @@ $(document).ready(function(){
                 }
                 if(select_content == "状态"){
                     status = input_content
+                    if(status == "未报名"){
+                        status_ = 0;
+                     }
+                    if(status == "已过期"){
+                        status_ = 1;
+                     }
+                    if(status == "已报名"){
+                        status_ = 2;
+                     }
                 }
             }
         }
@@ -334,6 +344,15 @@ $(document).ready(function(){
                 }
                 if(content == "状态"){
                     status = input_content[i]
+                    if(status == "未报名"){
+                        status_ = 0;
+                     }
+                    if(status == "已过期"){
+                        status_ = 1;
+                     }
+                    if(status == "已报名"){
+                        status_ = 2;
+                     }
                 }
             }
         }
@@ -355,7 +374,7 @@ $(document).ready(function(){
         $.ajax({
             type: 'GET',
             url: './searchsysactivity',
-            data: {'page': 1, 'per_page': per_page,'activityname':activityname},
+            data: {'page': 1, 'per_page': per_page,'activityname':activityname,'status':status_},
             dataType: 'json',
             async: false,
             cache: false,
@@ -429,7 +448,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchsysactivity',
-                    data:{'page':dpage-1,'per_page':per_page,'activityname':activityname},
+                    data:{'page':dpage-1,'per_page':per_page,'activityname':activityname,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -498,7 +517,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchsysactivity',
-                    data:{'page':dpage+1,'per_page':per_page,'activityname':activityname},
+                    data:{'page':dpage+1,'per_page':per_page,'activityname':activityname,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -566,7 +585,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchsysactivity',
-                    data:{'page':index,'per_page':per_page,'activityname':activityname},
+                    data:{'page':index,'per_page':per_page,'activityname':activityname,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,

@@ -144,7 +144,7 @@ def addndreport():
     user = session.get('user')
     userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]
-    record = Record(userid=userid, name=name, type="年度报告")
+    record = Record(userid=userid, name=name, type="年度")
     db.session.add(record)
     db.session.commit()
     # 修改用户操作时间

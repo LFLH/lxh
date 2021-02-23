@@ -100,6 +100,7 @@ def detailrecord():
         #id = request.json.get('id')
         id = request.form.get('id')
     record =Record.query.filter(Record.id == id).all()[0]
+    user=User.query.filter(User.id==record.userid).all()[0]
     data=record.datas
     filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
@@ -384,6 +385,7 @@ def updaterecord():
             return Response(json.dumps({'status': False, 'code': 500}), mimetype='application/json')
     id = request.args.get('id')
     name = request.args.get('name')
+    data = request.values.getlist('data[]')
     user = session.get('user')
     userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]
@@ -392,12 +394,22 @@ def updaterecord():
     # 修改报告信息
     if name!=None:
         record.name = name
-    # 移除报告中的文件
     datas = record.datas
+    '''
+    # 移除报告中的文件
     length = len(datas)
     for i in range(length):
         record.datas.remove(datas[length - i - 1])
+    '''
+    # 修改文件列表
+    for datasi in datas:
+        if datasi.id not in data:
+            record.datas.remove(datasi)
     db.session.add(record)
+    db.session.commit()
+    # 修改用户操作时间
+    user.updatetime = datetime.datetime.now()
+    db.session.add(user)
     db.session.commit()
     # 创建文件夹树
     file_dir = createdirtree(userid)
@@ -408,7 +420,7 @@ def updaterecord():
         ext = filename.rsplit('.')
         ext = ext[len(ext) - 1].lower()  # 获取文件后缀
         type = panduan(ext)
-        timestamp = str(time.mktime(time.strptime(str(record.updatetime), "%Y-%m-%d %H:%M:%S")))
+        timestamp = str(time.mktime(time.strptime(str(user.updatetime), "%Y-%m-%d %H:%M:%S")))
         new_filename = str(user.username) + "_" + str(record.name) + "_" + timestamp + "_" + str(i + 1) + '.' + ext  # 修改了上传的文件名
         if record.type=='科技周':
             status='kjzreport'

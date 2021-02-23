@@ -237,7 +237,7 @@ $(document).ready(function(){
         $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
     }).next("ul").hide();
 
-    let type = 1;
+    let type = 'count';
     $.ajax({
                 type:'GET',
                 url:'./showsystem',
@@ -247,7 +247,8 @@ $(document).ready(function(){
                 cache: false,
                 contentType: 'application/json',
                 success:function(result){
-                    if(result.main == null){
+                    console.log("result.main=",result.main)
+                    if(result.main.length == 0){
                         $("#receive_num").append("无");
                     }
                     else{

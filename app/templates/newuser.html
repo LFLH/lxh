@@ -276,7 +276,8 @@
                                 success: function (re) {
                                     console.log(re.status)
                                 }
-                            })
+                            });
+                             window.location.reload();
                         } else if (result.code == 500) {
                             layer.msg(result.msg, {icon: 5});
                             setTimeout(function () {

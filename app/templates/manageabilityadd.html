@@ -56,6 +56,7 @@
 {% endblock %}
 
 {% block js %}
+     document.getElementById("ability").style.display="";
     {#前后端交互：从后端数据库获取列表数据以及分页处理#}
     $(document).ready(function(){
         $("#add").on("click", function () {
