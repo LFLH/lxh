@@ -80,7 +80,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.manageactivityadd')}}">
                                       发布活动
@@ -104,7 +104,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
                                       已申报用户
@@ -132,7 +132,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
                                       已申报用户
@@ -235,7 +235,7 @@ $(document).ready(function(){
     {#菜单栏#}
     $(".a").click(function(){
         $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-    }).next("ul").hide();
+    })
 
     let type = 'count';
     $.ajax({

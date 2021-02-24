@@ -119,7 +119,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.userupdata')}}">
                                       活动提交
@@ -149,7 +149,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.useractivity')}}">
                                      已提交活动
@@ -307,7 +307,7 @@ $(document).ready(function(){
         {#菜单栏#}
         $(".a").click(function(){
             $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-        }).next("ul").hide();
+        })
         {#实现检索操作#}
     $(document).on("click","#search_all",function () {
         {#获取选择的检索内容#}
