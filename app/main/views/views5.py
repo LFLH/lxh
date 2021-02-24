@@ -120,6 +120,27 @@ def addnewuser():
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
 
+#删除申报的用户
+@main.route('/deletenewuser',methods=['GET','POST'])
+def deletenewuser():
+    if request.method == "GET":
+        id = request.args.get('id')
+    else:
+        #id = request.json.get('id')
+        id=request.form.get('id')
+    userz = request.values.getlist('userz[]')
+    declare=Declare.query.filter(Declare.id==id).all()[0]
+    users=declare.users
+    for usersi in users:
+        if usersi not in userz:
+            declare.users.remove(usersi)
+            usersi.status=2
+            db.session.add(usersi)
+            db.session.commit()
+    db.session.add(declare)
+    db.session.commit()
+    return Response(json.dumps({'status': True}), mimetype='application/json')
+
 #查看详细申报任务
 @main.route('/detaildeclare',methods=['GET','POST'])
 def detaildeclare():
@@ -275,4 +296,17 @@ def adddeclare():
     declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(declare)
     db.session.commit()
-    return Response(json.dumps({'status':True}), mimetype='application/json')
+    #添加申报用户
+    userz = request.values.getlist('userz[]')
+    declare=Declare.query.filter(Declare.id==id).all()[0]
+    for u in userz:
+        user=User.query.filter(User.id==u).all()[0]
+        declare.users.append(user)
+        user.checked=0
+        user.endtime=declare.endtime
+        db.session.add(user)
+        db.session.commit()
+    db.session.add(declare)
+    db.session.commit()
+    id=declare.id
+    return Response(json.dumps({'status':True,'id':id}), mimetype='application/json')

@@ -50,7 +50,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
@@ -93,7 +93,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none;">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.manageactivity')}}">
                                       活动列表
@@ -116,7 +116,7 @@
                               <p style="display: inline" class="indicator" id="indicator2">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none;">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
                                       已申报用户
@@ -143,7 +143,7 @@
                               <p style="display: inline" class="indicator" id="indicator3">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none;">
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
                                       已申报用户
@@ -227,7 +227,8 @@
                 {
                     // name: '访问来源',
                     type: 'pie',
-                    radius: '50%',
+                    radius: '40%',
+                    center: ['40%','50%'],
                     data: [],
                     emphasis: {
                         itemStyle: {
@@ -240,9 +241,10 @@
                 　　　　normal : {
                 　　　　　　formatter: '{b}:{c}: ({d}%)',
                 　　　　　　textStyle : {
-                　　　　　　　　fontWeight : '300',
-                　　　　　　　　fontSize : 15
-                　　　　　　}
+                　　　　　　　　fontWeight : '500',
+                　　　　　　　　fontSize : 12
+                　　　　　　},
+                          // position: "inside"//此处将展示的文字在内部展示
                 　　　　}
                 　　},
                 }
@@ -252,7 +254,7 @@
         //柱状图
         var barOption = {
             title: {
-                text: '各月活动提交情况',
+                text: '各月自主活动提交情况',
                 // subtext: '纯属虚构',
                 left: 'center'
             },
@@ -296,15 +298,28 @@
                 {
                     // name: '访问来源',
                     type: 'pie',
-                    radius: '50%',
+                    radius: '40%',
                     data: [],
+                    minAngle: 1,//最小角度
+                    startAngle:180, //起始角度
+                    center:['50%','50%'],
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,
                             shadowOffsetX: 0,
                             shadowColor: 'rgba(0, 0, 0, 0.5)',
                         }
-                    }
+                    },
+                    label : {
+                　　　　normal : {
+                　　　　　　formatter: '{b}:{c}: ({d}%)',
+                　　　　　　textStyle : {
+                　　　　　　　　fontWeight : '500',
+                　　　　　　　　fontSize : 12
+                　　　　　　},
+                          // position: "inside"//此处将展示的文字在内部展示
+                　　　　}
+                　　},
                 }
             ]
         };
@@ -356,7 +371,7 @@
     $(function(){
         $(".a").click(function(){
             $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-        }).next("ul").hide();
+        });
     });
 /*    //饼状图
 

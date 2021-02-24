@@ -36,7 +36,7 @@ def olduserall():
     userid=user['userid']
     year = str(datetime.datetime.now()).split('-')[0]
     jyear = year + '-01-01 00:00:00'
-    acount=Activity.query.filter(and_(Activity.userid==userid,Activity.updatetime>jyear,Activity.status!=3,Activity.status!=2)).count()
+    acount=Activity.query.filter(and_(Activity.userid==userid,Activity.updatetime>jyear,Activity.status!=3,Activity.status!=1)).count()
     # 转保留一位小数的百分比
     #ya, wa = zbfb(acount, count)
     ya=acount
@@ -53,7 +53,7 @@ def olduserall():
     activitycount = []
     for i in range(12):
         # 按月查询
-        activity = Activity.query.filter(and_(Activity.updatetime >= month[i], Activity.updatetime < month[i + 1],Activity.userid==userid,Activity.status!=3,Activity.status!=2)).count()
+        activity = Activity.query.filter(and_(Activity.updatetime >= month[i], Activity.updatetime < month[i + 1],Activity.userid==userid,Activity.status!=3,Activity.status!=1)).count()
         activitycount.append(activity)
     message=[]
     #被驳回的活动信息
