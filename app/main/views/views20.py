@@ -17,11 +17,11 @@ def after_request(response):
 #管理员条件检索
 def tsmrecord(username,recordname,year,type,status,page,per_page):
     if username!=None:
-        s1=(User.username==username)
+        s1=(User.username.contains(username))
     else:
         s1=True
     if recordname!=None:
-        s2=(Record.name==recordname)
+        s2=(Record.name.contains(recordname))
     else:
         s2=True
     if year!=None:
@@ -144,7 +144,7 @@ def bhrecord():
 #条件检索
 def tsrecord(recordname,year,type,status,page,per_page,userid):
     if recordname!=None:
-        s1=(Record.name==recordname)
+        s1=(Record.name.contains(recordname))
     else:
         s1=True
     if year!=None:
@@ -385,7 +385,13 @@ def updaterecord():
             return Response(json.dumps({'status': False, 'code': 500}), mimetype='application/json')
     id = request.args.get('id')
     name = request.args.get('name')
-    data = request.values.getlist('data[]')
+    data = request.args.get('data')
+    data = data.split(',')
+    data[0] = data[0].split('[')[1]
+    data[len(data) - 1] = data[len(data) - 1].split(']')[0]
+    for i in range(len(data)):
+        if data[i] != '':
+            data[i] = int(data[i])
     user = session.get('user')
     userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]
@@ -395,16 +401,15 @@ def updaterecord():
     if name!=None:
         record.name = name
     datas = record.datas
-    '''
-    # 移除报告中的文件
+    # 移除活动中的文件
     length = len(datas)
     for i in range(length):
         record.datas.remove(datas[length - i - 1])
-    '''
-    # 修改文件列表
-    for datasi in datas:
-        if datasi.id not in data:
-            record.datas.remove(datasi)
+    #修改文件列表
+    for did in data:
+        if did!='':
+            diddata=Data.query.filter(Data.id==did).all()[0]
+            record.datas.append(diddata)
     db.session.add(record)
     db.session.commit()
     # 修改用户操作时间

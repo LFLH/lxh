@@ -16,11 +16,11 @@ def after_request(response):
 #条件检索
 def tsudeclare(username,uptime,status,page,per_page):
     if username!=None:
-        s1=(User.username==username)
+        s1=(User.username.contains(username))
     else:
         s1=True
     if uptime!=None:
-        s2=(UDeclare.uptime==uptime)
+        s2=(UDeclare.uptime.contains(uptime))
     else:
         s2=True
     if status is None:

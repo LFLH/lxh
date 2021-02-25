@@ -17,7 +17,7 @@ def after_request(response):
 #条件检索
 def tssysactivity(activityname,status,page,per_page,uesrid):
     if activityname!=None:
-        s1=(Activity.name==activityname)
+        s1=(Activity.name.contains(activityname))
     else:
         s1=True
     if status is None:

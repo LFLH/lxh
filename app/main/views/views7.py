@@ -21,15 +21,15 @@ def tstrain(name,createtime,begintime,endtime,status,page,per_page):
     else:
         s1 = True
     if createtime != None:
-        s2=(Train.createtime==createtime)
+        s2=(Train.createtime.contains(createtime))
     else:
         s2 = True
     if begintime != None:
-        s3=(Train.begintime==begintime)
+        s3=(Train.begintime.contains(begintime))
     else:
         s3 = True
     if endtime != None:
-        s4=(Train.endtime==endtime)
+        s4=(Train.endtime.contains(endtime))
     else:
         s4 = True
     if status is None:

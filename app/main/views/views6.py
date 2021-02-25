@@ -16,15 +16,15 @@ def after_request(response):
 #条件检索
 def tsutrain(username,name,uptime,status,page,per_page):
     if username!=None:
-        s1=(User.username==username)
+        s1=(User.username.contains(username))
     else:
         s1=True
     if name!=None:
-        s2=(Train.name==name)
+        s2=(Train.name.contains(name))
     else:
         s2=True
     if uptime!=None:
-        s3=(UTrain.uptime==uptime)
+        s3=(UTrain.uptime.contains(uptime))
     else:
         s3=True
     if status is None:
