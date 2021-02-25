@@ -229,7 +229,13 @@ def updateactivity():
     endtime = request.args.get('endtime')
     main = request.args.get('main')
     type = request.args.get('type')
-    data=request.values.getlist('data[]')
+    data=request.args.get('data')
+    data=data.split(',')
+    data[0]=data[0].split('[')[1]
+    data[len(data)-1]=data[len(data)-1].split(']')[0]
+    for i in range(len(data)):
+        if data[i]!='':
+            data[i]=int(data[i])
     if begintime != None:
         begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     if endtime != None:
@@ -253,16 +259,15 @@ def updateactivity():
     activity.status=0
     activity.updatetime = datetime.datetime.now()
     datas = activity.datas
-    '''
     # 移除活动中的文件
     length = len(datas)
     for i in range(length):
         activity.datas.remove(datas[length - i - 1])
-    '''
     #修改文件列表
-    for datasi in datas:
-        if datasi.id not in data:
-            activity.datas.remove(datasi)
+    for did in data:
+        if did!='':
+            diddata=Data.query.filter(Data.id==did).all()[0]
+            activity.datas.append(diddata)
     db.session.add(activity)
     db.session.commit()
     # 修改用户操作时间
