@@ -46,6 +46,45 @@
             left:20%;
             overflow:scroll;
         }
+        {#搜索平铺样式#}
+        #filter
+        {
+            height:auto;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        #filter dl
+        {
+            padding:0;
+            margin-top:0;
+            margin-bottom:10px;
+            clear:both;
+            padding:4px 0;
+            font-size: 18px;
+        }
+        #filter dt,dd
+        {
+            display:block;
+            float:left;
+            width:auto;
+            padding:0;
+            margin:3px 0;
+        }
+        #filter dt
+        {
+            height:115px;
+            color:#333333;
+            width: 80px;
+        }
+        #filter dd
+        {
+            color: #005cbf;
+            margin-right:18px;
+        }
+        #filter a
+        {
+            cursor:pointer;
+        }
     </style>
 </head>
 
@@ -208,6 +247,32 @@
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">能力提升培训申请列表</h2>
             <br>
+             {#选择检索平铺#}
+            <div id="display-select" style="margin-left: 80px;display: none">
+                 <input id="select-show" type="text" class="form-control" style="width: 150px;float:left">
+                 <button id="delete-show" class="input-group-text" style="width: 35px;float: left">x</button>
+            </div>
+            {#检索平铺#}
+            <div id="filter">
+                <dl>
+                    <dt>状态：</dt>
+                    <dd><div><a href="#" id="sta_1" style="color: #005cbf">未通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_2" style="color: #005cbf">已通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_3" style="color: #005cbf">申报被驳回</a></div></dd>
+                    <dd><div><a href="#" id="sta_4" style="color: #005cbf">申报未通过且申请培训过期</a></div></dd>
+                    <dd><div><a href="#" id="sta_5" style="color: #005cbf">申报已通过但申请培训过期</a></div></dd>
+                    <dd><div><a href="#" id="sta_6" style="color: #005cbf">申请被驳回且申请培训过期</a></div></dd>
+                    <dd><div><a href="#" id="sta_7" style="color: #005cbf">用户被删除且申请未通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_8" style="color: #005cbf">申请已通过但用户被删除</a></div></dd>
+                    <dd><div><a href="#" id="sta_9" style="color: #005cbf">申请被驳回且用户被删除</a></div></dd>
+                    <dd><div><a href="#" id="sta_10" style="color: #005cbf">申请未通过且申请培训过期且用户被删除</a></div></dd>
+                    <dd><div><a href="#" id="sta_11" style="color: #005cbf">申请已通过且申请培训过期且用户被删除</a></div></dd>
+                    <dd><div><a href="#" id="sta_12" style="color: #005cbf">申请被驳回且申请培训过期且用户被删除</a></div></dd>
+                    <dd><div><a href="#" id="sta_13" style="color: #005cbf">培训未启用</a></div></dd>
+                </dl>
+            </div>
+            <br>
+            <br>
                 {#添加搜索栏#}
                 <div class="form-group">
                      <div class="input-group col-xs-12">
@@ -369,6 +434,76 @@ $(document).ready(function(){
     {#菜单栏#}
     $(".a").click(function(){
         $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
+    })
+    {#检索平铺操作#}
+    $(document).on("click","#sta_1",function () {
+        $("#display-select").show();
+        let status_1 = $("#sta_1").text() //选择平铺内容
+        $("#select-show").val(status_1) //放在input框
+    })
+    $(document).on("click","#sta_2",function () {
+        $("#display-select").show();
+        let status_2 = $("#sta_2").text() //选择平铺内容
+        $("#select-show").val(status_2) //放在input框
+    })
+    $(document).on("click","#sta_3",function () {
+        $("#display-select").show();
+        let status_3 = $("#sta_3").text() //选择平铺内容
+        $("#select-show").val(status_3) //放在input框
+    })
+    $(document).on("click","#sta_4",function () {
+        $("#display-select").show();
+        let status_4 = $("#sta_4").text() //选择平铺内容
+        $("#select-show").val(status_4) //放在input框
+    })
+    $(document).on("click","#sta_5",function () {
+        $("#display-select").show();
+        let status_5 = $("#sta_5").text() //选择平铺内容
+        $("#select-show").val(status_5) //放在input框
+    })
+    $(document).on("click","#sta_6",function () {
+        $("#display-select").show();
+        let status_6 = $("#sta_6").text() //选择平铺内容
+        $("#select-show").val(status_6) //放在input框
+    })
+    $(document).on("click","#sta_7",function () {
+        $("#display-select").show();
+        let status_7 = $("#sta_7").text() //选择平铺内容
+        $("#select-show").val(status_7) //放在input框
+    })
+    $(document).on("click","#sta_8",function () {
+        $("#display-select").show();
+        let status_8 = $("#sta_8").text() //选择平铺内容
+        $("#select-show").val(status_8) //放在input框
+    })
+    $(document).on("click","#sta_9",function () {
+        $("#display-select").show();
+        let status_9 = $("#sta_9").text() //选择平铺内容
+        $("#select-show").val(status_9) //放在input框
+    })
+    $(document).on("click","#sta_10",function () {
+        $("#display-select").show();
+        let status_10 = $("#sta_10").text() //选择平铺内容
+        $("#select-show").val(status_10) //放在input框
+    })
+    $(document).on("click","#sta_11",function () {
+        $("#display-select").show();
+        let status_11 = $("#sta_11").text() //选择平铺内容
+        $("#select-show").val(status_11) //放在input框
+    })
+    $(document).on("click","#sta_12",function () {
+        $("#display-select").show();
+        let status_12 = $("#sta_12").text() //选择平铺内容
+        $("#select-show").val(status_12) //放在input框
+    })
+    $(document).on("click","#sta_13",function () {
+        $("#display-select").show();
+        let status_13 = $("#sta_13").text() //选择平铺内容
+        $("#select-show").val(status_13) //放在input框
+    })
+    $(document).on("click","#delete-show",function () {
+        $("#select-show").val("") //清空input值
+        $("#display-select").css("display","none");
     })
     {#实现检索操作#}
     $(document).on("click","#search_all",function () {

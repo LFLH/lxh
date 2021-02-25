@@ -237,13 +237,16 @@ function fileTime(){
 }
 var form = new FormData();
 var files={};
+var sort=0
 {#选择多个文件#}
 layui.use('upload', function () {
         var $ = layui.jquery;
         var upload = layui.upload;
         //多文件选择
-        var Viewlist = $('#VIEWList'),
-        uploadIns = upload.render({
+        var Viewlist = $('#VIEWList');
+        if (sort == 0){
+            sort = 1;
+            uploadIns = upload.render({
             elem: '#add_file',
             {#url: '',#}
             accept: 'file,images,video',
@@ -281,10 +284,52 @@ layui.use('upload', function () {
                     })
 
                 });
-
             },
-
         });
+        }
+        else{
+            uploadIns.reload({
+            elem: '#add_file',
+            {#url: '',#}
+            accept: 'file,images,video',
+            exts: 'doc|docx|pdf|jpg|png|mp4',
+            multiple: true,
+            auto: false,
+            {#bindAction: '#submit',#}
+            choose: function (obj) {
+                files = obj.pushFile(); //选择文件赋给files
+                var file_time = fileTime();
+                //读取本地文件
+                obj.preview(function (index, file, result) {
+                    var tr = $(['<tr id="upload-' + index + '">'
+                        , '<td>' + file.name + '</td>'
+                        , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                        , '<td>' + file_time + '</td>'
+                        , '<td>'
+                        , '<button class="layui-btn layui-btn-xs layui-btn-danger file_delete">删除</button>'
+                        , '</td>'
+                        , '</tr>'].join(''));
+                    //将每次选择的文件追加到文件队列
+                    Viewlist.append(tr);
+                    if ($('#VIEWList tr').length != 0) {
+                            $("#ViewListAction").removeClass('layui-hide'); //显示上传
+                    }
+                    //删除文件按钮
+                    tr.find('.file_delete').on('click', function () {
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                        {#若文件列表无数据，隐藏上传按钮#}
+                        if ($('#VIEWList tr').length == 0) {
+                               $("#ViewListAction").addClass('layui-hide'); //隐藏上传
+                        }
+                    })
+
+                });
+            },
+        });
+        }
+
         })
 
 //文件上传
@@ -328,6 +373,12 @@ $("#ViewListAction").on("click", function () {
                         layer.closeAll('loading');
                     }, 2000);//关闭加载风格
                 }
+                for(let key in files){
+                     delete files[key];
+                 }
+                 for(var key of form.keys()){
+                     form.delete(key);
+                 }
             }
         })
     }

@@ -46,6 +46,45 @@
             overflow:scroll;
 
         }
+        {#搜索平铺样式#}
+        #filter
+        {
+            height:auto;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        #filter dl
+        {
+            padding:0;
+            margin-top:0;
+            margin-bottom:10px;
+            clear:both;
+            padding:4px 0;
+            font-size: 18px;
+        }
+        #filter dt,dd
+        {
+            display:block;
+            float:left;
+            width:auto;
+            padding:0;
+            margin:3px 0;
+        }
+        #filter dt
+        {
+            height:25px;
+            color:#333333;
+            width: 100px;
+        }
+        #filter dd
+        {
+            color: #005cbf;
+            margin-right:18px;
+        }
+        #filter a
+        {
+            cursor:pointer;
+        }
     </style>
 </head>
 
@@ -179,6 +218,46 @@
 
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">提交报告列表</h2>
+            <br>
+            {#选择检索平铺#}
+            <div id="display-select-year" style="margin-left: 80px;display: none;float: left">
+                 <input id="select-show-year" type="text" class="form-control" style="width: 150px;float:left">
+                 <button id="delete-show-year" class="input-group-text" style="width: 35px;float: left">x</button>
+            </div>
+            <div id="display-select-repo" style="margin-left: 80px;display: none;float: left">
+                 <input id="select-show-repo" type="text" class="form-control" style="width: 150px;float:left">
+                 <button id="delete-show-repo" class="input-group-text" style="width: 35px;float: left">x</button>
+            </div>
+            <div id="display-select-sta" style="margin-left: 80px;display: none;float: left">
+                 <input id="select-show-sta" type="text" class="form-control" style="width: 150px;float:left">
+                 <button id="delete-show-sta" class="input-group-text" style="width: 35px;float: left">x</button>
+            </div>
+            {#检索平铺#}
+            <div id="filter">
+                <dl>
+                    <dt>年份：</dt>
+                    <dd><div><a href="#" id="year_1" style="color: #005cbf">2019</a></div></dd>
+                    <dd><div><a href="#" id="year_2" style="color: #005cbf">2020</a></div></dd>
+                    <dd><div><a href="#" id="year_3" style="color: #005cbf">2021</a></div></dd>
+                </dl>
+                <dl>
+                    <dt>报告类型：</dt>
+                    <dd><div><a href="#" id="repo_1" style="color: #005cbf">年度</a></div></dd>
+                    <dd><div><a href="#" id="repo_2" style="color: #005cbf">科技周</a></div></dd>
+                </dl>
+                <dl>
+                    <dt>报告状态：</dt>
+                    <dd><div><a href="#" id="sta_1" style="color: #005cbf">报告未通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_2" style="color: #005cbf">报告被驳回</a></div></dd>
+                    <dd><div><a href="#" id="sta_3" style="color: #005cbf">报告已通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_4" style="color: #005cbf">报告已删除</a></div></dd>
+                    <dd><div><a href="#" id="sta_5" style="color: #005cbf">过去报告未通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_6" style="color: #005cbf">过去报告已通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_7" style="color: #005cbf">考核未过报告未通过</a></div></dd>
+                    <dd><div><a href="#" id="sta_8" style="color: #005cbf">考核未过报告已通过</a></div></dd>
+                </dl>
+            </div>
+            <br>
             <br>
                  <div class="form-group">
                      <div class="input-group col-xs-12">
@@ -441,6 +520,84 @@ $(document).ready(function(){
         $(".a").click(function(){
             $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide()
             {#$(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();#}
+        })
+        {#检索平铺操作#}
+        $(document).on("click","#year_1",function () {
+            $("#display-select-year").show();
+            let year_1 = $("#year_1").text() //选择平铺内容
+            $("#select-show-year").val(year_1) //放在input框
+        })
+        $(document).on("click","#year_2",function () {
+            $("#display-select-year").show();
+            let year_2 = $("#year_2").text() //选择平铺内容
+            $("#select-show-year").val(year_2) //放在input框
+        })
+        $(document).on("click","#year_3",function () {
+            $("#display-select-year").show();
+            let year_3 = $("#year_3").text() //选择平铺内容
+            $("#select-show-year").val(year_3) //放在input框
+        })
+        $(document).on("click","#repo_1",function () {
+            $("#display-select-repo").show();
+            let repo_1 = $("#repo_1").text() //选择平铺内容
+            $("#select-show-repo").val(repo_1) //放在input框
+        })
+        $(document).on("click","#repo_2",function () {
+            $("#display-select-repo").show();
+            let repo_2 = $("#repo_2").text() //选择平铺内容
+            $("#select-show-repo").val(repo_2) //放在input框
+        })
+        $(document).on("click","#sta_1",function () {
+            $("#display-select-sta").show();
+            let status_1 = $("#sta_1").text() //选择平铺内容
+            $("#select-show-sta").val(status_1) //放在input框
+        })
+        $(document).on("click","#sta_2",function () {
+            $("#display-select-sta").show();
+            let status_2 = $("#sta_2").text() //选择平铺内容
+            $("#select-show-sta").val(status_2) //放在input框
+        })
+        $(document).on("click","#sta_3",function () {
+            $("#display-select-sta").show();
+            let status_3 = $("#sta_3").text() //选择平铺内容
+            $("#select-show-sta").val(status_3) //放在input框
+        })
+        $(document).on("click","#sta_4",function () {
+            $("#display-select-sta").show();
+            let status_4 = $("#sta_4").text() //选择平铺内容
+            $("#select-show-sta").val(status_4) //放在input框
+        })
+        $(document).on("click","#sta_5",function () {
+            $("#display-select-sta").show();
+            let status_5 = $("#sta_5").text() //选择平铺内容
+            $("#select-show-sta").val(status_5) //放在input框
+        })
+        $(document).on("click","#sta_6",function () {
+            $("#display-select-sta").show();
+            let status_6 = $("#sta_6").text() //选择平铺内容
+            $("#select-show-sta").val(status_6) //放在input框
+        })
+        $(document).on("click","#sta_7",function () {
+            $("#display-select-sta").show();
+            let status_7 = $("#sta_7").text() //选择平铺内容
+            $("#select-show-sta").val(status_7) //放在input框
+        })
+        $(document).on("click","#sta_8",function () {
+            $("#display-select-sta").show();
+            let status_8 = $("#sta_8").text() //选择平铺内容
+            $("#select-show-sta").val(status_8) //放在input框
+        })
+        $(document).on("click","#delete-show-year",function () {
+            $("#select-show-year").val("") //清空input值
+            $("#display-select-year").css("display","none");
+        })
+        $(document).on("click","#delete-show-repo",function () {
+            $("#select-show-repo").val("") //清空input值
+            $("#display-select-repo").css("display","none");
+        })
+        $(document).on("click","#delete-show-sta",function () {
+            $("#select-show-sta").val("") //清空input值
+            $("#display-select-sta").css("display","none");
         })
        {#dpage：应该是表示第几页
         pages：应该是表示总共的页数
@@ -978,8 +1135,9 @@ $(document).ready(function(){
                 else{
                    for(var j=0;j<data_word.length;j++){
                         report_word =  data_word[j].newname;
+                        console.log("data_word[j]=",data_word[j])
                         {#$("#report_word").append("<a href='/data/word/"+report_word+"'>"+report_word+"</a>");#}
-                        $("#report_word").append("<a href='"+data_word[j].path+"/"+report_word+"'>"+report_word+"</a>");
+                        $("#report_word").append("<a href='"+data_word[j].path+"'>"+report_word+"</a>");
                         $("#report_word").append("<p></p>");
                      }
 
@@ -1003,7 +1161,7 @@ $(document).ready(function(){
                    for(var m=0;m<data_image.length;m++){
                         report_image =  data_image[m].newname;
                         {#$("#report_image").append("<a href='/data/image/"+report_image+"'>"+report_image+"</a>");#}
-                        $("#report_image").append("<a href='"+data_image[m].path+"/"+report_image+"'>"+report_image+"</a>");
+                        $("#report_image").append("<a href='"+data_image[m].path+"'>"+report_image+"</a>");
                         $("#report_image").append("<p></p>");
                      }
 
@@ -1124,8 +1282,8 @@ $(document).on("click","#ViewListAction_nd",function () {
                     }, 2000);//关闭加载风格
                     $('#VIEWList_nd tr').remove(); //移除列表中上传的内容
                     $("#ViewListAction_nd").addClass('layui-hide'); //隐藏上传按钮
-                    {#files_nd = {};//初始化上传文件和data，避免重复上传#}
-                    {#form_nd = new FormData();#}
+                    files_nd = {};//初始化上传文件和data，避免重复上传
+                    form_nd = new FormData();
                 } else if (result.code == 500) {
                     layer.msg(result.msg, {icon: 5});
                     setTimeout(function () {
