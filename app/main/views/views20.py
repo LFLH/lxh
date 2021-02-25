@@ -17,11 +17,11 @@ def after_request(response):
 #管理员条件检索
 def tsmrecord(username,recordname,year,type,status,page,per_page):
     if username!=None:
-        s1=(User.username==username)
+        s1=(User.username.contains(username))
     else:
         s1=True
     if recordname!=None:
-        s2=(Record.name==recordname)
+        s2=(Record.name.contains(recordname))
     else:
         s2=True
     if year!=None:
@@ -144,7 +144,7 @@ def bhrecord():
 #条件检索
 def tsrecord(recordname,year,type,status,page,per_page,userid):
     if recordname!=None:
-        s1=(Record.name==recordname)
+        s1=(Record.name.contains(recordname))
     else:
         s1=True
     if year!=None:

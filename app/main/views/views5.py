@@ -21,15 +21,15 @@ def tsdeclare(name,createtime,begintime,endtime,status,page,per_page):
     else:
         s1=True
     if createtime!=None:
-        s2=(Declare.createtime==createtime)
+        s2=(Declare.createtime.contains(createtime))
     else:
         s2=True
     if begintime!=None:
-        s3=(Declare.begintime==begintime)
+        s3=(Declare.begintime.contains(begintime))
     else:
         s3=True
     if endtime!=None:
-        s4=(Declare.endtime==endtime)
+        s4=(Declare.endtime.contains(endtime))
     else:
         s4=True
     if status is None:

@@ -17,7 +17,7 @@ def after_request(response):
 #条件检索活动
 def tsactivity(name,type,status,page,per_page):
     if name!=None:
-        s1=(Activity.name==name)
+        s1=(Activity.name.contains(name))
     else:
         s1=True
     if type!=None:
@@ -116,7 +116,7 @@ def addsysactivity():
 #条件检索系统活动
 def tsactivity1(name,type,status,page,per_page):
     if name!=None:
-        s1=(Activity.name==name)
+        s1=(Activity.name.contains(name))
     else:
         s1=True
     if type!=None:
@@ -181,7 +181,7 @@ def searchmansysactivity():
 #条件检索自主活动
 def tsactivity2(name,type,status,page,per_page):
     if name!=None:
-        s1=(Activity.name==name)
+        s1=(Activity.name.contains(name))
     else:
         s1=True
     if type!=None:

@@ -17,7 +17,7 @@ def after_request(response):
 #条件检索
 def tshowactivity(name,type,status,page,per_page,userid):
     if name!=None:
-        s1=(Activity.name==name)
+        s1=(Activity.name.contains(name))
     else:
         s1=True
     if type!=None:

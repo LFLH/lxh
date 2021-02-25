@@ -145,7 +145,7 @@ def detailuser():
 #条件检索
 def tsuser(username,status,page,per_page):
     if username!=None:
-        s1=(User.username==username)
+        s1=(User.username.contains(username))
     else:
         s1=True
     if status!=None:

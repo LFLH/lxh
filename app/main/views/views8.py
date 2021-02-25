@@ -17,7 +17,7 @@ def after_request(response):
 def tsscore(username,activitycount,onys,twys,thys,page,per_page):
     year = int(datetime.datetime.now().strftime('%Y'))
     if username!=None:
-        s1=(User.username==username)
+        s1=(User.username.contains(username))
     else:
         s1=True
     if onys!=None:
