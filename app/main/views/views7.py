@@ -169,9 +169,9 @@ def updatetrain():
         endtime = request.form.get('endtime')
         main = request.form.get('main')
     if begintime!=None:
-        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
     if endtime!=None:
-        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     train = Train.query.filter(Train.id == id).all()[0]
     # chatime =datetime.datetime.now()-train.endtime
     # chatime=chatime.days
@@ -233,8 +233,8 @@ def addability():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     #创建能力提升培训
     train=Train(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(train)

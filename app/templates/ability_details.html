@@ -2,142 +2,99 @@
 {% extends "base_Txx.html" %}
 
 {% block css %}
-    tbody {
-       counter-reset:sectioncounter;
-    }
-
-    .SortCLASS:before {
-       content:counter(sectioncounter);
-       counter-increment:sectioncounter;
-
-    }
 {% endblock %}
 
 {% block content %}
-<div class="container">
     <h2 style="padding-top: 20px">能力提升培训详情</h2>
     <br>
     <form id="ability" role="form">
-        <div class="form-group">
-          <label for="name" style="font-size: large; font-weight: bold">能力提升培训名：</label>
-          <input type="text" class="form-control" id="name" name="abilityName">
+        <div class="form-group" style="margin-top: 10px">
+          <label for="name" style="font-size: large; font-weight: bold">培训名称：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+            <input type="text" class="form-control" id="name" name="abilityName">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="startTime" style="font-size: large; font-weight: bold">培训创建时间：</label>
+        <div class="form-group" style="margin-top: 10px">
+          <label for="startTime" style="font-size: large; font-weight: bold">创建时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
           <input type="text" class="form-control" id="createTime" name="time" disabled="disabled">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="startTime" style="font-size: large; font-weight: bold">申报开始时间：</label>
-          <input type="text" class="form-control" id="startTime" name="time1" >
+        <div class="form-group" style="margin-top: 10px">
+          <label for="startTime" style="font-size: large; font-weight: bold">开始时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+            <input type="datetime-local" class="form-control" id="startTime" name="time1" >
+          </div>
         </div>
-        <div class="form-group" style="font-size: large; font-weight: bold">
-          <label for="stopTime">申报结束时间：</label>
-          <input type="text" class="form-control" id="stopTime" name="time2">
+         <div class="form-group" style="margin-top: 10px">
+          <label for="stopTime" style="font-size: large; font-weight: bold">结束时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+            <input type="datetime-local" class="form-control" id="stopTime" name="time2">
+          </div>
         </div>
-        <div class="form-group" style="font-size: large; font-weight: bold">
-          <label for="content">能力提升培训内容：</label>
-          <input type="text" class="form-control" id="content" name="abilityContent">
+        <div class="form-group" style="margin-top:15px;">
+          <label for="content" style="vertical-align: top;font-size: large; font-weight: bold">培训内容：</label>
+          <div class="col-sm-5" style="display: inline-block; width: 80%">
+              <textarea type="text" class="form-control" id="content" name="abilityContent"></textarea>
+          </div>
         </div>
-        <div style="text-align:center">
-            <button id="cancel" type="button" class="btn btn-default" style="margin:50px; background-color: lightgrey;">取消</button>
-            <button id="change" type="button" class="btn btn-success" style="margin:50px">修改</button>
+        <div class="col-sm-5" style="text-align:center">
+            <button id="cancel" type="button" class="btn btn-default" style="margin-top:10px; margin-right: 50px;background-color: lightgrey;">取消</button>
+            <button id="change" type="button" class="btn btn-success" style="margin-top:10px; margin-right: 50px;">修改</button>
         </div>
-        <br>
-        <p style="font-size: large; font-weight: bold">申报用户记录</p>
-        <br>
-        <div class="form-group">
-            <div class="input-group col-xs-12">
-             <div class="input-group-btn">
-                <select name="type" class="form-control" style="width: auto;">
-                    <option>申报人用户名</option>
-                    <option>申报人账户</option>
-                    <option>申报状态</option>
-                </select>
-             </div>
-                <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" id="search" type="submit">搜索</button>
-                </span>
-            </div>
-        </div>
-        <div class="form-group">
-                <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
-                    <thead style="text-align: center">
-                    <tr>
-                        <th style="width: 10%; text-align: center">序号</th>
-                        <th style="width: 40%; text-align: center">申报人用户名</th>
-                        <th style="width: 40%; text-align: center">申报时间</th>
-                        <th style="width: 10%; text-align: center">申报状态</th>
-                    </tr>
-                    </thead>
-                    <tbody id="demoList"></tbody>
-                </table>
+    </form>
+{#        <br>#}
+{#        <p style="font-size: large; font-weight: bold">申报用户记录</p>#}
+{#        <br>#}
+{#        <div class="form-group" style="width: 60%;">#}
+{#            <div class="input-group col-xs-12">#}
+{#             <div class="input-group-btn">#}
+{#                <select name="type" class="form-control" style="width: auto;">#}
+{#                    <option>用户名</option>#}
+{#                    <option>申报状态</option>#}
+{#                </select>#}
+{#             </div>#}
+{#                <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">#}
+{#                <span class="input-group-btn">#}
+{#                    <button class="btn btn-primary" id="search" type="submit">搜索</button>#}
+{#                </span>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="form-group" style="width: 60%">#}
+{#                <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">#}
+{#                    <thead style="text-align: center">#}
+{#                    <tr>#}
+{#                        <th style="width: 10%; ">序号</th>#}
+{#                        <th style="width: 40%; ">用户名</th>#}
+{#                        <th style="width: 40%; ">申报时间</th>#}
+{#                        <th style="width: 10%; ">申报状态</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    <tbody id="demoList"></tbody>#}
+{#                </table>#}
 {#                 <nav aria-label="Page navigation">#}
 {#                        <ul class="pagination justify-content-end" id="page-li">#}
 {#                        </ul>#}
 {#                 </nav>#}
-        </div>
-    </form>
-</div>
+{#        </div>#}
+
 
 {% endblock %}
 
 {% block js %}
     $(function () {
+{#通过地址栏获取培训id#}
          var searchUrl = window.location.href;
          var searchData = searchUrl.split("="); //截取 url中的“=”,获得“=”后面的参数
          var id = decodeURI(searchData[1]); //decodeURI解码
          console.log(id);
+
+{#取消按钮点击事件#}
          $("#cancel").on("click", function () {
              window.location.reload();
          });
-         $.ajax({
-             type:'GET',
-             url:'/detailtrain',
-             data:{id:id},
-             dataType:'json',
-             async: false,
-             cache: false,
-             contentType: 'application/json',
-             success:function(da) {
-{#                 console.log(re.status);#}
-                 console.log(da);
-                 let name = da.name;
-                 let createtime = da.createtime;
-                 let begintime = da.begintime;
-                 console.log(begintime);
-                 let endtime = da.endtime;
-                 let main = da.main;
-                 $('#name').val(name);
-                 $('#createTime').val(createtime);
-                 $('#startTime').val(begintime);
-                 $('#stopTime').val(endtime);
-                 $('#content').val(main);
-{#                 let str1 = "";#}
-                 let str2 = "";
-                 let idz=new Array(200);
-                 var acquire=new Array(200);
-{#                 str1 += "<tr><td style='width: 20%; text-align: left'>能力提升培训名</td><td>" + name + "</td></tr>" +#}
-{#                     "<tr><td style='width: 20%; text-align: left'>创建时间</td><td>" + createtime + "</td></tr>" +#}
-{#                     "<tr><td style='width: 20%; text-align: left'>开始时间</td><td>" + begintime + "</td></tr>" +#}
-{#                     "<tr><td style='width: 20%; text-align: left'>结束时间</td><td>" + endtime + "</td></tr>" +#}
-{#                     "<tr><td style='width: 20%; text-align: left'>内容</td><td>" + main + "</td></tr>"#}
-{#                 $("#tableText").html(str1);#}
-                 for (let index = 0; index < da.user.length; index++) {
-                     idz[index] = da.user[index].id;
-                     {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
-{#                     let acquire_number = da.user[index].number;#}
-                     let number = index + 1;
-{#                     acquire[acquire_number] = da.user[index].id;#}
-                     str2 += "<tr><td>" + number +
-                         "</td><td>" + da.user[index].username +
-                         "</td><td>" + da.user[index].uptime +
-                         "</td><td>" + da.user[index].status + "</tr>";
-                 }
-                 $("#demoList").html(str2);
-             }
-         });
-        {#    添加重复确认信息#}
+
+{#修改按钮点击事件#}
          $("#change").on("click", function () {
             var flag = confirm("确定修改吗？");
             if(flag == false){
@@ -168,5 +125,80 @@
                  })
             }
          });
+{#加载能力提升培训详情，列表展示部分在前段注释掉了，没有用到#}
+         function replace(str){
+            var str1 = "";
+            for(i=0; i < str.length; i++){
+                if(i==10){
+                    str1 += "T";
+                }else{
+                    str1 += str[i];
+                }
+            }
+            return str1;
+            console.log("str1:", str1);
+         }
+         $.ajax({
+             type:'GET',
+             url:'/detailtrain',
+             data:{id:id},
+             dataType:'json',
+             async: false,
+             cache: false,
+             contentType: 'application/json',
+             success:function(da) {
+                 console.log(da);
+                 let name = da.name;
+                 let createtime = da.createtime;
+                 {#    获取数据库返回的时间并截取到分钟#}
+                 console.log("da.begintime:", da.begintime)
+                 let begintime = da.begintime.slice(0, 16);
+                 console.log("begintime_1:", begintime);
+                 {#    转换成可以填充到前端的时间格式#}
+                 begintime = replace(begintime)
+                 console.log("begintime:", begintime);
+                 let endtime = da.endtime.slice(0, 16);
+                 endtime = replace(endtime)
+                 let main = da.main;
+                 $('#name').val(name);
+                 $('#createTime').val(createtime);
+                 $('#startTime').val(begintime);
+                 $('#stopTime').val(endtime);
+                 $('#content').val(main);
+{#                 let str1 = "";#}
+                 let str2 = "";
+                 let idz=new Array(200);
+                 var acquire=new Array(200);
+{#                 str1 += "<tr><td style='width: 20%; text-align: left'>能力提升培训名</td><td>" + name + "</td></tr>" +#}
+{#                     "<tr><td style='width: 20%; text-align: left'>创建时间</td><td>" + createtime + "</td></tr>" +#}
+{#                     "<tr><td style='width: 20%; text-align: left'>开始时间</td><td>" + begintime + "</td></tr>" +#}
+{#                     "<tr><td style='width: 20%; text-align: left'>结束时间</td><td>" + endtime + "</td></tr>" +#}
+{#                     "<tr><td style='width: 20%; text-align: left'>内容</td><td>" + main + "</td></tr>"#}
+{#                 $("#tableText").html(str1);#}
+                 for (let index = 0; index < da.user.length; index++) {
+                     idz[index] = da.user[index].id;
+                     {#获取列表中的序号number,将列表中的number作为acquire数组的index#}
+{#                     let acquire_number = da.user[index].number;#}
+                     let number = index + 1;
+                     let status = '';
+                     if(da.user[index].status==0){
+                        status = "审核中"
+                     }
+                     if(da.user[index].status==1){
+                            status = "审核通过"
+                     }
+                     if(da.user[index].status==2){
+                            status = "审核驳回"
+                     }
+{#                     acquire[acquire_number] = da.user[index].id;#}
+                     str2 += "<tr><td>" + number +
+                         "</td><td>" + da.user[index].username +
+                         "</td><td>" + da.user[index].uptime +
+                         "</td><td>" + status + "</tr>";
+                 }
+                 $("#demoList").html(str2);
+             }
+         });
+
     })
 {% endblock %}

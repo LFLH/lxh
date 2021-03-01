@@ -154,7 +154,8 @@ class Score(db.Model):
 #表 15系统设置表(次数)
 class System(db.Model):
     __tablename__='system'
-    type=db.Column(db.String(255),primary_key=True)#类型
+    id=db.Column(db.Integer,primary_key=True,autoincrement=True)#id号
+    type=db.Column(db.String(255))#类型
     main=db.Column(db.String(255))#内容
 
     def __repr__(self):

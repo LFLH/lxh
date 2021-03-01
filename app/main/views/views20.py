@@ -228,7 +228,7 @@ def detailuserrecord():
     data = record.datas
     filedata = {'video': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
-        dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
+        dataz = {'id':datai.id,'name': datai.name, 'path': datai.path, 'newname': datai.newname}
         filedata[datai.type].append(dataz)
     # 返回报告名、报告类型、视频、图片、pdf、word
     da = {'username':user.username,'name': record.name, 'type': record.type, 'year': record.year,
@@ -385,7 +385,7 @@ def updaterecord():
             return Response(json.dumps({'status': False, 'code': 500}), mimetype='application/json')
     id = request.args.get('id')
     name = request.args.get('name')
-    data = request.args.get('data')
+    data = request.args.get('data')#未改的旧文件id
     data = data.split(',')
     data[0] = data[0].split('[')[1]
     data[len(data) - 1] = data[len(data) - 1].split(']')[0]

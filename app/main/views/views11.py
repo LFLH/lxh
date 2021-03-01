@@ -35,12 +35,14 @@ def getnewuserdeclare():
 def getnewuserdeclaredata():
     user = session.get('user')
     userid = user['userid']
-    udeclare = UDeclare.query.filter(UDeclare.userid == userid).all()[0]
-    datas=udeclare.datas
+    #按时间倒序进行排列
+    udeclare = UDeclare.query.filter(UDeclare.userid == userid).order_by(-UDeclare.uptime).all()
     dataz=[]
-    for datai in datas:
-        datazi={'name':datai.name,'path':datai.path,'newname':datai.newname}
-        dataz.append(datazi)
+    for ud in udeclare:
+        datas=ud.datas
+        for datai in datas:
+            datazi={'name':datai.name,'path':datai.path,'newname':datai.newname,'uptime':str(ud.uptime)}
+            dataz.append(datazi)
     data={'data':dataz}
     return Response(json.dumps(data), mimetype='application/json')
 

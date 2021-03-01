@@ -85,6 +85,8 @@ def detailactivity():
         dataz = {'id':datai.id,'name': datai.name, 'path': datai.path, 'newname': datai.newname}
         filedata[datai.type].append(dataz)
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、视频、音频、图片、pdf、word
+    begintime = activity.begintime.strftime('%Y-%m-%dT%H:%M')
+    endtime = activity.endtime.strftime('%Y-%m-%dT%H:%M')
     da = {'name': activity.name, 'typeuser': activity.typeuser, 'type': activity.type,
           'begintime': str(activity.begintime), 'endtime': str(activity.endtime), 'main': activity.main,
           'video': filedata['video'], 'music': filedata['music'], 'image': filedata['image'], 'pdf': filedata['pdf'],
@@ -237,9 +239,9 @@ def updateactivity():
         if data[i]!='':
             data[i]=int(data[i])
     if begintime != None:
-        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
     if endtime != None:
-        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     user = session.get('user')
     userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]

@@ -243,7 +243,7 @@ def searchuser():
         else:
             status=3#考核未过用户
         #返回用户id，用户名，密码，最后操作时间，状态
-        itemss={'number':count+i+1,'id':items[i].id,'username':items[i].username,'password':items[i].password,'lasttime':str(items[i].updatetime),'status':status}
+        itemss={'number':count+i+1,'id':items[i].id,'username':items[i].username,'name':items[i].name,'password':items[i].password,'lasttime':str(items[i].updatetime),'status':status}
         item.append(itemss)
     # 返回总页数、活动总数、当前页、用户集合
     data={'zpage':user.pages,'total':user.total,'dpage':user.page,'item':item}

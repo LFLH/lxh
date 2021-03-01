@@ -1,4 +1,4 @@
-<title>managedeclareadd</title>
+<title>申报任务添加</title>
 {% extends "base_Txx.html" %}
 
 {% block content %}
@@ -31,26 +31,33 @@
             <input type="date" class="form-control" id="stopTime" >
           </div>
         </div>
+        <div class="form-group" style="margin-top:10px;">
+          <label for="content" style="font-size: large; font-weight: bold; display: inline; vertical-align: top">申报用户：</label>
+          <div class="col-sm-5" style="display: inline-block; width: 80%">
+              <textarea type="text" class="form-control" id="users" cols="" rows="" readonly></textarea>
+          </div>
+        </div>
+
+        <div style="width: 50%;">
+        <label style="font-size: large; font-weight: bold; ">可选申报用户</label>
+           <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+               <thead style="text-align: center">
+               <tr>
+                    <th>用户名</th>
+                    <th style="display: none">用户ID</th>
+                    <th>名称</th>
+               </tr>
+                </thead>
+                <tbody id="tableText"></tbody>
+            </table>
+            <button id="add" type="button" class="btn btn-info" style="float: right; margin-top: 20px;">选择</button>
+        </div>
         <div class="col-sm-5" style="text-align:center;margin-top:10px;">
          <button id="cancel" type="button" class="btn btn-default" style="margin:50px; background-color: lightgrey;">取消</button>
          <button id="submit" type="button" class="btn btn-success" style="margin:50px">添加</button>
        </div>
 
       </form>
-    <div style="width: 50%;">
-        <label style="font-size: large; font-weight: bold; ">可选申报用户</label>
-           <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
-               <thead style="text-align: center">
-               <tr>
-                    <th>用户ID</th>
-                    <th>用户名</th>
-                    <th>名称</th>
-               </tr>
-            </thead>
-            <tbody id="tableText"></tbody>
-        </table>
-        <button id="add" type="button" class="btn btn-info" style="float: right; margin-top: 20px;">添加申报用户</button>
-    </div>
 {#    </div>#}
 
 {% endblock %}
@@ -71,13 +78,15 @@
                 let str = "";
                 console.log(data.userz.length);
                 for (let index = 0; index < data.userz.length; index++) {
-                    str += "<tr><td>" + data.userz[index].userid +
-                            "</td><td >" + data.userz[index].username +
+                    str += "<tr><td>" + data.userz[index].username +
+                            "</td><td style='display: none;' >" + data.userz[index].userid +
                             "</td><td>" + data.userz[index].name + "</tr>";
                 }
             $("#tableText").html(str);
             }
         });
+
+{#        添加checkbox#}
         function initTableCheckbox() {
             var $thr = $('table thead tr');
             var $checkAllTh = $('<th><input type="checkbox" id="checkAll" name="checkAll" />&nbsp;&nbsp;全选</th>');
@@ -137,18 +146,68 @@
             var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "-" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
             return res
         }
+
+        var userzid = [];
+        $("#add").click(function(){
+{#             var userz = [];#}
+             console.log($("input[name=checkItem]:checked").length);
+             if($("input[name=checkItem]:checked").length==0){
+                var flag = confirm("已选择添加的用户个数为0！");
+                if(flag == false){
+                    return false
+                }else {
+                    var userz = "";
+                }
+             }else{
+                 var userz = [];
+                 var obj = document.getElementsByName("checkItem");
+                 for(k in obj){
+    {#                // 找到选中的复选框#}
+                    if(obj[k].checked){
+    {#                    // 找到选中的复选框所在的行#}
+                        console.log(obj[k]);
+    {#                    console.log(obj[k]);#}
+                        var $tr = $($(obj[k]).parents('td')[0]).parent();
+    {#                    // 找到此行中的某个td#}
+                        var userid = $tr.find("td").eq(2).text();
+                        var username = $tr.find("td").eq(1).text();
+                        userz.push(username);
+                        userzid.push(userid);
+{#                        console.log("obj[k].checked:", obj[k].checked);#}
+{#                        obj[k].checked = false;#}
+    {#                  隐藏已添加用户#}
+{#                        $tr.hide();#}
+                    }
+                 }
+             }
+                document.getElementById("users").value = userz;
+        });
         var createtime = createTime();
         $("#cancel").click(function () {
-            $("#name").val('');
-            $('#startTime').val('');
-            $('#stopTime').val('');
-            $('#content').val('');
+            var flag = confirm("该操作将清空所有输入，确定取消吗？");
+            if(flag == false){
+                return false
+            }else {
+                $("#name").val('');
+                $('#startTime').val('');
+                $('#stopTime').val('');
+                $('#content').val('');
+                $('#users').val('');
+                userid = "";
+                var obj = document.getElementsByName("checkItem");
+                for(k in obj){
+                    if(obj[k].checked){
+                        obj[k].checked = false;
+                    }
+                }
+            }
         });
         $("#submit").click(function () {
             var content = $("#content").val();
             var startTime = $('#startTime').val();
             var stopTime = $('#stopTime').val();
-            var name= $('#name').val();
+            var name = $('#name').val();
+            var users = $('#users').val();
 
              if(name == ''){
              alert('名字不能为空！');
@@ -175,81 +234,75 @@
                  alert('请选择结束时间！');
                  return
              }
-            $.ajax({
-                type: "GET",
-                url: "/adddeclare",
-                data: {name:$('#name').val(),begintime:$('#startTime').val(),endtime:$('#stopTime').val(),main:$("#content").val(),createtime:createtime},
-                dataType: 'json',
-                async: false,
-                cache: false,
-                contentType: 'application/json',
-                success:function ({'status':True, 'id':id}) {
-                    var re = {'status':True, 'id':id};
-                    Flush(re.status);
-                    id = re.id;
-                    console.log("id:",id);
-{#                    $("button #add").style.display = "";#}
-                    $("#add").click(function(){
-                         if($("input[name=checkItem]:checked").length==0){
-                            alert("请先选择要添加的用户！");
-                         }else{
-                             var userz = [];
-                             var obj = document.getElementsByName("checkItem");
-                             for(k in obj){
-                {#                // 找到选中的复选框#}
-                                if(obj[k].checked){
-                {#                    // 找到选中的复选框所在的行#}
-                                    console.log(obj[k]);
-                {#                    console.log(obj[k]);#}
-                                    var $tr = $($(obj[k]).parents('td')[0]).parent();
-                {#                    // 找到此行中的某个td#}
-                                    var userid = $tr.find("td").eq(1).text();
-                                     userz.push(userid);
-                                }
-                            }
-                            console.log("id:",id);
-                            var flag = confirm("将添加以下ID的用户为该任务的申报用户：\n" + userz);
-                            if(flag == false){
-                                return false
-                            }else {
-                                 $.ajax({
-                                    type: "GET",
-                                    url: "/addnewuser",
-                                    data: {id:id, userz:userz},
-                                    dataType: 'json',
-                                    async: false,
-                                    cache: false,
-                                    contentType: 'application/json',
-                                    success:function (re) {
-                                        if(re.status==true){
-                                            alert("添加成功！");
-{#                                            $("#add").style.display = "none";#}
-                                            for(k in obj){
-                                {#                // 找到选中的复选框#}
-                                                if(obj[k].checked){
-                                {#                    // 隐藏已添加用户#}
-                                                    var $tr = $($(obj[k]).parents('td')[0]).parent().hide();
-                                                    $(obj[k]).prop("checked", false);
-                                                }
-                                            }
-    {#                                        $("#checkAll").prop("checked",false);#}
-                                        }else{
-                                            alert("添加失败！");
-                                        }
-                                    }
-                                });
-                            }
-                         }
-                    });
-                }
-            });
+             if(users == ''){
+                alert("请先选择要添加的申报用户！");
+             }
+             var flag = confirm("确定添加当前申报任务吗？");
+             if(flag == false){
+                return false
+             }else {
+                 $.ajax({
+                    type: "GET",
+                    url: "/adddeclare",
+                    data: {name:$('#name').val(),begintime:$('#startTime').val(),endtime:$('#stopTime').val(),main:$("#content").val(),createtime:createtime, userz:userzid},
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    contentType: 'application/json',
+                    success:function ({'status':True, 'id':id}) {
+                        var re = {'status':True, 'id':id};
+                        Flush(re.status);
+                        id = re.id;
+                        console.log("id:",id);
+    {#                    $("button #add").style.display = "";#}
+                    }
+                });
+            }
         });
         function Flush(status){
             if(status==true){
                 alert("添加成功！")
+                window.location.href = '/managedeclareadd';
             }else{
                 alert("添加失败！")
             }
         };
     });
 {% endblock %}
+
+{#                            console.log("id:",id);#}
+{#                            var flag = confirm("将添加以下ID的用户为该任务的申报用户：\n" + userz);#}
+{#                            if(flag == false){#}
+{#                                return false#}
+{#                            }else {#}
+{#                                 $.ajax({#}
+{#                                    type: "GET",#}
+{#                                    url: "/addnewuser",#}
+{#                                    data: {id:id, userz:userz},#}
+{#                                    dataType: 'json',#}
+{#                                    async: false,#}
+{#                                    cache: false,#}
+{#                                    contentType: 'application/json',#}
+{#                                    success:function (re) {#}
+{#                                        if(re.status==true){#}
+{#                                            alert("添加成功！");#}
+{#                                            $("#add").style.display = "none";#}
+{#                                            for(k in obj){#}
+                                {#                // 找到选中的复选框#}
+{#                                                if(obj[k].checked){#}
+                                {#                    // 隐藏已添加用户#}
+{#                                                    var $tr = $($(obj[k]).parents('td')[0]).parent().hide();#}
+{#                                                    $(obj[k]).prop("checked", false);#}
+{#                                                }#}
+{#                                            }#}
+    {#                                        $("#checkAll").prop("checked",false);#}
+{#                                        }else{#}
+{#                                            alert("添加失败！");#}
+{#                                        }#}
+{#                                    }#}
+{#                                });#}
+{#                            }#}
+{#                         }#}
+{#                    });#}
+
+

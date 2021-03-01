@@ -99,9 +99,9 @@ def addsysactivity():
         main = request.form.get('main')
     user = session.get('user')
     #处理时间类型数据
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
-    stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%d')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
+    stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%dT%H:%M')
     userid = user['userid']
     #创建活动及存表
     activity = Activity(name=name, typeuser='系统',type=type, begintime=begintime, endtime=endtime, stoptime=stoptime, main=main, userid=userid,status=2)
@@ -311,6 +311,9 @@ def detailsysactivity():
     user2=[]
     for users2 in userz2:
         user2.append(users2.username)
+    stoptime = activity.stoptime.strftime('%Y-%m-%dT%H:%M')
+    begintime = activity.begintime.strftime('%Y-%m-%dT%H:%M')
+    endtime = activity.endtime.strftime('%Y-%m-%dT%H:%M')
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、用户组
     da={'name':activity.name,'typeuser':activity.typeuser,'type':activity.type,'stoptime':str(activity.stoptime),'begintime':str(activity.begintime),'endtime':str(activity.endtime),'main':activity.main,'user':user,'user2':user2}
     return Response(json.dumps(da), mimetype='application/json')
@@ -337,11 +340,11 @@ def updatesysactivity():
         main = request.form.get('main')
     # 处理时间类型数据
     if begintime!=None:
-        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
     if endtime!=None:
-        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     if stoptime!=None:
-        stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%d')
+        stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%dT%H:%M')
     user=session.get('user')
     userid=user['userid']
     # 修改活动及存表

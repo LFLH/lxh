@@ -34,7 +34,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
@@ -106,11 +106,6 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{url_for('main.managedeclareadd_new')}}">
-                                      申报任务添加
-                                    </a>
-                                </li>
-                                <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
                                       申报任务记录
                                     </a>
@@ -130,11 +125,6 @@
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
                                       已申报用户
-                                    </a>
-                                 </li>
-                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{url_for('main.manageabilityadd_new')}}">
-                                      能力提升培训添加
                                     </a>
                                  </li>
                                 <li class="nav-item">
@@ -235,7 +225,7 @@
                             <tr>
                                 <th>序号</th>
                                 <th>用户名</th>
-                                <th>初始密码</th>
+                                <th>用户单位</th>
                                 <th>最后活动时间</th>
                                 <th>用户类型</th>
                                 <th>操作</th>
@@ -555,7 +545,7 @@
                 }*/
                 str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].password +
+                            "</td><td>" + data.item[index].name +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -638,7 +628,7 @@
                         }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].password +
+                            "</td><td>" + data.item[index].name +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -740,7 +730,7 @@
                         }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].password +
+                            "</td><td>" + data.item[index].name +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -837,7 +827,7 @@
                         }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].password +
+                            "</td><td>" + data.item[index].name +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta+
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -933,7 +923,7 @@
                         }*/
                         str += "<tr><td>" + data.item[index].number +
                             "</td><td>" + data.item[index].username +
-                            "</td><td>" + data.item[index].password +
+                            "</td><td>" + data.item[index].name +
                             "</td><td>" + data.item[index].lasttime +
                             "</td><td>" + sta +
                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -1077,7 +1067,7 @@
                                 }*/
                                 str += "<tr><td>" + data.item[index].number +
                                             "</td><td>" + data.item[index].username +
-                                            "</td><td>" + data.item[index].password +
+                                            "</td><td>" + data.item[index].name +
                                             "</td><td>" + data.item[index].lasttime +
                                             "</td><td>" + sta +
                                             "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -1171,7 +1161,7 @@
                             }*/
                             str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].username +
-                                        "</td><td>" + data.item[index].password +
+                                        "</td><td>" + data.item[index].name +
                                         "</td><td>" + data.item[index].lasttime +
                                         "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -1254,7 +1244,7 @@
                             }*/
                             str += "<tr><td>" + data.item[index].number +
                                         "</td><td>" + data.item[index].username +
-                                        "</td><td>" + data.item[index].password +
+                                        "</td><td>" + data.item[index].name +
                                         "</td><td>" + data.item[index].lasttime +
                                         "</td><td>" + sta +
                                         "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -1287,12 +1277,12 @@
         })
         //导出用户
         $("#userout").on('click', function () {
-            // window.open("./userout");
-            var $eleForm = $("<form method='get'></form>");
+            window.location.href="./userout"
+            /*var $eleForm = $("<form method='get'></form>");
             $eleForm.attr("action","./userout");
             $(document.body).append($eleForm);
             //提交表单，实现下载
-            $eleForm.submit();
+            $eleForm.submit();*/
         })
         //条件检索
         $("#search").on('click', function () {
@@ -1355,7 +1345,7 @@
                     }*/
                     str += "<tr><td>" + data.item[index].number +
                                 "</td><td>" + data.item[index].username +
-                                "</td><td>" + data.item[index].password +
+                                "</td><td>" + data.item[index].name +
                                 "</td><td>" + data.item[index].lasttime +
                                 "</td><td>" + sta +
                                 "</td><td>"+ "<button class='btn btn-info btn-sm' id='view"+index+"'>查看</button> " +
@@ -1389,7 +1379,7 @@
     $(function(){
         $(".a").click(function(){
             $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-        }).next("ul").hide();
+        });
     });
 </script>
 </body>

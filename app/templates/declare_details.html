@@ -13,115 +13,140 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
     <h2 style="padding-top: 20px">申报任务详情</h2>
     <br>
     <form id="ability" role="form">
-        <div class="form-group">
-          <label for="name" style="font-size: large; font-weight: bold">申报任务名：</label>
-          <input type="text" class="form-control" id="name" name="abilityName">
+        <div class="form-group" style="margin-top:10px;">
+          <label for="name" style="font-size: large; font-weight: bold">申报名称：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+            <input type="text" class="form-control" id="name" name="declareName">
+          </div>
+           <label for="startTime" style="font-size: large; font-weight: bold">创建时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+            <input type="text" class="form-control" id="createTime" name="time" disabled="disabled">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="startTime" style="font-size: large; font-weight: bold">申报任务创建时间：</label>
-          <input type="text" class="form-control" id="createTime" name="time" disabled="disabled">
+
+         <div class="form-group" style="margin-top:10px;">
+          <label for="startTime" style="font-size: large; font-weight: bold">开始时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+             <input type="date" class="form-control" id="startTime" name="time1">
+          </div>
+          <label for="stopTime" style="font-size: large; font-weight: bold">结束时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+            <input type="date" class="form-control" id="stopTime" name="time2">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="startTime" style="font-size: large; font-weight: bold">申报开始时间：</label>
-          <input type="text" class="form-control" id="startTime" name="time1" >
-        </div>
-        <div class="form-group" style="font-size: large; font-weight: bold">
-          <label for="stopTime">申报结束时间：</label>
-          <input type="text" class="form-control" id="stopTime" name="time2">
-        </div>
-        <div class="form-group" style="font-size: large; font-weight: bold">
-          <label for="content">申报任务内容：</label>
-          <input type="text" class="form-control" id="content" name="abilityContent">
-        </div>
-        <div style="text-align:center">
-            <button id="cancel" type="button" class="btn btn-default" style="margin:50px; background-color: lightgrey;">取消</button>
-            <button id="change" type="button" class="btn btn-success" style="margin:50px">修改</button>
-        </div>
-        <br>
-        <p style="font-size: large; font-weight: bold">申报用户记录</p>
-        <br>
-        <div class="form-group">
-            <div class="input-group col-xs-12">
-             <div class="input-group-btn">
-                <select name="type" class="form-control" style="width: auto;">
-                    <option>申报人用户名</option>
-                    <option>申报人账户</option>
-                    <option>申报状态</option>
-                </select>
-             </div>
-                <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" id="search" type="submit">搜索</button>
-                </span>
+
+        <div class="form-group" style="margin-top:15px;">
+             <label for="content" style="font-size: large; font-weight: bold; vertical-align: top">申报内容：</label>
+            <div class="col-sm-5" style="display: inline-block; width: 80%;">
+            <textarea type="text" class="form-control" id="content" name="declareContent" ></textarea>
             </div>
         </div>
-        <div class="form-group">
-                <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
-                    <thead style="text-align: center">
-                    <tr>
-                        <th style="width: 10%; text-align: center">序号</th>
-                        <th style="width: 40%; text-align: center">申报人用户名</th>
-                        <th style="width: 40%; text-align: center">申报时间</th>
-                        <th style="width: 10%; text-align: center">申报状态</th>
-                    </tr>
-                    </thead>
-                    <tbody id="demoList"></tbody>
-                </table>
+        <div class="col-sm-5" style="display: inline-block;text-align: center">
+            <button id="cancel" type="button" class="btn btn-default" style="margin-top:10px; margin-right: 50px;background-color: lightgrey;text-align:center;">取消</button>
+            <button id="change" type="button" class="btn btn-success" style="margin-top:10px; margin-right: 50px; text-align:center;">修改</button>
+        </div>
+
+{#        <div class="form-group" style="margin-top:10px;">#}
+{#          <label for="startTime" style="font-size: large; font-weight: bold">创建时间：</label>#}
+{#          <div class="col-sm-3" style="display: inline-block; width: 80%">#}
+{#            <input type="text" class="form-control" id="createTime" name="time" disabled="disabled">#}
+{#          </div>#}
+{#        </div>#}
+
+{#        <div class="form-group" style="margin-top:10px;" >#}
+{#          <label for="stopTime" style="font-size: large; font-weight: bold">结束时间：</label>#}
+{#          <div class="col-sm-3" style="display: inline-block; width: 80%">#}
+{#            <input type="text" class="form-control" id="stopTime" name="time2">#}
+{#          </div>#}
+{#        </div>#}
+
+        <div class="form-group" style="margin-top: 10px;width: 50%;">
+          <label for="content" style="font-size: large; font-weight: bold">申报用户：</label>
+          <table id="usersList" class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+                <thead style="text-align: center">
+                <tr>
+{#                    <th style="width: 10%; text-align: center">序号</th>#}
+                    <th style="text-align: center">用户名</th>
+                    <th style="display: none">用户ID</th>
+                    <th style="text-align: center">基地名称</th>
+{#                    <th style="width: 20%; text-align: center">操作</th>#}
+                </tr>
+                </thead>
+                <tbody id="users"></tbody>
+          </table>
+          <div style="display: inline;">
+          <button id="all" type="button" class="btn btn-info" style="float: right; margin-top: 20px; margin-right: 20px">选择新用户</button>
+          <button id="del" type="button" class="btn btn-warning" style="float: right; margin-top: 20px;margin-right: 20px">删除</button>
+          </div>
+{#            <textarea type="text" class="form-control" id="users" name="users" style=" width: 60% " cols="" rows="" readonly></textarea>#}
+        </div>
+
+        <div id="choose" style="width: 50%; display: none; margin-top: 50px;" >
+        <label style="font-size: large; font-weight: bold; ">可选申报用户</label>
+           <table id="allUsers" class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
+               <thead style="text-align: center">
+               <tr>
+                    <th>用户名</th>
+                    <th style="display: none">用户ID</th>
+                    <th>基地名称</th>
+               </tr>
+                </thead>
+                <tbody id="tableText"></tbody>
+            </table>
+            <button id="add" type="button" class="btn btn-success" style="float: right; margin-top: 20px;">添加</button>
+        </div>
     </form>
-</div>
+
+{#        <br>#}
+{#        <p style="font-size: large; font-weight: bold; margin-top: 50px;">申报记录</p>#}
+{#        <div class="form-group" style="width: 50%;">#}
+{#            <div class="input-group col-xs-12" >#}
+{#             <div class="input-group-btn">#}
+{#                <select name="type" class="form-control" style="width: auto;">#}
+{#                    <option>用户名</option>#}
+{#                    <option>申报时间</option>#}
+{#                    <option>申报状态</option>#}
+{#                </select>#}
+{#             </div>#}
+{#                <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请您输入关键词">#}
+{#                <span class="input-group-btn">#}
+{#                    <button class="btn btn-primary" id="search" type="submit">搜索</button>#}
+{#                </span>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="form-group" style="margin-top:10px; width: 50%">#}
+{#            <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">#}
+{#                <thead style="text-align: center">#}
+{#                <tr>#}
+{#                    <th style="width: 10%; text-align: center">序号</th>#}
+{#                    <th style="width: 35%; text-align: center">用户名</th>#}
+{#                    <th style="width: 35%; text-align: center">基地名称</th>#}
+{#                    <th style="width: 20%; text-align: center">申报状态</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody id="demoList"></tbody>#}
+{#            </table>#}
+{#        </div>#}
+
 
 {% endblock %}
 
 {% block js %}
     $(function () {
+{#从地址栏获取申报id#}
          var searchUrl = window.location.href;
          var searchData = searchUrl.split("="); //截取 url中的“=”,获得“=”后面的参数
          var id = decodeURI(searchData[1]); //decodeURI解码
          console.log(id);
+
+{#取消按钮点击事件#}
          $("#cancel").on("click", function () {
              window.location.reload();
          });
-         $.ajax({
-             type:'GET',
-             url:'/detaildeclare',
-             data:{id:id},
-             dataType:'json',
-             async: false,
-             cache: false,
-             contentType: 'application/json',
-             success:function(da) {
-{#                 console.log(re.status);#}
-                 console.log(da);
-                 let name = da.name;
-                 let createtime = da.createtime;
-                 let begintime = da.begintime;
-                 console.log(begintime);
-                 let endtime = da.endtime;
-                 let main = da.main;
-                 $('#name').val(name);
-                 $('#createTime').val(createtime);
-                 $('#startTime').val(begintime);
-                 $('#stopTime').val(endtime);
-                 $('#content').val(main);
-                 let str2 = "";
-                 let idz=new Array(200);
-                 var acquire=new Array(200);
-                 for (let index = 0; index < da.user.length; index++) {
-                     idz[index] = da.user[index].id;
-                     let number = index + 1;
-                     str2 += "<tr><td>" + number +
-                         "</td><td>" + da.user[index].username +
-                         "</td><td>" + da.user[index].uptime +
-                         "</td><td>" + da.user[index].status + "</tr>";
-                 }
-                 $("#demoList").html(str2);
-             }
-         });
-        {#    修改按钮二次确认#}
+{#修改按钮点击事件#}
          $("#change").on("click", function () {
             var flag = confirm("确定修改吗？");
             if(flag == false){
@@ -152,5 +177,288 @@
                  })
             }
          });
-    })
+{#进入页面即加载申报任务名称、时间、申报用户、申报记录等内容#}
+{#    申报记录在前端注释掉了没有用上#}
+        {# 记录该申报任务当前的申报用户#}
+         var user_now = [];
+         $.ajax({
+             type:'GET',
+             url:'/detaildeclare',
+             data:{id:id},
+             dataType:'json',
+             async: false,
+             cache: false,
+             contentType: 'application/json',
+             success:function(da) {
+                 console.log(da);
+                 let name = da.name;
+                 let createtime = da.createtime;
+                 let begintime = da.begintime.slice(0, 10);
+                 console.log(begintime);
+                 let endtime = da.endtime.slice(0, 10);
+                 let main = da.main;
+                 let user = da.user;
+                 $('#name').val(name);
+                 $('#createTime').val(createtime);
+                 $('#startTime').val(begintime);
+                 $('#stopTime').val(endtime);
+                 $('#content').val(main);
+                 let str1 = "";
+                 let str2 = "";
+                 let idz=new Array();
+                 console.log("da.zuser.length:", da.zuser.length);
+                 for (let index = 0; index < da.zuser.length; index++){
+                     str1 += "<tr><td style='text-align: center'>" + da.zuser[index].username +
+                         "</td><td style='display: none;' >" + da.zuser[index].userid +
+                         "</td><td style='text-align: center'>" + da.zuser[index].name + "</tr>";
+{#                         "</td><td style='text-align: center'>" + "<input type='button' class='btn btn-warning btn-sm' value=删除>"+"</tr>";#}
+                     user_now.push(da.zuser[index].username);
+                 }
+                 $("#users").html(str1);
+
+                 for (let index = 0; index < da.user.length; index++) {
+                     idz[index] = da.user[index].id;
+                     let status = '';
+                     if(da.user[index].status==0){
+                        status = "审核中"
+                     }
+                     if(da.user[index].status==1){
+                            status = "审核通过"
+                     }
+                     if(da.user[index].status==2){
+                            status = "审核驳回"
+                     }
+                     let number = index + 1;
+                     str2 += "<tr><td style='text-align: center'>" + number +
+                         "</td><td style='text-align: center'>" + da.user[index].username +
+                         "</td><td style='text-align: center'>" + da.user[index].uptime +
+                         "</td><td style='text-align: center'>" + status + "</tr>";
+                 }
+                 $("#demoList").html(str2);
+             }
+         });
+{#为申报用户列表添加checkbox#}
+        function initTableCheckbox1() {
+            var $thr = $("#usersList thead tr");
+            console.log("$thr:", $thr);
+            var $checkAllTh = $('<th><input type="checkbox" id="checkAll1" name="checkAll1" />&nbsp;&nbsp;全选</th>');
+            $thr.prepend($checkAllTh);
+            var $checkAll = $thr.find('input');
+            $checkAll.click(function(event){
+                $tbr.find('input').prop('checked',$(this).prop('checked'));
+                if ($(this).prop('checked')) {
+                    $tbr.find('input').parent().parent().addClass('warning');
+                } else{
+                    $tbr.find('input').parent().parent().removeClass('warning');
+                }
+                event.stopPropagation();
+            });
+            $checkAllTh.click(function(){
+                $(this).find('input').click();
+            });
+            var $tbr = $("#usersList tbody tr");
+            var $checkItemTd = $('<td><input type="checkbox" name="checkItem1" /></td>');
+            $tbr.prepend($checkItemTd);
+            $tbr.find('input').click(function(event){
+                $(this).parent().parent().toggleClass('warning');
+                $checkAll.prop('checked',$tbr.find('input:checked').length == $tbr.length ? true : false);
+                event.stopPropagation();
+            });
+            $tbr.click(function(){
+                $(this).find('input').click();
+            });
+        }
+        initTableCheckbox1();
+
+{#进入页面即加载全部可选申报用户#}
+        $.ajax({
+            type: "GET",
+            url: "/getnewuser",
+            data: {},
+            dataType: 'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function ({'userz': userz}) {
+                let data = {'userz': userz};
+                let str = "";
+                console.log(data.userz.length);
+                console.log("user_now:", user_now)
+                for (let index = 0; index < data.userz.length; index++) {
+{#                    判断在该申报任务中用户是否已被选择，隐藏已选择的用户，显示未选择的用户#}
+                    if (user_now.indexOf(data.userz[index].username)!=-1){
+                        str += "<tr style='display: none'><td>" + data.userz[index].username +
+                            "</td><td style='display: none;' >" + data.userz[index].userid +
+                            "</td><td>" + data.userz[index].name + "</tr>";
+                    }else{
+                        str += "<tr><td>" + data.userz[index].username +
+                            "</td><td style='display: none;' >" + data.userz[index].userid +
+                            "</td><td>" + data.userz[index].name + "</tr>";
+                    }
+                }
+            $("#tableText").html(str);
+            }
+        });
+{#为所有申报用户列表添加checkbox#}
+        function initTableCheckbox2() {
+{#            var $thr = $("table thead tr");#}
+            var $thr = $("#allUsers thead tr");
+            console.log("$thr:", $thr);
+            var $checkAllTh = $('<th><input type="checkbox" id="checkAll2" name="checkAll2" />&nbsp;&nbsp;全选</th>');
+{#            /*将全选/反选复选框添加到表头最前，即增加一列*/#}
+            $thr.prepend($checkAllTh);
+{#            /*“全选/反选”复选框*/#}
+            var $checkAll = $thr.find('input');
+            $checkAll.click(function(event){
+{#                /*将所有行的选中状态设成全选框的选中状态*/#}
+                $tbr.find('input').prop('checked',$(this).prop('checked'));
+{#                /*并调整所有选中行的CSS样式*/#}
+                if ($(this).prop('checked')) {
+                    $tbr.find('input').parent().parent().addClass('warning');
+                } else{
+                    $tbr.find('input').parent().parent().removeClass('warning');
+                }
+{#                /*阻止向上冒泡，以防再次触发点击操作*/#}
+                event.stopPropagation();
+            });
+{#            /*点击全选框所在单元格时也触发全选框的点击操作*/#}
+            $checkAllTh.click(function(){
+                $(this).find('input').click();
+            });
+            var $tbr = $("#allUsers tbody tr");
+            var $checkItemTd = $('<td><input type="checkbox" name="checkItem2" /></td>');
+{#            /*每一行都在最前面插入一个选中复选框的单元格*/#}
+            $tbr.prepend($checkItemTd);
+{#            /*点击每一行的选中复选框时*/#}
+            $tbr.find('input').click(function(event){
+{#                /*调整选中行的CSS样式*/#}
+                $(this).parent().parent().toggleClass('warning');
+{#                /*如果已经被选中行的行数等于表格的数据行数，将全选框设为选中状态，否则设为未选中状态*/#}
+                $checkAll.prop('checked',$tbr.find('input:checked').length == $tbr.length ? true : false);
+{#                /*阻止向上冒泡，以防再次触发点击操作*/#}
+                event.stopPropagation();
+            });
+{#            /*点击每一行时也触发该行的选中操作*/#}
+            $tbr.click(function(){
+                $(this).find('input').click();
+            });
+        }
+        initTableCheckbox2();
+
+{#查看所有用户按钮点击事件：展示/隐藏所有用户列表#}
+        $("#all").click(function () {
+            console.log("我被点击了");
+            var btn = document.getElementById("all");
+            var allUsers =  document.getElementById("choose");
+            console.log("按钮显示文字：",btn.innerHTML);
+            if( btn.innerHTML=="选择新用户"){
+                allUsers.style.display="";
+                btn.innerHTML = "隐藏新用户";
+            }
+            else if( btn.innerHTML=="隐藏新用户"){
+                allUsers.style.display="none";
+                btn.innerHTML = "选择新用户";
+            }
+        });
+{#删除按钮点击事件：删除申报用户#}
+        $("#del").click(function () {
+             var userz = [];
+             var userzid = [];
+             var obj = document.getElementsByName("checkItem1");
+             for(k in obj){
+                if(obj[k].checked){
+                    console.log(obj[k]);
+                    var $tr = $($(obj[k]).parents('td')[0]).parent();
+                    var userid = $tr.find("td").eq(2).text();
+                    var username = $tr.find("td").eq(1).text();
+                    userz.push(username);
+                    userzid.push(userid);
+                }
+             }
+             console.log($("input[name=checkItem1]:checked").length);
+             if($("input[name=checkItem1]:checked").length==0){
+                alert("已选择的用户个数为0！");
+                return false
+             }else{
+                var flag = confirm("确定删除以下申报用户吗？\n"+ userz);
+                console.log("userzid", userzid);
+                if(flag == false){
+                    return false
+                }else {
+                     $.ajax({
+                        type:'GET',
+                        url:'/deletenewuser',
+                        data:{id:id, userz:userzid},
+                        dataType:'json',
+                        async: false,
+                        cache: false,
+                        contentType: 'application/json',
+                        success:function(result){
+                            console.log(result.status)
+                            if(result.status==true){
+                                alert("删除成功！");
+                                for(k in obj){
+                                    if(obj[k].checked){
+                                        var $tr = $($(obj[k]).parents('td')[0]).parent();
+                                        $tr.hide();
+                                        obj[k].checked = false;
+                                    }
+                                 }
+{#                                window.location.reload();#}
+                            }else{
+                                alert("删除失败！");
+                            }
+        {#                    window.location.reload()#}
+                        }
+                    });
+                }
+            }
+        });
+{#添加按钮点击事件：添加申报用户#}
+        $("#add").click(function () {
+             var userz = [];
+             var userzid = [];
+             var obj = document.getElementsByName("checkItem2");
+             for(k in obj){
+                if(obj[k].checked){
+                    console.log(obj[k]);
+                    var $tr = $($(obj[k]).parents('td')[0]).parent();
+                    var userid = $tr.find("td").eq(2).text();
+                    var username = $tr.find("td").eq(1).text();
+                    userz.push(username);
+                    userzid.push(userid);
+                }
+             }
+             console.log($("input[name=checkItem2]:checked").length);
+             if($("input[name=checkItem2]:checked").length==0){
+                alert("已选择的用户个数为0！");
+                return false
+             }else{
+                var flag = confirm("确定添加以下申报用户吗？\n"+ userz);
+                console.log("userzid", userzid);
+                if(flag == false){
+                    return false
+                }else {
+                     $.ajax({
+                        type:'GET',
+                        url:'/addnewuser',
+                        data:{id:id, userz:userzid},
+                        dataType:'json',
+                        async: false,
+                        cache: false,
+                        contentType: 'application/json',
+                        success:function(result){
+                            console.log(result.status)
+                            if(result.status==true){
+                                alert("添加成功！");
+                                window.location.reload();
+                            }else{
+                                alert("添加失败！");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+      })
 {% endblock %}

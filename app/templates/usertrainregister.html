@@ -23,6 +23,32 @@
             vertical-align: middle;
             text-align: center;
         }
+        .tableCondition {
+            width: 90%;
+            margin:0 auto;
+            background: #a39f9f; /* browsers that don't support rgba  */
+            background: rgba(210, 205, 205, 0.15);
+            font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            /*color: #0; 不能用1个0 */
+            border: none;
+            border-collapse: collapse;
+        }
+        .table td, .table th {
+            padding: .45rem .75rem;
+        }
+        .type {
+            background: #93D1FF;
+            width: 50px;
+            height: 50px;
+            text-shadow: 0 1px 2px rgba(132, 130, 130, 0.3);
+        }
+        .stat {
+            background: #93D1FF;
+            width: 55px;
+            height: 55px;
+            text-shadow: 0 1px 2px rgba(111, 109, 109, 0.3);
+        }
         .dropdown-menu li{
             text-align: left;
             padding-left: 10px;
@@ -44,7 +70,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%;">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
@@ -164,7 +190,7 @@
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">林学会能力提升培训列表</h2>
-                <div class="form-group" style="margin-top: 10px">
+                <!--<div class="form-group" style="margin-top: 10px">
                      <div class="input-group col-xs-12" style="float: right">
                          <div class="input-group-btn">
                             <select name="selectSta" class="form-control" style="width: auto;" id="selectSta">
@@ -180,6 +206,25 @@
                          </span>
                      </div>
                      <br>
+                </div>-->
+                <table class="table table-bordered tableCondition"  style="float: left;margin-top: 10px">
+                    <tbody id="condition_table">
+                        <tr style="height: 10px">
+                          <td style="width: 120px">状态：</td>
+                          <td style="text-align: left">
+                              <a id="sta_1" style="color: #005cbf;">未报名</a>
+                              <a id="sta_2" style="color: #005cbf;margin-left: 15px">已报名</a>
+                              <a id="sta_3" style="color: #005cbf;margin-left: 15px">已过期</a>
+                          </td>
+                        </tr>
+                        <tr style="width: 120px">
+                          <td>培训任务名：</td>
+                          <td><input type="text" name="keyword" id="keyword_trainName" class="form-control" placeholder="请输入培训任务名称" style="height: 30px"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="float: left;margin-left: 20px;margin-top: 52px">
+                    <button class="btn btn-dark" id="search_all" type="submit">检索</button>
                 </div>
                 <div class="table-responsive" style="padding-top: 10px">
                     <table class="table table-bordered table-hover" id="mytable">
@@ -354,21 +399,71 @@
         var idz = new Array(per_page);
         var sort=0;
         init();
+        var name
+        var type
+        var status_show
+        var status
+        $(document).on("click","#sta_1",function () {
+            let status_1 = $("#sta_1").text() //选择平铺内容
+            $("#sta_2").attr("class",'') //先清空其他平铺样式
+            $("#sta_3").attr("class",'')
+            $("#sta_1").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_1").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_1
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        $(document).on("click","#sta_2",function () {
+            let status_2 = $("#sta_2").text() //选择平铺内容
+            $("#sta_1").attr("class",'') //先清空其他平铺样式
+            $("#sta_3").attr("class",'')
+            $("#sta_2").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_2").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_2
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        $(document).on("click","#sta_3",function () {
+            let status_3 = $("#sta_3").text() //选择平铺内容
+            $("#sta_1").attr("class",'') //先清空其他平铺样式
+            $("#sta_2").attr("class",'')
+            $("#sta_3").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_3").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_3
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        // 实现检索操作
+        $(document).on("click","#search_all",function () {
+            // 获取平铺检索内容
+            if(status_show == "未报名"){
+                status = 0;
+             }
+            if(status_show == "已过期"){
+                status = 1;
+             }
+            if(status_show == "已报名"){
+                status = 2;
+             }
+            if(status_show == undefined){
+                status = undefined;
+            }
+            console.log("actiivitytype=",type)
+            console.log("status_show=",status_show)
+            console.log("status_=",status)
+            // 获取选择的活动名
+            name = $("#keyword_trainName").val()
+            console.log("activityname=",name)
+            // 刷新页面
+            init();
+        });
         function init(){
-            if (document.getElementById('trainName').value){
-                var name = document.getElementById('trainName').value
-            }
-            switch (document.getElementById('selectSta').value) {
-                case '未报名':
-                    var status = 0;
-                    break;
-                case '已过期':
-                    var status = 1;
-                    break;
-                case '已报名':
-                    var status = 2;
-                    break;
-            }
             $.ajax({
             type: 'GET',
             url: './searchsystrain',
@@ -645,7 +740,7 @@
             }
         })
         // 条件检索
-        $("#search").on('click', function () {
+        /*$("#search").on('click', function () {
             if (document.getElementById('trainName').value){
                 var name = document.getElementById('trainName').value
             }
@@ -719,7 +814,7 @@
                     }
                 }
             });
-        })
+        })*/
         // 前一页
         $("#page-li").on("click", "#prev", function () {
             if (dpage == 1) {

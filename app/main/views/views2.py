@@ -40,13 +40,13 @@ def manageall():
         #yd,wd=zbfb(udeclarecount,usercount)
         if usercount==0:
             yd=0.0
-            wd=100.0
+            wd=0.0
         else:
             yd=udeclarecount
             wd=usercount-udeclarecount
     else:
         yd=0.0
-        wd=100.0
+        wd=0.0
     d={"yd":yd,"wd":wd}
     #各月活动提交情况
     year=str(datetime.datetime.now()).split('-')[0]
@@ -62,7 +62,7 @@ def manageall():
         activity=Activity.query.filter(and_(Activity.updatetime>=month[i],Activity.updatetime<month[i+1],Activity.typeuser=='自主',Activity.status!=3,Activity.status!=1)).count()
         activitycount.append(activity)
     #需要报名人数
-    train=Train.query.filter(and_(Train.status==0,Train.endtime>datetime.datetime.now())).order_by(-Train.id).all()
+    train=Train.query.filter(and_(Train.status==0)).order_by(-Train.id).all()
     if len(train)>0:
         train=train[0]
         usercount2=User.query.filter(and_(User.checked==1,User.type=='user')).count()
@@ -72,13 +72,13 @@ def manageall():
         #yt,wt = zbfb(utraincount, usercount2)
         if usercount2==0:
             yt = 0.0
-            wt = 100.0
+            wt = 0.0
         else:
             yt=utraincount
             wt=usercount2-utraincount
     else:
         yt=0.0
-        wt=100.0
+        wt=0.0
     t={"yt":yt,"wt":wt}
     #返回申报百分比，各月提交情况，新培训报名
     return Response(json.dumps({"d":d,"activitycount":activitycount,"t":t}), mimetype='application/json')

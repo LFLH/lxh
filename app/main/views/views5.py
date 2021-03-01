@@ -130,20 +130,13 @@ def deletenewuser():
         id=request.form.get('id')
     userz = request.values.getlist('userz[]')
     declare=Declare.query.filter(Declare.id==id).all()[0]
-    users=declare.users
     # 移除申报中的用户
-    length = len(users)
-    for i in range(length):
-        users[length - i - 1].status=2
-        db.session.add(users[length - i - 1])
-        db.session.commit()
-        declare.users.remove(users[length - i - 1])
     for usersi in userz:
         user=User.query.filter(User.id==usersi).all()[0]
-        user.status=0
+        user.status=2
         db.session.add(user)
         db.session.commit()
-        declare.users.append(user)
+        declare.users.remove(user)
     db.session.add(declare)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -164,9 +157,13 @@ def detaildeclare():
         userud=User.query.filter(User.id==ud.userid).all()[0]
         #用户名，申报时间，申报状态
         user.append({'username':userud.name,'uptime':str(ud.uptime),'status':ud.type})
-    # 返回申报任务名、创建时间、开始时间、结束时间、活动内容、用户组
+    zuser=[]
+    usersz=declare.users
+    for u in usersz:
+        zuser.append({'name':u.name,'username':u.username,'userid':u.id})
+    # 返回申报任务名、创建时间、开始时间、结束时间、活动内容、报名用户组、总用户组
     da = {'name': declare.name, 'createtime':str(declare.createtime),
-          'begintime': str(declare.begintime), 'endtime': str(declare.endtime), 'main': declare.main, 'user': user}
+          'begintime': str(declare.begintime), 'endtime': str(declare.endtime), 'main': declare.main, 'user': user,'zuser':zuser}
     return Response(json.dumps(da), mimetype='application/json')
 
 #详细申报任务页的条件检索
@@ -227,9 +224,9 @@ def updatedeclare():
         endtime = request.form.get('endtime')
         main = request.form.get('main')
     if begintime!=None:
-        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
+        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
     if endtime!=None:
-        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     declare = Declare.query.filter(Declare.id == id).all()[0]
      # chatime =datetime.datetime.now()-declare.endtime
     # chatime=chatime.days
@@ -251,7 +248,7 @@ def updatedeclare():
         db.session.add(declare)
         db.session.commit()
         # 设置新用户提交时间
-        user = declare.user
+        user = declare.users
         for i in range(len(user)):
             user[i].endtime = endtime
             db.session.add(user[i])
@@ -297,8 +294,8 @@ def adddeclare():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     #创建申报
     declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(declare)

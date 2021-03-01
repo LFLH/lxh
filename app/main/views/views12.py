@@ -56,11 +56,14 @@ def olduserall():
         activity = Activity.query.filter(and_(Activity.updatetime >= month[i], Activity.updatetime < month[i + 1],Activity.userid==userid,Activity.status!=3,Activity.status!=1)).count()
         activitycount.append(activity)
     message=[]
+    msgUrl=[]
     #被驳回的活动信息
     activitybh=Activity.query.filter(and_(Activity.updatetime >= month[i],Activity.userid==userid,Activity.status==2)).all()
     for bh in activitybh:
         s=bh.name+"被驳回了"
+        url = "../useractivity"
         message.append(s)
+        msgUrl.append(url)
     #培训申请状态
     utrain=UTrain.query.filter(and_(UTrain.userid==userid,UTrain.type==0)).all()
     for ut in utrain:
@@ -68,30 +71,40 @@ def olduserall():
         if len(train)>0:
             if train[0].endtime>datetime.datetime.now():
                 s=train[0].name+"申请未通过"
+                url = "../usertrainregister"
                 message.append(s)
+                msgUrl.append(url)
     #新活动发布
     activitynew=Activity.query.filter(and_(Activity.typeuser=="系统",Activity.stoptime>datetime.datetime.now(),Activity.status!=3)).all()
     for new in activitynew:
         ua=User.query.join(AU).join(Activity).filter(and_(Activity.id==new.id,User.id==userid)).count()
         if ua==0:
             s=new.name+"系统任务发布"
+            url = "../useractivityregister"
             message.append(s)
+            msgUrl.append(url)
     #新培训发布
     trainnew=Train.query.filter(and_(Train.endtime>datetime.datetime.now(),Train.status!=1)).all()
     for tn in trainnew:
         utt=UTrain.query.join(TUT).join(Train).filter(and_(Train.id==tn.id,UTrain.userid==userid)).count()
         if utt==0:
             s=tn.name+"新培训发布了"
+            url = "../usertrainregister"
             message.append(s)
+            msgUrl.append(url)
     #活动报名截止
     activityold=Activity.query.filter(and_(Activity.typeuser=="系统",Activity.stoptime<datetime.datetime.now(),Activity.status!=3)).all()
     for old in activityold:
         s=old.name+"系统任务报名截止了"
+        url = "../useractivityregister"
         message.append(s)
+        msgUrl.append(url)
     #培训报名截止
     trainold = Train.query.filter(and_(Train.endtime < datetime.datetime.now(),Train.status!=1)).all()
     for to in trainold:
-        s = to.name + "系统任务报名截止了"
+        s = to.name + "培训报名截止了"
+        url = "../usertrainregister"
         message.append(s)
+        msgUrl.append(url)
     #返回已提交活动占比，各月提交情况，各种信息（被驳回的活动信息，培训申请状态，新活动发布，新培训发布，活动报名截止，培训报名截止）
     return Response(json.dumps({"a":a,"activitycount":activitycount,"message":message}), mimetype='application/json')

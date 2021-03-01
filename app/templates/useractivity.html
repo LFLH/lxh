@@ -27,6 +27,33 @@
             text-align: center;
         }
 
+        .tableCondition {
+            width: 90%;
+            margin:0 auto;
+            background: #a39f9f; /* browsers that don't support rgba  */
+            background: rgba(210, 205, 205, 0.15);
+            font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            /*color: #0; 不能用1个0 */
+            border: none;
+            border-collapse: collapse;
+        }
+        .table td, .table th {
+            padding: .45rem .75rem;
+        }
+        .type {
+            background: #93D1FF;
+            width: 50px;
+            height: 50px;
+            text-shadow: 0 1px 2px rgba(132, 130, 130, 0.3);
+        }
+        .stat {
+            background: #93D1FF;
+            width: 55px;
+            height: 55px;
+            text-shadow: 0 1px 2px rgba(111, 109, 109, 0.3);
+        }
+
         .dropdown-menu li {
             text-align: left;
             padding-left: 10px;
@@ -166,12 +193,13 @@
         </div>
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">自主活动列表</h2>
-            <div class="form-group" style="margin-top: 10px">
+            <!--<div class="form-group" style="margin-top: 10px">
                  <div class="input-group col-xs-12" style="float: right">
                      <div class="input-group-btn">
                         <select name="selectType" class="form-control" style="width: auto;" id="selectType">
                             <option>活动类型</option>
                             <option>会议</option>
+                            <option>培训</option>
                         </select>
                      </div>
                      <div class="input-group-btn" style="padding-left: 10px">
@@ -188,9 +216,36 @@
                      </span>
                  </div>
                  <br>
+            </div>-->
+            <table class="table table-bordered tableCondition"  style="float: left;margin-top: 10px">
+                <tbody id="condition_table">
+                      <tr style="height: 10px">
+                      <td style="width: 120px">活动类型：</td>
+                      <td style="text-align: left">
+                          <a id="ac_type_1" style="color: #005cbf">会议</a>
+                          <a id="ac_type_2" style="color: #005cbf;margin-left: 15px">培训</a>
+                          <a id="ac_type_3" style="color: #005cbf;margin-left: 15px">交流</a>
+                      </td>
+                    </tr>
+                    <tr style="height: 10px">
+                      <td style="width: 120px">状态：</td>
+                      <td style="text-align: left">
+                          <a id="sta_1" style="color: #005cbf;">审核中</a>
+                          <a id="sta_2" style="color: #005cbf;margin-left: 15px">通过</a>
+                          <a id="sta_3" style="color: #005cbf;margin-left: 15px">驳回</a>
+                      </td>
+                    </tr>
+                    <tr style="width: 120px">
+                      <td>活动名：</td>
+                      <td><input type="text" name="keyword" id="keyword_acname" class="form-control" placeholder="请输入活动名称" style="height: 30px"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="float: left;margin-left: 20px;margin-top: 88px">
+                <button class="btn btn-dark" id="search_all" type="submit">检索</button>
             </div>
-            <div class="table-responsive" style="padding-top: 10px">
-                <table class="table table-bordered table-hover" id="mytable">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="mytable" style="margin-top: 10px">
                     <thead>
                     <tr class="table-info">
                         <th>序号</th>
@@ -204,7 +259,6 @@
                     </thead>
                     <tbody id="tableText">
                     </tbody>
-
                 </table>
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-end" id="page-li">
@@ -308,14 +362,14 @@
                     </div>
 <!--                </form>-->
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="show-foot">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
 </div>
 <!-- 修改模态框 #addModal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -341,13 +395,13 @@
                     <div class="form-group">
                         <label for="editbegintime" class="col-sm-3 control-label">活动起始时间:</label>
                         <div class="col-md-4" style="padding-left: 20px;">
-                            <input type="date" class="form-control" id="editbegintime" required value="">
+                            <input type="datetime-local" class="form-control" id="editbegintime" required value="">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="editendtime" class="col-sm-3 control-label">活动结束时间:</label>
                         <div class="col-md-4" style="padding-left: 20px;">
-                            <input type="date" class="form-control" id="editendtime" required value="">
+                            <input type="datetime-local" class="form-control" id="editendtime" required value="">
                         </div>
                     </div>
                     <div class="form-group">
@@ -452,29 +506,193 @@
         var dpage = 1 //当前页
         var pages = 1 //总页数
         var per_page = 10 //每页显示
-        var d_per_page = per_page
+        // var d_per_page = per_page
         // var idz = new Array(10);
-        var sort=0;
         init();
-        function init(){
+        var sort=0;
+        var name
+        var type
+        var status_show
+        var status
+        $(document).on("click","#ac_type_1",function () {
+            let ac_type_1 = $("#ac_type_1").text() //选择平铺内容
+            $("#ac_type_2").attr("class",'') //先清空其他平铺样式
+            $("#ac_type_3").attr("class",'')
+            $("#ac_type_1").toggleClass("type") //点击增加和删除样式
+            if($("#ac_type_1").attr('class') == 'type'){ //判断平铺选择的内容
+                type = ac_type_1
+            }
+            else{
+                type = undefined
+            }
+        })
+        $(document).on("click","#ac_type_2",function () {
+            let ac_type_2 = $("#ac_type_2").text() //选择平铺内容
+            $("#ac_type_1").attr("class",'') //先清空其他平铺样式
+            $("#ac_type_3").attr("class",'')
+            $("#ac_type_2").toggleClass("type") //点击增加和删除样式
+            if($("#ac_type_2").attr('class') == 'type'){ //判断平铺选择的内容
+                type = ac_type_2
+            }
+            else{
+                type = undefined
+            }
+        })
+        $(document).on("click","#ac_type_3",function () {
+            let ac_type_3 = $("#ac_type_3").text() //选择平铺内容
+            $("#ac_type_1").attr("class",'') //先清空其他平铺样式
+            $("#ac_type_2").attr("class",'')
+            $("#ac_type_3").toggleClass("type") //点击增加和删除样式
+            if($("#ac_type_3").attr('class') == 'type'){ //判断平铺选择的内容
+                type = ac_type_3
+            }
+            else{
+                type = undefined
+            }
+        })
+        $(document).on("click","#sta_1",function () {
+            let status_1 = $("#sta_1").text() //选择平铺内容
+            $("#sta_2").attr("class",'') //先清空其他平铺样式
+            $("#sta_3").attr("class",'')
+            $("#sta_1").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_1").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_1
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        $(document).on("click","#sta_2",function () {
+            let status_2 = $("#sta_2").text() //选择平铺内容
+            $("#sta_1").attr("class",'') //先清空其他平铺样式
+            $("#sta_3").attr("class",'')
+            $("#sta_2").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_2").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_2
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        $(document).on("click","#sta_3",function () {
+            let status_3 = $("#sta_3").text() //选择平铺内容
+            $("#sta_1").attr("class",'') //先清空其他平铺样式
+            $("#sta_2").attr("class",'')
+            $("#sta_3").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_3").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_3
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        // 实现检索操作
+        $(document).on("click","#search_all",function () {
+            // 获取平铺检索内容
+            if(status_show == "审核中"){
+                status = 0;
+             }
+            if(status_show == "驳回"){
+                status = 1;
+             }
+            if(status_show == "通过"){
+                status = 2;
+             }
+            if(status_show == undefined){
+                status = undefined;
+            }
+            console.log("actiivitytype=",type)
+            console.log("status_show=",status_show)
+            console.log("status_=",status)
+            // 获取选择的活动名
+            name = $("#keyword_acname").val()
+            console.log("activityname=",name)
+            // 刷新页面
+            init();
+        });
+        // 条件检索-旧
+        /*$("#search").on('click', function () {
             if (document.getElementById('activityName').value){
-                var name = document.getElementById('activityName').value
+                name = document.getElementById('activityName').value
             }
             if (document.getElementById('selectType').value!='活动类型'){
-                var type = document.getElementById('selectType').value
+                type = document.getElementById('selectType').value
             }
             switch (document.getElementById('selectSta').value)
             {
                 case '审核中':
-                    var status = 0;
+                    status = 0;
                     break;
                 case '驳回':
-                    var status = 1;
+                    status = 1;
                     break;
                 case '通过':
-                    var status = 2;
+                    status = 2;
                     break;
             }
+            $.ajax({
+                type: 'GET',
+                url: './showactivity',
+                data:{
+                    page:dpage,
+                    per_page:per_page,
+                    name:name,
+                    type:type,
+                    status:status
+                },
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success: function (data) {
+                    pages = data.zpage;
+                    let total = data.total;
+                    dpage = data.dpage;
+                    let activity = data.item;
+                    let str = ""
+                    for (let index = 0; index < data.item.length; index++) {
+                        switch(data.item[index].status) {
+                                 case 0:
+                                    var sta = '审核中';
+                                    break;
+                                 case 1:
+                                    var sta = '驳回';
+                                    break;
+                                 case 2:
+                                    var sta = '通过';
+                                    break;
+                                }
+                        str += "<tr><td>" + data.item[index].number +
+                            "</td><td>" + data.item[index].activityname +
+                            "</td><td>" + data.item[index].type +
+                            "</td><td>" + data.item[index].begintime +
+                            "</td><td>" + data.item[index].endtime +
+                            "</td><td>" + sta +
+                            "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
+                            "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button> " +
+                            "<button data-toggle='modal' class='btn btn-danger btn-sm user-active-delete' data-id='" + data.item[index].id + "'>删除</button>" + "</tr>";
+                    }
+                    $("#tableText").html(str);
+                    let strli = "<li class='page-item'><a class='page-link' href='#' id='prev'>前一页</a></li>"
+                    strli += "<li class='page-item'><a id=li" + 1 + " href='#' class='page-link page-num'>" + 1 + "</a></li>"
+                    for (let index = 2; index <= pages; index++) {
+                        strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link page-num'>" + index + "</a></li>"
+                    }
+                    strli += "<li class='page-item'><a class='page-link' href='#' id='next'>后一页</a></li>"
+                    $("#page-li").html(strli);
+                    let s = "#li" + dpage
+                    $(s).css("border-color", "blue");
+                    if (dpage < pages) {
+                        let r = dpage + 1
+                        let rs = "#li" + r
+                        $(rs).css("border-left-color", "blue");
+                    } else {
+                        $("#next").css("border-left-color", "blue");
+                    }
+                }
+            });
+        })*/
+        function init(){
             $.ajax({
             type: 'GET',
             url: './showactivity',
@@ -641,9 +859,44 @@
                     }
                     // $("#showModal").find("#InputFileWord").text(data.word[0].name)
                     // $("#showModal").find("#InputFileWord").attr('href',data.word[0].path)
-                    $("#showModal").modal('show')
+                    $("#show-foot").empty()
+                    var strFile = '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+                      +'<button type="button" class="btn btn-success exportFile" data-dismiss="modal" data-id="' + id + '">导出文件</button>'
+                    $("#show-foot").html(strFile);
+                    $("#showModal").modal('show');
                 }
             });
+        })
+        // 导出文件
+        $("#show-foot").on('click', '.exportFile', function () {
+            var id = $(this).data('id')
+            // window.location.href="./download/zhactivity/"+id
+            $.ajax({
+					type:'GET',
+	                url:'./download/zhactivity/'+id,
+	                data:{},
+	                dataType:'json',
+	                async: false,
+	                cache: false,
+	                contentType: 'application/json',
+	                //contentType: 'application/x-www-form-urlencoded',
+	                success:function(re){
+	                	alert(re.url);
+	                	url=re.url;
+	                	for (let i = 0; i < url.length; i++) {
+						    const iframe = document.createElement("iframe");
+						    iframe.style.display = "none";
+						    iframe.style.height = 0;
+						    // url自己进行指定
+						    iframe.src = url[i];
+						    document.body.appendChild(iframe);
+						    // 不能马上将iframe进行删除，否者也会出现马上取消的情况
+						    setTimeout(() => {
+						        iframe.remove();
+						    }, 5 * 1000);
+						}
+	                }
+				});
         })
         // 修改活动
         var files={};
@@ -766,138 +1019,145 @@
                     }
                 });
 
-                    layui.use('upload', function () {
-                    var $ = layui.jquery,
-                        upload = layui.upload;
-                    //多文件列表示例
-                    var fileListView = $('#fileList');
-                    var uploadListIns = {}
-                    if (sort == 0) {
-                        sort = 1
-                        uploadListIns = upload.render({
-                            elem: '#chooseFile',
-                            accept: 'file',
-                            exts: 'doc|docx|pdf|jpg|mp3|mp4',
-                            multiple: true,
-                            auto: false,
-                            choose: function (obj) {
-                                files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                                // formData.append("files", files);//保存每一个文件
-                                //读取本地文件
-                                obj.preview(function (index, file, result) {
-                                    var tr = $(['<tr id="upload-' + index + '">'
-                                        , '<td style="width: 65%">' + file.name + '</td>'
-                                        , '<td style="width: 8%;">'
-                                        , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
-                                        , '</td>'
-                                        , '</tr>'].join(''));
-                                    console.log(index)
-                                    //删除
-                                    tr.find('.demo-delete').on('click', function () {
-                                        delete files[index]; //删除对应的文件
-                                        tr.remove();
-                                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                                    });
-                                    fileListView.append(tr);
+                layui.use('upload', function () {
+                var $ = layui.jquery,
+                    upload = layui.upload;
+                //多文件列表示例
+                var fileListView = $('#fileList');
+                var uploadListIns = {}
+                if (sort == 0) {
+                    sort = 1
+                    uploadListIns = upload.render({
+                        elem: '#chooseFile',
+                        accept: 'file',
+                        exts: 'doc|docx|pdf|jpg|mp3|mp4',
+                        multiple: true,
+                        auto: false,
+                        choose: function (obj) {
+                            files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                            // formData.append("files", files);//保存每一个文件
+                            //读取本地文件
+                            obj.preview(function (index, file, result) {
+                                var tr = $(['<tr id="upload-' + index + '">'
+                                    , '<td style="width: 65%">' + file.name + '</td>'
+                                    , '<td style="width: 8%;">'
+                                    , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                    , '</td>'
+                                    , '</tr>'].join(''));
+                                console.log(index)
+                                //删除
+                                tr.find('.demo-delete').on('click', function () {
+                                    delete files[index]; //删除对应的文件
+                                    tr.remove();
+                                    uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
                                 });
-                            },
-                        })
-                    } else {
-                        //如果已选择过，那么需要重新加载-----问题点
-                        //renderObj.reload(uploadListIns);
-                        uploadListIns.reload({
-                            elem: '#chooseFile',
-                            accept: 'file',
-                            exts: 'doc|docx|pdf|jpg|mp3|mp4',
-                            multiple: true,
-                            auto: false,
-                            choose: function (obj) {
-                                files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                                // formData.append("files", files);//保存每一个文件
-                                //读取本地文件
-                                obj.preview(function (index, file, result) {
-                                    var tr = $(['<tr id="upload-' + index + '">'
-                                        , '<td style="width: 65%">' + file.name + '</td>'
-                                        , '<td style="width: 8%;">'
-                                        , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
-                                        , '</td>'
-                                        , '</tr>'].join(''));
-                                    console.log(index)
-                                    //删除
-                                    tr.find('.demo-delete').on('click', function () {
-                                        delete files[index]; //删除对应的文件
-                                        tr.remove();
-                                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                                    });
-                                    fileListView.append(tr);
+                                fileListView.append(tr);
+                            });
+                        },
+                    })
+                } else {
+                    //如果已选择过，那么需要重新加载-----问题点
+                    //renderObj.reload(uploadListIns);
+                    uploadListIns.reload({
+                        elem: '#chooseFile',
+                        accept: 'file',
+                        exts: 'doc|docx|pdf|jpg|mp3|mp4',
+                        multiple: true,
+                        auto: false,
+                        choose: function (obj) {
+                            files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                            // formData.append("files", files);//保存每一个文件
+                            //读取本地文件
+                            obj.preview(function (index, file, result) {
+                                var tr = $(['<tr id="upload-' + index + '">'
+                                    , '<td style="width: 65%">' + file.name + '</td>'
+                                    , '<td style="width: 8%;">'
+                                    , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                    , '</td>'
+                                    , '</tr>'].join(''));
+                                console.log(index)
+                                //删除
+                                tr.find('.demo-delete').on('click', function () {
+                                    delete files[index]; //删除对应的文件
+                                    tr.remove();
+                                    uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
                                 });
-                            },
-                        })
+                                fileListView.append(tr);
+                            });
+                        },
+                    })
+                }
+
+                });
+                //提交
+                $("#save").on("click", function () {
+                     var formData = new FormData();
+                     var data=[]
+                     console.log(filesSub);
+                     for(let k in filesSub){
+                        if(filesSub[k].id!=''){
+                         data[k]=filesSub[k].id;}
+                     }
+                    console.log(data,filesSub);
+                    for(let k in files){
+                        formData.append("files",files[k]);
+                        console.log('k',k,files[k])
                     }
 
+                    var len = 0;
+                    formData.forEach((value, key) => {
+                    console.log("key %s: value %s", key, value);
+                    len = key.length;
                     });
-                    //提交
-                    $("#save").on("click", function () {
-                         var formData = new FormData();
-                         var data=[]
-                         console.log(filesSub);
-                         for(let k in filesSub){
-                            if(filesSub[k].id!=''){
-                             data[k]=filesSub[k].id;}
-                         }
-                        console.log(data);
-                        for(let k in files){
-                            formData.append("files",files[k]);
-                            console.log('k',k,files[k])
-                        }
-
-                        var len = 0;
-                        formData.forEach((value, key) => {
-                        console.log("key %s: value %s", key, value);
-                        len = key.length;
-                        });
-                        if(len==0){
-                            layer.msg("未选择文件！", {icon: 5});
-                        }else{
-                            // var id = $(this).data("id");
-                            var id = $("#save").attr("data-id");
-                            let name = $('#editname').val();
-                            let begintime = $('#editbegintime').val();
-                            let endtime = $('#editendtime').val();
-                            let main = $('#editcontent').val();
-                            let type = $('#edittype').val();
-                            console.log('id',id,name,main)
-                            s='./updateactivity?id='+id+'&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type+'&data=['+data+']'
-                            layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
-                            console.log('formdata',formData);
-                            $.ajax({
-                                url: s,
-                                type: "POST",
-                                data: formData,
-                                contentType: false,
-                                processData: false,
-                                success: function (result) {
-                                    console.log(result);
-                                    if (result.status == true) {
-                                        layer.msg("提交成功！", {icon: 6});
-                                        setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
-                                    } else {
-                                        layer.msg(result.msg, {icon: 5});
-                                        setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
-                                    }
-                                    console.log(1,files)
-                                    for(let key in files){
-                                        delete files[key];
-                                    }
-
-                                    for (var key of formData.keys()){
-                                        formData.delete(key);
-                                    };
-                                    init();
+                    console.log('changdu',data.length)
+                    if(len==0&&data.length==0){
+                        layer.msg("未选择文件！", {icon: 5});
+                    }
+                    else{
+                        // var id = $(this).data("id");
+                        var id = $("#save").attr("data-id");
+                        let name = $('#editname').val();
+                        let begintime = $('#editbegintime').val();
+                        let endtime = $('#editendtime').val();
+                        let main = $('#editcontent').val();
+                        let type = $('#edittype').val();
+                        console.log('id',id,name,main)
+                        s='./updateactivity?id='+id+'&name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type+'&data=['+data+']'
+                        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+                        console.log('formdata',formData);
+                        $.ajax({
+                            url: s,
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (result) {
+                                console.log(result);
+                                if (result.status == true) {
+                                    layer.msg("提交成功！", {icon: 6});
+                                    setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
+                                } else {
+                                    layer.msg(result.msg, {icon: 5});
+                                    setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
                                 }
-                            })
-                        }
-                    });
+                                console.log(1,files)
+                                for(let key in files){
+                                    delete files[key];
+                                }
+                                for(let key in filesSub){
+                                    delete filesSub[key];
+                                }
+                                for(let key in data){
+                                    delete data[key];
+                                }
+                                for (var key of formData.keys()){
+                                    formData.delete(key);
+                                };
+                                init();
+                            }
+                        })
+                    }
+                });
                 /*$("#save").unbind('click').click(function() {
                     var id = $("#save").attr("data-id");
                     // var id = $(this).data("id");
@@ -972,7 +1232,13 @@
                 $.ajax({
                     type: 'GET',
                     url: './showactivity',
-                    data: {'page': dpage - 1, 'per_page': per_page},
+                    data: {
+                        page: dpage - 1,
+                        per_page: per_page,
+                        name:name,
+                        type:type,
+                        status:status
+                    },
                     dataType: 'json',
                     async: false,
                     cache: false,
@@ -1023,6 +1289,7 @@
             if (dpage == pages) {
                 alert("该页是最后一页！");
             } else {
+                console.log(type)
                 let s = "#li" + dpage
                 $(s).css("border-color", "");
                 if (dpage < pages) {
@@ -1035,7 +1302,13 @@
                 $.ajax({
                     type: 'GET',
                     url: './showactivity',
-                    data: {'page': dpage + 1, 'per_page': per_page},
+                    data: {
+                        page: dpage + 1,
+                        per_page: per_page,
+                        name:name,
+                        type:type,
+                        status:status
+                    },
                     dataType: 'json',
                     async: false,
                     cache: false,
@@ -1088,7 +1361,13 @@
             $.ajax({
                     type: 'GET',
                     url: './showactivity',
-                    data: {'page': pageNum, 'per_page': per_page},
+                    data: {
+                            page: pageNum,
+                            per_page: per_page,
+                            name:name,
+                            type:type,
+                            status:status
+                        },
                     dataType: 'json',
                     async: false,
                     cache: false,
@@ -1134,88 +1413,6 @@
                         // }
                     }
                 });
-        })
-        // 条件检索
-        $("#search").on('click', function () {
-            if (document.getElementById('activityName').value){
-                var name = document.getElementById('activityName').value
-            }
-            if (document.getElementById('selectType').value!='活动类型'){
-                var type = document.getElementById('selectType').value
-            }
-            switch (document.getElementById('selectSta').value)
-            {
-                case '审核中':
-                    var status = 0;
-                    break;
-                case '驳回':
-                    var status = 1;
-                    break;
-                case '通过':
-                    var status = 2;
-                    break;
-            }
-            $.ajax({
-                type: 'GET',
-                url: './showactivity',
-                data:{
-                    page:dpage,
-                    per_page:per_page,
-                    name:name,
-                    type:type,
-                    status:status
-                },
-                dataType: 'json',
-                async: false,
-                cache: false,
-                contentType: 'application/json',
-                success: function (data) {
-                    pages = data.zpage;
-                    let total = data.total;
-                    dpage = data.dpage;
-                    let activity = data.item;
-                    let str = ""
-                    for (let index = 0; index < data.item.length; index++) {
-                        switch(data.item[index].status) {
-                                 case 0:
-                                    var sta = '审核中';
-                                    break;
-                                 case 1:
-                                    var sta = '驳回';
-                                    break;
-                                 case 2:
-                                    var sta = '通过';
-                                    break;
-                                }
-                        str += "<tr><td>" + data.item[index].number +
-                            "</td><td>" + data.item[index].activityname +
-                            "</td><td>" + data.item[index].type +
-                            "</td><td>" + data.item[index].begintime +
-                            "</td><td>" + data.item[index].endtime +
-                            "</td><td>" + sta +
-                            "</td><td>" + "<button class='btn btn-primary btn-sm user-active-view' data-id='" + data.item[index].id + "'>查看</button> " +
-                            "<button class='btn btn-warning btn-sm user-active-modify' data-id='" + data.item[index].id + "'>修改</button> " +
-                            "<button data-toggle='modal' class='btn btn-danger btn-sm user-active-delete' data-id='" + data.item[index].id + "'>删除</button>" + "</tr>";
-                    }
-                    $("#tableText").html(str);
-                    let strli = "<li class='page-item'><a class='page-link' href='#' id='prev'>前一页</a></li>"
-                    strli += "<li class='page-item'><a id=li" + 1 + " href='#' class='page-link page-num'>" + 1 + "</a></li>"
-                    for (let index = 2; index <= pages; index++) {
-                        strli += "<li class='page-item'><a id=li" + index + " href='#' class='page-link page-num'>" + index + "</a></li>"
-                    }
-                    strli += "<li class='page-item'><a class='page-link' href='#' id='next'>后一页</a></li>"
-                    $("#page-li").html(strli);
-                    let s = "#li" + dpage
-                    $(s).css("border-color", "blue");
-                    if (dpage < pages) {
-                        let r = dpage + 1
-                        let rs = "#li" + r
-                        $(rs).css("border-left-color", "blue");
-                    } else {
-                        $("#next").css("border-left-color", "blue");
-                    }
-                }
-            });
         })
     });
     $(function(){

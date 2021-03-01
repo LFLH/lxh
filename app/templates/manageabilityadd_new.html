@@ -1,4 +1,4 @@
-<title>manageabilityadd</title>
+<title>能力提升培训添加</title>
 {% extends "base_Txx.html" %}
 
 {% block content %}
@@ -6,27 +6,35 @@
         <h2 style="padding-top: 20px">添加能力提升培训</h2>
         <br>
         <br>
-        <form id="form">
-        <div class="form-group">
-          <label for="name" style="font-size: large; font-weight: bold">能力提升培训名：</label>
-          <input type="text" class="form-control" id="name" name="abilityName">
+        <form id="form" >
+        <div class="form-group" style="margin-top: 10px">
+          <label for="name" style="font-size: large; font-weight: bold">培训名称：</label>
+          <div class="col-sm-5" style="display: inline-block; width: 80%">
+            <input type="text" class="form-control" id="name" name="abilityName">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="startTime" style="font-size: large; font-weight: bold">申报开始时间：</label>
-          <input type="date" class="form-control" id="startTime" name="time1" >
+        <div class="form-group" style="margin-top: 10px">
+          <label for="content" style="font-size: large; font-weight: bold; vertical-align: top;">培训内容：</label>
+          <div class="col-sm-5" style="display: inline-block; width: 80%">
+              <textarea type="text" class="form-control" id="content" name="abilityContent"></textarea>
+          </div>
         </div>
-        <div class="form-group" style="font-size: large; font-weight: bold">
-          <label for="stopTime">申报结束时间：</label>
-          <input type="date" class="form-control" id="stopTime" name="time2">
+
+        <div class="form-group" style="margin-top: 10px">
+          <label for="startTime" style="font-size: large; font-weight: bold">开始时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+             <input type="datetime-local" class="form-control" id="startTime" name="time1" >
+          </div>
         </div>
-        <div class="form-group" style="font-size: large; font-weight: bold">
-          <label for="content">能力提升培训内容：</label>
-          <input type="text" class="form-control" id="content" name="abilityContent">
+        <div class="form-group" style="margin-top: 10px">
+          <label for="stopTime" style="font-size: large; font-weight: bold">结束时间：</label>
+          <div class="col-sm-3" style="display: inline-block; width: 80%">
+            <input type="datetime-local" class="form-control" id="stopTime" name="time2">
+          </div>
         </div>
-        <div style="text-align:center">
-         <button id="cancel" type="button" class="btn btn-default" style="margin:50px; background-color: lightgrey;">取消</button>
-         <button id="submit" type="button" class="btn btn-success" style="margin:50px">添加</button>
-{#         <button id="submit" onclick="alert($('#content').val())" type="button" style="margin:50px">添加</button>#}
+        <div class="col-sm-5" style="text-align:center">
+         <button id="cancel" type="button" class="btn btn-default" style="margin-top:10px; margin-right: 50px; background-color: lightgrey;">取消</button>
+         <button id="submit" type="button" class="btn btn-success" style="margin-top:10px; margin-right: 50px;">添加</button>
         </div>
       </form>
 {#    </div>#}
@@ -104,11 +112,12 @@
         });
         function Flush(status){
             if(status==true){
-                $('#name').val('');
-                $('#startTime').val('');
-                $('#stopTime').val('');
-                $('#content').val('');
+{#                $('#name').val('');#}
+{#                $('#startTime').val('');#}
+{#                $('#stopTime').val('');#}
+{#                $('#content').val('');#}
                 alert("添加成功！")
+                window.location.href = '/manageabilityadd';
             }
             if(status==false){
                 alert("添加失败！")

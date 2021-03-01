@@ -126,6 +126,25 @@
                         </div>
                     </div>
                 </form>
+
+                <form id="files" name="files">
+                    <label style="font-size: large; font-weight: bold;">申报文件上传历史</label>
+                    <div class="form-group col-md-12" >
+{#                        <div class="layui-upload-list col-md-12">#}
+                            <table class="layui-table" style="margin-top: 20px; table-layout: fixed;">
+                                <thead style="text-align: center">
+                                <tr>
+                                    <th style="width: 10%; text-align: center">序号</th>
+                                    <th style="width: 65%; text-align: center">文件名</th>
+                                    <th style="width: 25%; text-align: center">上传时间</th>
+{#                                    <th style="width: 20%; text-align: center">操作</th>#}
+                                </tr>
+                                </thead>
+                                <tbody id="filesList"></tbody>
+                            </table>
+                        </div>
+{#                    </div>#}
+                </form>
             </div>
         </div>
     </div>
@@ -133,7 +152,6 @@
 <script>
     $(function () {
         layui.use('layer', function(){
-            console.log($('p').text());
             $.ajax({
                   type: "GET",
                   url: "/getnewuserdeclare",
@@ -143,9 +161,9 @@
                   cache: false,
                   contentType: 'application/json',
                   success:function (data) {
-                      console.log(data);
-                      console.log(data.endtime);
-                      console.log(data.status);
+                      console.log("data:", data);
+                      console.log("data.endtime:", data.endtime);
+                      console.log("data.status:", data.status);
                       $('#endtime').text(data.endtime);
                       if (data.status == 0) {
                           $('p').text("等待审核")
@@ -158,13 +176,43 @@
                       }
                   }
             });
+             console.log("$('p').text():", $('p').text());
             if ($('p').text() == '等待审核' || $('p').text() == '审核通过') {
                 document.getElementById('newuser').style.display='none';
+                document.getElementById('files').style.display='';
+                document.getElementById('files').style.marginTop='50px';
                   {#$("#testList").addClass('layui-hide'); //隐藏选择文件#}
              }
-            if ($('p').text() == '尚未申报' || $('p').text() == '申报驳回，请重新申报') {
+            if ($('p').text() == '尚未申报') {
                 document.getElementById('newuser').style.display='';
+                document.getElementById('files').style.display='none';
                   {#$("#testList").removeClass('layui-hide'); //隐藏选择文件#}
+            }
+            if ($('p').text() == '申报驳回，请重新申报') {
+                document.getElementById('newuser').style.display='';
+                document.getElementById('files').style.display='';
+                document.getElementById('files').style.marginTop='200px';
+                  {#$("#testList").removeClass('layui-hide'); //隐藏选择文件#}
+            }
+        });
+        {#上传文件历史#}
+         $.ajax({
+            type: "GET",
+            url: "/getnewuserdeclaredata",
+            data: {},
+            dataType: 'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function (data) {
+                let str = "";
+                console.log("data.data.length:", data.data.length);
+                for (let index = 0; index < data.data.length; index++) {
+                    str += "<tr><td style='text-align: center'>" + (index+1) +
+                            "</td><td style='text-align: center' >" + "<a href=" +data.data[index].path+ " download=" +data.data[index].newname+ ">" +data.data[index].name+
+                            "</td><td style='text-align: center'>" + data.data[index].uptime + "</tr>";
+                }
+            $("#filesList").html(str);
             }
         });
 
@@ -265,18 +313,18 @@
                             setTimeout(function () {
                                 layer.closeAll('loading');
                             }, 2000);//关闭加载风格
-                            $.ajax({
-                                type: 'GET',
-                                url: './changeStatus',
-                                data: {status: 0},
-                                dataType: 'json',
-                                async: false,
-                                cache: false,
-                                contentType: 'application/json',
-                                success: function (re) {
-                                    console.log(re.status)
-                                }
-                            });
+                            {#$.ajax({#}
+                            {#    type: 'GET',#}
+                            {#    url: './changeStatus',#}
+                            {#    data: {status: 0},#}
+                            {#    dataType: 'json',#}
+                            {#    async: false,#}
+                            {#    cache: false,#}
+                            {#    contentType: 'application/json',#}
+                            {#    success: function (re) {#}
+                            {#        console.log(re.status)#}
+                            {#    }#}
+
                              window.location.reload();
                         } else if (result.code == 500) {
                             layer.msg(result.msg, {icon: 5});

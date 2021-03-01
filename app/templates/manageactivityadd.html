@@ -52,7 +52,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
@@ -125,11 +125,6 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{url_for('main.managedeclareadd_new')}}">
-                                      申报任务添加
-                                    </a>
-                                </li>
-                                <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.managedeclareadd')}}">
                                       申报任务记录
                                     </a>
@@ -149,11 +144,6 @@
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
                                       已申报用户
-                                    </a>
-                                 </li>
-                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{url_for('main.manageabilityadd_new')}}">
-                                      能力提升培训添加
                                     </a>
                                  </li>
                                 <li class="nav-item">
@@ -209,27 +199,29 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="type" class="control-label"  style="margin-top:10px;">活动类型：</label>
+                    <label for="activityType" class="control-label"  style="margin-top:10px;">活动类型：</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
-                        <input type="text" class="form-control " name="type" id="type" required>
+                        <select type="text" class="form-control " name="activityType" id="activityType" required>
+{#                            <option value="">会议</option>#}
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="stoptime" class="control-label"  style="margin-top:10px;">报名截止时间：</label>
                     <div class="col-md-3"  style="padding-left: 20px;">
-                        <input type="date" class="form-control" id="stoptime" required>
+                        <input type="datetime-local" class="form-control" id="stoptime" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="starttime" class="control-label"  style="margin-top:10px;">活动开始时间：</label>
                     <div class="col-md-3"  style="padding-left: 20px;">
-                        <input type="date" class="form-control" id="starttime" required>
+                        <input type="datetime-local" class="form-control" id="starttime" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="endtime" class="control-label"  style="margin-top:10px;">活动结束时间：</label>
                     <div class="col-md-3"  style="padding-left: 20px;">
-                        <input type="date" class="form-control" id="endtime" required>
+                        <input type="datetime-local" class="form-control" id="endtime" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -241,7 +233,7 @@
                 <div class="form-group" style="margin-top: 50px">
                     <div class="col-sm-10">
                     <button class="btn btn-outline-danger" id="cancel">取消</button>
-                    <button type="button" class="btn btn-outline-info" id="add">提交</button>
+                    <button type="button" class="btn btn-outline-info" id="add" style="margin-left: 45px">提交</button>
                     </div>
                 </div>
             </form>
@@ -310,10 +302,23 @@
     </div>
 </div>-->
 
-
-
 <script type="text/javascript">
     $(document).ready(function(){
+        $.ajax({
+            type:'GET',
+            url:'./getactivitytype',
+            data:{},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(result){
+                console.log(result)
+                for (var i=0;i<result.data.length;i++){
+                    $("#activityType").append('<option value="">'+ result.data[i].main+'</option>');
+                }
+            }
+        });
         //确认添加按钮
         $('#add').click(function (){
             $.ajax({
@@ -322,14 +327,13 @@
                 // data:$('#addModal form').serialize(),
                 data:{
                     name:document.getElementById("activityname").value,
-                    type:document.getElementById("type").value,
+                    type:document.getElementById("activityType").value,
                     stoptime:document.getElementById("stoptime").value,
                     begintime:document.getElementById("starttime").value,
                     endtime:document.getElementById("endtime").value,
                     main:document.getElementById("content").value,
                 },
                 success:function(data){
-                    console.log('data:',data,name,type);
                     if (data.status==1) {
                         alert('发布成功');
                         Flush();
@@ -342,7 +346,7 @@
                 $('#starttime').val('');
                 $('#endtime').val('');
                 $('#content').val('');
-                $('#type').val('');
+                $('#activityType').val('');
             };
         })
         $(function(){
