@@ -17,7 +17,7 @@ def after_request(response):
 #条件检索
 def tstrain(name,status,page,per_page,userid):
     if name!=None:
-        s1=(Train.name==name)
+        s1=(Train.name.contains(name))
     else:
         s1=True
     if status is None:

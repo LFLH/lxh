@@ -21,15 +21,15 @@ def tsdeclare(name,createtime,begintime,endtime,status,page,per_page):
     else:
         s1=True
     if createtime!=None:
-        s2=(Declare.createtime==createtime)
+        s2=(Declare.createtime.contains(createtime))
     else:
         s2=True
     if begintime!=None:
-        s3=(Declare.begintime==begintime)
+        s3=(Declare.begintime.contains(begintime))
     else:
         s3=True
     if endtime!=None:
-        s4=(Declare.endtime==endtime)
+        s4=(Declare.endtime.contains(endtime))
     else:
         s4=True
     if status is None:
@@ -131,12 +131,19 @@ def deletenewuser():
     userz = request.values.getlist('userz[]')
     declare=Declare.query.filter(Declare.id==id).all()[0]
     users=declare.users
-    for usersi in users:
-        if usersi not in userz:
-            declare.users.remove(usersi)
-            usersi.status=2
-            db.session.add(usersi)
-            db.session.commit()
+    # 移除申报中的用户
+    length = len(users)
+    for i in range(length):
+        users[length - i - 1].status=2
+        db.session.add(users[length - i - 1])
+        db.session.commit()
+        declare.users.remove(users[length - i - 1])
+    for usersi in userz:
+        user=User.query.filter(User.id==usersi).all()[0]
+        user.status=0
+        db.session.add(user)
+        db.session.commit()
+        declare.users.append(user)
     db.session.add(declare)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -296,11 +303,8 @@ def adddeclare():
     declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(declare)
     db.session.commit()
-    # id = declare.id
-    # return Response(json.dumps({'status':True, 'id':id}), mimetype='application/json')
     #添加申报用户
     userz = request.values.getlist('userz[]')
-    declare=Declare.query.filter(Declare.id==declare.id).all()[0]
     for u in userz:
         user=User.query.filter(User.id==u).all()[0]
         declare.users.append(user)
@@ -312,4 +316,3 @@ def adddeclare():
     db.session.commit()
     id=declare.id
     return Response(json.dumps({'status':True,'id':id}), mimetype='application/json')
-
