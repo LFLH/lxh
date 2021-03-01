@@ -16,20 +16,19 @@ def after_request(response):
 #条件检索
 def tstrain(name,createtime,begintime,endtime,status,page,per_page):
     if name != None:
-        #s1=(Train.name==name)
         s1=(Train.name.contains(name))
     else:
         s1 = True
     if createtime != None:
-        s2=(Train.createtime.contains(createtime))
+        s2=(Train.createtime==createtime)
     else:
         s2 = True
     if begintime != None:
-        s3=(Train.begintime.contains(begintime))
+        s3=(Train.begintime==begintime)
     else:
         s3 = True
     if endtime != None:
-        s4=(Train.endtime.contains(endtime))
+        s4=(Train.endtime==endtime)
     else:
         s4 = True
     if status is None:
@@ -71,6 +70,7 @@ def searchtrain():
     per_page = int(per_page)
     #train=Train.query.order_by(-Train.createtime).paginate(page, per_page, error_out=False)
     train=tstrain(name,createtime,begintime,endtime,status,page,per_page)
+    print("train:", train)
     items = train.items
     item = []
     count = (int(page) - 1) * int(per_page)
@@ -111,48 +111,6 @@ def detailtrain():
           'begintime': str(train.begintime), 'endtime': str(train.endtime), 'main': train.main, 'user': user}
     return Response(json.dumps(da), mimetype='application/json')
 
-#详细培训任务页的条件检索
-def tjsearchdetailtrain(id,username,name,status):
-    if username!=None:
-        s1=(User.username.contains(username))
-    else:
-        s1=True
-    if name!=None:
-        s2=(User.name.contains(name))
-    else:
-        s2=True
-    if status is None:
-        s3=True
-    else:
-        status=int(status)
-        s3=(UTrain.type==status)
-    utrain=UTrain.query.join(User).join(TUT).join(Train).filter(and_(s1,s2,s3,Train.id==id)).all()
-    return utrain
-
-#详细培训任务页的列表展示
-@main.route('/detailtrainsearch',methods=['GET','POST'])
-def detailtrainsearch():
-    if request.method == "GET":
-        id=request.args.get('id')#培训id
-        #检索条件
-        username=request.args.get('username')#账户
-        name=request.args.get('name')#用户名
-        status=request.args.get('status')#状态
-    else:
-        id = request.form.get('id')  # 培训id
-        # 检索条件
-        username = request.form.get('username')  # 账户
-        name = request.form.get('name')  # 用户名
-        status = request.form.get('status')  # 状态
-    utrain=tjsearchdetailtrain(id,username,name,status)
-    user = []
-    for ut in utrain:
-        userud = User.query.filter(User.id == ut.userid).all()[0]
-        # 用户名，申请时间，申请状态
-        user.append({'username': userud.name, 'uptime': str(ut.uptime), 'status': ut.type})
-    da = {'user': user}
-    return Response(json.dumps(da), mimetype='application/json')
-
 #修改培训任务
 @main.route('/updatetrain',methods=['GET','POST'])
 def updatetrain():
@@ -168,10 +126,8 @@ def updatetrain():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    if begintime!=None:
-        begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    if endtime!=None:
-        endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    begintime = datetime.datetime.strptime(begintime,'%Y-%m-%dT%H:%M')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     train = Train.query.filter(Train.id == id).all()[0]
     # chatime =datetime.datetime.now()-train.endtime
     # chatime=chatime.days
@@ -182,14 +138,10 @@ def updatetrain():
         return Response(json.dumps({'status': False}), mimetype='application/json')
     #修改培训信息
     else:
-        if name!=None:
-            train.name=name
-        if begintime!=None:
-            train.begintime=begintime
-        if endtime!=None:
-            train.endtime=endtime
-        if main!=None:
-            train.main=main
+        train.name=name
+        train.begintime=begintime
+        train.endtime=endtime
+        train.main=main
         db.session.add(train)
         db.session.commit()
         return Response(json.dumps({'status': True}), mimetype='application/json')
@@ -233,8 +185,8 @@ def addability():
         begintime = request.form.get('begintime')
         endtime = request.form.get('endtime')
         main = request.form.get('main')
-    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
-    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%d')
+    begintime = datetime.datetime.strptime(begintime, '%Y-%m-%dT%H:%M')
+    endtime = datetime.datetime.strptime(endtime, '%Y-%m-%dT%H:%M')
     #创建能力提升培训
     train=Train(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(train)

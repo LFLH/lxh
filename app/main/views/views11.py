@@ -35,31 +35,16 @@ def getnewuserdeclare():
 def getnewuserdeclaredata():
     user = session.get('user')
     userid = user['userid']
-    udeclare = UDeclare.query.filter(UDeclare.userid == userid).all()[0]
-    datas=udeclare.datas
+    #按时间倒序进行排列
+    udeclare = UDeclare.query.filter(UDeclare.userid == userid).order_by(-UDeclare.uptime).all()
     dataz=[]
-    for datai in datas:
-        datazi={'name':datai.name,'path':datai.path,'newname':datai.newname}
-        dataz.append(datazi)
+    for ud in udeclare:
+        datas=ud.datas
+        for datai in datas:
+            datazi={'name':datai.name,'path':datai.path,'newname':datai.newname,'uptime':str(ud.uptime)}
+            dataz.append(datazi)
     data={'data':dataz}
     return Response(json.dumps(data), mimetype='application/json')
-
-#不清楚用处
-#申报成功修改申报状态为等待审核
-@main.route('/changeStatus',methods=['GET', 'POST'])
-def changeStatus():
-    if request.method == "GET":
-        status = request.args.get('status')
-    else:
-        status = request.form.get('status')
-    user = session.get('user')
-    userid = user['userid']
-    udeclare = UDeclare.query.filter(UDeclare.userid == userid).all()[0]
-    # 修改申报状态
-    udeclare.type = status
-    db.session.add(udeclare)
-    db.session.commit()
-    return Response(json.dumps({'status': True}), mimetype='application/json')
 
 #判断上传文件类型
 def panduan(ext):

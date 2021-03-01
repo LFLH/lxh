@@ -21,15 +21,15 @@ def tsdeclare(name,createtime,begintime,endtime,status,page,per_page):
     else:
         s1=True
     if createtime!=None:
-        s2=(Declare.createtime.contains(createtime))
+        s2=(Declare.createtime==createtime)
     else:
         s2=True
     if begintime!=None:
-        s3=(Declare.begintime.contains(begintime))
+        s3=(Declare.begintime==begintime)
     else:
         s3=True
     if endtime!=None:
-        s4=(Declare.endtime.contains(endtime))
+        s4=(Declare.endtime==endtime)
     else:
         s4=True
     if status is None:
@@ -132,21 +132,16 @@ def deletenewuser():
     declare=Declare.query.filter(Declare.id==id).all()[0]
     users=declare.users
     # 移除申报中的用户
-    length = len(users)
-    for i in range(length):
-        users[length - i - 1].status=2
-        db.session.add(users[length - i - 1])
-        db.session.commit()
-        declare.users.remove(users[length - i - 1])
     for usersi in userz:
         user=User.query.filter(User.id==usersi).all()[0]
-        user.status=0
+        user.status=2
         db.session.add(user)
         db.session.commit()
-        declare.users.append(user)
+        declare.users.remove(user)
     db.session.add(declare)
     db.session.commit()
     return Response(json.dumps({'status': True}), mimetype='application/json')
+
 
 #查看详细申报任务
 @main.route('/detaildeclare',methods=['GET','POST'])
@@ -164,9 +159,13 @@ def detaildeclare():
         userud=User.query.filter(User.id==ud.userid).all()[0]
         #用户名，申报时间，申报状态
         user.append({'username':userud.name,'uptime':str(ud.uptime),'status':ud.type})
-    # 返回申报任务名、创建时间、开始时间、结束时间、活动内容、用户组
+    zuser=[]
+    usersz=declare.users
+    for u in usersz:
+        zuser.append({'name':u.name,'username':u.username,'userid':u.id})
+    # 返回申报任务名、创建时间、开始时间、结束时间、活动内容、报名用户组、总用户组
     da = {'name': declare.name, 'createtime':str(declare.createtime),
-          'begintime': str(declare.begintime), 'endtime': str(declare.endtime), 'main': declare.main, 'user': user}
+          'begintime': str(declare.begintime), 'endtime': str(declare.endtime), 'main': declare.main, 'user': user,'zuser':zuser}
     return Response(json.dumps(da), mimetype='application/json')
 
 #详细申报任务页的条件检索
@@ -251,7 +250,7 @@ def updatedeclare():
         db.session.add(declare)
         db.session.commit()
         # 设置新用户提交时间
-        user = declare.user
+        user = declare.users
         for i in range(len(user)):
             user[i].endtime = endtime
             db.session.add(user[i])
@@ -303,8 +302,11 @@ def adddeclare():
     declare=Declare(name=name,begintime=begintime,endtime=endtime,main=main)
     db.session.add(declare)
     db.session.commit()
+    # id = declare.id
+    # return Response(json.dumps({'status':True, 'id':id}), mimetype='application/json')
     #添加申报用户
     userz = request.values.getlist('userz[]')
+    declare=Declare.query.filter(Declare.id==declare.id).all()[0]
     for u in userz:
         user=User.query.filter(User.id==u).all()[0]
         declare.users.append(user)
@@ -316,3 +318,4 @@ def adddeclare():
     db.session.commit()
     id=declare.id
     return Response(json.dumps({'status':True,'id':id}), mimetype='application/json')
+
