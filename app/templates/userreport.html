@@ -46,6 +46,63 @@
             overflow:scroll;
 
         }
+        {#搜索平铺样式#}
+        #filter
+        {
+            height:auto;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        #filter dl
+        {
+            padding:0;
+            margin-top:0;
+            margin-bottom:10px;
+            clear:both;
+            padding:4px 0;
+            font-size: 18px;
+        }
+        #filter dt,dd
+        {
+            display:block;
+            float:left;
+            width:auto;
+            padding:0;
+            margin:3px 0;
+        }
+        #filter dt
+        {
+            height:25px;
+            color:#333333;
+            width: 100px;
+        }
+        #filter dd
+        {
+            color: #005cbf;
+            margin-right:18px;
+        }
+        #filter a
+        {
+            cursor:pointer;
+        }
+        .year
+        {
+            background: #93D1FF;
+            width: 50px;
+            height: 50px;
+        }
+        .type
+        {
+            background: #93D1FF;
+            width: 50px;
+            height: 50px;
+        }
+        .stat
+        {
+            background: #93D1FF;
+            width: 50px;
+            height: 50px;
+        }
     </style>
 </head>
 
@@ -180,23 +237,45 @@
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">提交报告列表</h2>
             <br>
-                 <div class="form-group">
-                     <div class="input-group col-xs-12">
-                        <div class="input-group-btn">
-                            <select name="type" class="selectpicker form-control" style="width: auto;" id="search_select" multiple="multiple">
-                                <option value="报告名称">报告名称</option>
-                                <option value="年份">年份</option>
-                                <option value="报告类型">报告类型</option>
-                                <option value="报告状态">报告状态</option>
-                            </select>
-                         </div>
-                           <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请输入检索信息(若检索项为多个，按表格列由左向右输入检索项，且用英文逗号相隔)">
-                            <span class="input-group-btn">
-                                <button class="btn btn-dark" id="search_all" type="submit">检索</button>
-                            </span>
-                        </div>
-                   <br>
-                  </div>
+            {#检索表格#}
+            <table class="table table-bordered"  style="width: 90%;float: left">
+                <tbody id="sta_table">
+                    <tr>
+                        <td style="width: 115px;font-size: large">年份：</td>
+                        <td style="text-align: left">
+                            <a id="year_1" style="color: #005cbf;font-size: large">2019</a>
+                            <a id="year_2" style="color: #005cbf;font-size: large">2020</a>
+                            <a id="year_3" style="color: #005cbf;font-size: large">2021</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 115px;font-size: large">报告类型：</td>
+                        <td style="text-align: left">
+                            <a id="repo_1" style="color: #005cbf;font-size: large">年度</a>
+                            <a id="repo_2" style="color: #005cbf;font-size: large">科技周</a>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 115px;font-size: large">报告状态：</td>
+                      <td style="text-align: left">
+                          <a id="sta_1" style="color: #005cbf;font-size: large">报告未通过</a>
+                          <a id="sta_2" style="color: #005cbf;margin-left: 15px;font-size: large">报告被驳回</a>
+                          <a id="sta_3" style="color: #005cbf;margin-left: 15px;font-size: large">报告已通过</a>
+                          <a id="sta_4" style="color: #005cbf;margin-left: 15px;font-size: large">过去报告未通过</a>
+                          <a id="sta_5" style="color: #005cbf;margin-left: 15px;font-size: large">过去报告已通过</a>
+                          <a id="sta_6" style="color: #005cbf;margin-left: 15px;font-size: large">考核未过报告未通过</a>
+                          <a id="sta_7" style="color: #005cbf;margin-left: 15px;font-size: large">考核未过报告已通过</a>
+                      </td>
+                    </tr>
+                    <tr style="width: 115px;font-size: large">
+                      <td>报告名称：</td>
+                      <td><input type="text" name="keyword_recordname" id="keyword_recordname" class="form-control" placeholder="请输入检索信息"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="float: left;margin-left: 20px;margin-top: 195px">
+                <button class="btn btn-dark" id="search_all" type="submit">检索</button>
+            </div>
 
                 <div class="table-responsive">
                     <form action="/"></form>
@@ -298,9 +377,9 @@
                                         <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
                                             <thead style="text-align: center">
                                             <tr>
-                                                <th style="width: 35%">文件名</th>
-                                                <th style="width: 15%">大小</th>
-                                                 <th style="width: 25%">时间</th>
+                                                <th style="width: 40%">文件名</th>
+{#                                                <th style="width: 15%">大小</th>#}
+                                                 <th style="width: 35%">时间</th>
                                                 <th style="width: 25%">操作</th>
                                             </tr>
                                             </thead>
@@ -311,7 +390,8 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button id="del_window_nd" class="btn btn-default btn-lg" style="margin-left: 40px">关闭</button>
+                             <button type="button" class="btn btn-default btn-lg" id="ViewListAction_nd" style="margin-left: 40px">修改提交</button>
+                             <button id="del_window_nd" class="btn btn-default btn-lg" style="float: right;margin-left: 29px">关闭</button>
 {#                            <button id="submit_nd" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px ;float: right">修改提交</button>#}
                         </div>
                     </div>
@@ -360,9 +440,9 @@
                                         <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
                                             <thead style="text-align: center">
                                             <tr>
-                                                <th style="width: 35%">文件名</th>
-                                                <th style="width: 15%">大小</th>
-                                                 <th style="width: 25%">时间</th>
+                                                <th style="width: 40%">文件名</th>
+{#                                                <th style="width: 15%">大小</th>#}
+                                                 <th style="width: 35%">时间</th>
                                                 <th style="width: 25%">操作</th>
                                             </tr>
                                             </thead>
@@ -373,7 +453,8 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                             <button id="del_window_kjz" class="btn btn-default btn-lg" style="margin-left: 40px">关闭</button>
+                            <button type="button" class="btn btn-default btn-lg" id="ViewListAction_kjz" style="margin-right: 40px">修改提交</button>
+                             <button id="del_window_kjz" class="btn btn-default btn-lg" style="float: right;margin-right: 20px">关闭</button>
 {#                            <button id="submit_kjz" type="submit" class="btn btn-default btn-lg" style="margin-left: 29px;float: right">修改提交</button>#}
                         </div>
                     </div>
@@ -426,11 +507,17 @@ var type;
 var status;
 var status_num;
 var status_show_;
+var status_show;
 var status_;
 var form_nd = new FormData();
 var files_nd={};
 var form_kjz = new FormData();
 var files_kjz={};
+var sort=0;
+var filesSub_nd={};
+var filesSub_kjz={};
+var count_nd=0;
+var count_kjz=0;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
         let per_page=10;
@@ -442,109 +529,223 @@ $(document).ready(function(){
             $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide()
             {#$(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();#}
         })
-       {#dpage：应该是表示第几页
-        pages：应该是表示总共的页数
-        d_per_page:总共有多少条数据
-        idz:存储每条数据的id#}
-        {#let dpage=1;#}
-        {#let pages=1;#}
-    {#实现检索操作#}
-    $(document).on("click","#search_all",function () {
-        {#获取选择的检索内容#}
-        let select_content = $("#search_select").val()
-        let input_content = $("#keyword").val()
-        if(select_content.length < 2){
-            if(select_content.length == 0){
-                alert("请选择需要检索的列名")
-            }
-            else{
-                if(select_content == "报告名称"){
-                    recordname = input_content
-                }
-                if(select_content == "年份"){
-                    year = input_content
-                }
-                if(select_content == "报告类型"){
-                    type = input_content
-                }
-                if(select_content == "报告状态"){
-                    status = input_content
-                    if(status == "报告未通过"){
-                        status_ = 0;
-                     }
-                    if(status == "报告被驳回"){
-                        status_ = 1;
-                     }
-                    if(status == "过去报告未通过"){
-                        status_ = 10;
-                     }
-                    if(status == "过去报告已通过"){
-                        status_ = 11;
-                     }
-                    if(status == "考核未过报告未通过"){
-                        status_ = 20;
-                     }
-                    if(status == "考核未过报告已通过"){
-                        status_ = 21;
-                     }
-                    if(status == "报告已通过"){
-                        status_ = 2;
-                     }
-                    if(status == "报告已删除"){
-                        status_ = 3;
-                     }
-                }
-            }
-
+        {#检索平铺操作#}
+    $(document).on("click","#year_1",function () {
+        let year_1 = $("#year_1").text() //选择平铺内容
+        $("#year_2").attr("class",'') //先清空其他平铺样式
+        $("#year_3").attr("class",'')
+        $("#year_1").toggleClass("year") //点击增加和删除样式
+        if($("#year_1").attr('class') == 'year'){ //判断平铺选择的内容
+            year = year_1
         }
         else{
-            input_content = input_content.split(",")
-            for(let i=0;i<select_content.length;i++){
-                let content = select_content[i]
-                if(content == "报告名称"){
-                    recordname = input_content[i]
-                }
-                if(content == "年份"){
-                    year = input_content[i]
-                }
-                if(content == "报告类型"){
-                    type = input_content[i]
-                }
-                if(content == "报告状态"){
-                    status = input_content[i]
-                    if(status == "报告未通过"){
-                        status_ = 0;
-                     }
-                    if(status == "报告被驳回"){
-                        status_ = 1;
-                     }
-                    if(status == "过去报告未通过"){
-                        status_ = 10;
-                     }
-                    if(status == "过去报告已通过"){
-                        status_ = 11;
-                     }
-                    if(status == "考核未过报告未通过"){
-                        status_ = 20;
-                     }
-                    if(status == "考核未过报告已通过"){
-                        status_ = 21;
-                     }
-                    if(status == "报告已通过"){
-                        status_ = 2;
-                     }
-                    if(status == "报告已删除"){
-                        status_ = 3;
-                     }
-                }
-            }
+            year = undefined
         }
+    })
+    $(document).on("click","#year_2",function () {
+        let year_2 = $("#year_2").text() //选择平铺内容
+        $("#year_1").attr("class",'') //先清空其他平铺样式
+        $("#year_3").attr("class",'')
+        $("#year_2").toggleClass("year") //点击增加和删除样式
+        if($("#year_2").attr('class') == 'year'){ //判断平铺选择的内容
+            year = year_2
+        }
+        else{
+            year = undefined
+        }
+    })
+    $(document).on("click","#year_3",function () {
+        let year_3 = $("#year_3").text() //选择平铺内容
+        $("#year_1").attr("class",'') //先清空其他平铺样式
+        $("#year_2").attr("class",'')
+        $("#year_3").toggleClass("year") //点击增加和删除样式
+        if($("#year_3").attr('class') == 'year'){ //判断平铺选择的内容
+            year = year_3
+        }
+        else{
+            year = undefined
+        }
+    })
+    $(document).on("click","#repo_1",function () {
+        let repo_1 = $("#repo_1").text() //选择平铺内容
+        $("#repo_2").attr("class",'') //先清空其他平铺样式
+        $("#repo_1").toggleClass("type") //点击增加和删除样式
+        if($("#repo_1").attr('class') == 'type'){ //判断平铺选择的内容
+            type = repo_1
+        }
+        else{
+            type = undefined
+        }
+    })
+    $(document).on("click","#repo_2",function () {
+        let repo_2 = $("#repo_2").text() //选择平铺内容
+        $("#repo_1").attr("class",'') //先清空其他平铺样式
+        $("#repo_2").toggleClass("type") //点击增加和删除样式
+        if($("#repo_2").attr('class') == 'type'){ //判断平铺选择的内容
+            type = repo_2
+        }
+        else{
+            type = undefined
+        }
+    })
+    $(document).on("click","#sta_1",function () {
+        let status_1 = $("#sta_1").text() //选择平铺内容
+        $("#sta_2").attr("class",'') //先清空其他平铺样式
+        $("#sta_3").attr("class",'')
+        $("#sta_4").attr("class",'')
+        $("#sta_5").attr("class",'')
+        $("#sta_6").attr("class",'')
+        $("#sta_7").attr("class",'')
+        $("#sta_1").toggleClass("stat") //点击增加和删除样式
+        if($("#sta_1").attr('class') == 'stat'){ //判断平铺选择的内容
+            status_show = status_1
+        }
+        else{
+            status_show = undefined
+        }
+    })
+    $(document).on("click","#sta_2",function () {
+        let status_2 = $("#sta_2").text() //选择平铺内容
+        $("#sta_1").attr("class",'') //先清空其他平铺样式
+        $("#sta_3").attr("class",'')
+        $("#sta_4").attr("class",'')
+        $("#sta_5").attr("class",'')
+        $("#sta_6").attr("class",'')
+        $("#sta_7").attr("class",'')
+        $("#sta_2").toggleClass("stat")//点击增加和删除样式
+        if($("#sta_2").attr('class') == 'stat'){ //判断平铺选择的内容
+            status_show = status_2
+        }
+        else{
+            status_show = undefined
+        }
+    })
+    $(document).on("click","#sta_3",function () {
+        let status_3 = $("#sta_3").text() //选择平铺内容
+        $("#sta_1").attr("class",'') //先清空其他平铺样式
+        $("#sta_2").attr("class",'')
+        $("#sta_4").attr("class",'')
+        $("#sta_5").attr("class",'')
+        $("#sta_6").attr("class",'')
+        $("#sta_7").attr("class",'')
+        $("#sta_3").toggleClass("stat")//点击增加和删除样式
+        if($("#sta_3").attr('class') == 'stat'){ //判断平铺选择的内容
+            status_show = status_3
+        }
+        else{
+            status_show = undefined
+        }
+    })
+    $(document).on("click","#sta_4",function () {
+        let status_4 = $("#sta_4").text() //选择平铺内容
+        $("#sta_1").attr("class",'') //先清空其他平铺样式
+        $("#sta_2").attr("class",'')
+        $("#sta_3").attr("class",'')
+        $("#sta_5").attr("class",'')
+        $("#sta_6").attr("class",'')
+        $("#sta_7").attr("class",'')
+        $("#sta_4").toggleClass("stat")//点击增加和删除样式
+        if($("#sta_4").attr('class') == 'stat'){ //判断平铺选择的内容
+            status_show = status_4
+        }
+        else{
+            status_show = undefined
+        }
+    })
+    $(document).on("click","#sta_5",function () {
+        let status_5 = $("#sta_5").text() //选择平铺内容
+        $("#sta_1").attr("class",'') //先清空其他平铺样式
+        $("#sta_2").attr("class",'')
+        $("#sta_3").attr("class",'')
+        $("#sta_4").attr("class",'')
+        $("#sta_6").attr("class",'')
+        $("#sta_7").attr("class",'')
+        $("#sta_5").toggleClass("stat")//点击增加和删除样式
+        if($("#sta_5").attr('class') == 'stat'){ //判断平铺选择的内容
+            status_show = status_5
+        }
+        else{
+            status_show = undefined
+        }
+    })
+    $(document).on("click","#sta_6",function () {
+        let status_6 = $("#sta_6").text() //选择平铺内容
+        $("#sta_1").attr("class",'') //先清空其他平铺样式
+        $("#sta_2").attr("class",'')
+        $("#sta_3").attr("class",'')
+        $("#sta_4").attr("class",'')
+        $("#sta_5").attr("class",'')
+        $("#sta_7").attr("class",'')
+        $("#sta_6").toggleClass("stat")//点击增加和删除样式
+        if($("#sta_6").attr('class') == 'stat'){ //判断平铺选择的内容
+            status_show = status_6
+        }
+        else{
+            status_show = undefined
+        }
+    })
+    $(document).on("click","#sta_7",function () {
+        let status_7 = $("#sta_7").text() //选择平铺内容
+        $("#sta_1").attr("class",'') //先清空其他平铺样式
+        $("#sta_2").attr("class",'')
+        $("#sta_3").attr("class",'')
+        $("#sta_4").attr("class",'')
+        $("#sta_5").attr("class",'')
+        $("#sta_6").attr("class",'')
+        $("#sta_7").toggleClass("stat")//点击增加和删除样式
+        if($("#sta_7").attr('class') == 'stat'){ //判断平铺选择的内容
+            status_show = status_7
+        }
+        else{
+            status_show = undefined
+        }
+    })
+    {#实现检索操作#}
+    $(document).on("click","#search_all",function () {
+        {#获取平铺的检索内容#}
+        console.log("year=",year)
+        console.log("type=",type)
+        if(status_show == "报告未通过"){
+            status_ = 0;
+         }
+        if(status_show == "报告被驳回"){
+            status_ = 1;
+         }
+        if(status_show == "过去报告未通过"){
+            status_ = 10;
+         }
+        if(status_show == "过去报告已通过"){
+            status_ = 11;
+         }
+        if(status_show == "考核未过报告未通过"){
+            status_ = 20;
+         }
+        if(status_show == "考核未过报告已通过"){
+            status_ = 21;
+         }
+        if(status_show == "报告已通过"){
+            status_ = 2;
+         }
+        if(status_show == undefined){
+            status_ = undefined;
+        }
+        console.log("status_show=",status_show)
+        console.log("status_=",status_)
+        {#获取报告名检索#}
+        recordname = $("#keyword_recordname").val()
+        console.log("recordname=",recordname)
         {#刷新页面#}
         init();
     });
         function init() {
+            {#dpage：应该是表示第几页
+             pages：应该是表示总共的页数
+             d_per_page:总共有多少条数据
+             idz:存储每条数据的id#}
+             {#let dpage=1;#}
+            {#let pages=1;#}
             {#初始化搜索栏#}
-            $(".selectpicker").multiselect({nonSelectedText: '选择搜索列',allSelectedText: '已全选',buttonWidth: '150px'});
+            {#$(".selectpicker").multiselect({nonSelectedText: '选择搜索列',allSelectedText: '已全选',buttonWidth: '150px'});#}
             let per_page = 10;
             let d_per_page = 10;
             let idz = new Array(10);
@@ -966,6 +1167,7 @@ $(document).ready(function(){
                 else{
                     for(var i=0;i<data_pdf.length;i++){
                         report_pdf = data_pdf[i].newname;
+                        console.log("data_pdf[i]=",data_pdf[i])
                         {#$("#report_pdf").append("<a href='/data/pdf/"+report_pdf+"'>"+report_pdf+"</a>");#}
                         $("#report_pdf").append("<a href='"+data_pdf[i].path+"'>"+report_pdf+"</a>");
                         $("#report_pdf").append("<p></p>");
@@ -978,8 +1180,9 @@ $(document).ready(function(){
                 else{
                    for(var j=0;j<data_word.length;j++){
                         report_word =  data_word[j].newname;
+                        console.log("data_word[j]=",data_word[j])
                         {#$("#report_word").append("<a href='/data/word/"+report_word+"'>"+report_word+"</a>");#}
-                        $("#report_word").append("<a href='"+data_word[j].path+"/"+report_word+"'>"+report_word+"</a>");
+                        $("#report_word").append("<a href='"+data_word[j].path+"'>"+report_word+"</a>");
                         $("#report_word").append("<p></p>");
                      }
 
@@ -1002,8 +1205,9 @@ $(document).ready(function(){
                 else{
                    for(var m=0;m<data_image.length;m++){
                         report_image =  data_image[m].newname;
+                        console.log("data_image[m]=",data_image[m])
                         {#$("#report_image").append("<a href='/data/image/"+report_image+"'>"+report_image+"</a>");#}
-                        $("#report_image").append("<a href='"+data_image[m].path+"/"+report_image+"'>"+report_image+"</a>");
+                        $("#report_image").append("<a href='"+data_image[m].path+"'>"+report_image+"</a>");
                         $("#report_image").append("<p></p>");
                      }
 
@@ -1045,60 +1249,68 @@ $(document).ready(function(){
                 '                     <br>\n' +
                 '                     <br>\n' +
                 '                      <label style="font-size: small;color: grey;float: left">（仅支持doc、docx、pdf、jpg和png格式的文件）</label>\n' +
-                '                    <button type="button" class="layui-btn layui-hide" id="ViewListAction_nd" style="float: right;margin-right: 20px">上传</button>\n' +
+                {#'                    <button type="button" class="layui-btn layui-hide" id="ViewListAction_nd" style="float: right;margin-right: 20px">上传</button>\n' +#}
                 '                     <br>\n' +
                 '                   </div>\n' +
                 '               </div>');
             //多文件选择
-            var VIEWList_nd = $('#VIEWList_nd'),
-                upload_nd_Ins = upload.render({
-                    elem: '#add_file_nd',
-                    {#url: '',#}
-                    accept: 'file,images',
-                    exts: 'doc|docx|pdf|jpg|png',
-                    multiple: true,
-                    auto: false,
-                    {#bindAction: '#submit',#}
-                    choose: function (obj) {
-                        files_nd = obj.pushFile(); //选择文件赋给files
-                        var file_nd_time = fileTime();
-                        //读取本地文件
-                        obj.preview(function (index, file, result) {
-                            var tr = $(['<tr id="upload-' + index + '">'
-                                , '<td>' + file.name + '</td>'
-                                , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
-                                , '<td>' + file_nd_time + '</td>'
-                                , '<td>'
-                                , '<button class="layui-btn layui-btn-xs layui-btn-danger file_nd_delete">删除</button>'
-                                , '</td>'
-                                , '</tr>'].join(''));
-                            //将每次选择的文件追加到文件队列
-                            VIEWList_nd.append(tr);
-                            if ($('#VIEWList_nd tr').length != 0) {
-                                $("#ViewListAction_nd").removeClass('layui-hide'); //显示上传
-                            }
-                            //删除文件按钮
-                            tr.find('.file_nd_delete').on('click', function () {
-                                delete files_nd[index]; //删除对应的文件
-                                tr.remove();
-                                upload_nd_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                                {#若文件列表无数据，隐藏上传按钮#}
-                                if ($('#VIEWList_nd tr').length == 0) {
-                                       $("#ViewListAction_nd").addClass('layui-hide'); //隐藏上传
-                                }
-                            })
-                        });
-                }
-            })
+            var VIEWList_nd = $('#VIEWList_nd');
+            var upload_nd_Ins = {};
+            upload_nd_Ins = upload.render({
+                elem: '#add_file_nd',
+                {#url: '',#}
+                accept: 'file,images',
+                exts: 'doc|docx|pdf|jpg|png',
+                multiple: true,
+                auto: false,
+                {#bindAction: '#submit',#}
+                choose: function (obj) {
+                    files_nd = obj.pushFile(); //选择文件赋给files
+                    var file_nd_time = fileTime();
+                    //读取本地文件
+                    obj.preview(function (index, file, result) {
+                        var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td>' + file.name + '</td>'
+                            {#, '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'#}
+                            , '<td>' + file_nd_time + '</td>'
+                            , '<td>'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger file_nd_delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+                        //将每次选择的文件追加到文件队列
+                        VIEWList_nd.append(tr);
+                        {#if ($('#VIEWList_nd tr').length != 0) {#}
+                        {#    $("#ViewListAction_nd").removeClass('layui-hide'); //显示上传#}
+
+                        //删除文件按钮
+                        tr.find('.file_nd_delete').on('click', function () {
+                            delete files_nd[index]; //删除对应的文件
+                            tr.remove();
+                            upload_nd_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                            {#若文件列表无数据，隐藏上传按钮#}
+                            {#if ($('#VIEWList_nd tr').length == 0) {#}
+                            {#       $("#ViewListAction_nd").addClass('layui-hide'); //隐藏上传#}
+
+                        })
+                    });
+               }
+          })
+
         })
    }
 //文件上传（年度报告）
 {#文件上传二次确认#}
 $(document).on("click","#ViewListAction_nd",function () {
+    var data_nd = [];
     var flag = confirm("上传之后不可更改，确定上传吗？");
     if(flag == false){
         return false
     }else {
+        for(let k in filesSub_nd){
+             if(filesSub_nd[k].id!=''){
+                 data_nd[k]=filesSub_nd[k].id;}
+        }
+        console.log("data_nd=",data_nd);
         for (let i in files_nd) {
             form_nd.append("files", files_nd[i]);
         }
@@ -1110,7 +1322,7 @@ $(document).on("click","#ViewListAction_nd",function () {
         layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
         let name_nd = $('#name_nd').val();
         $.ajax({
-            url: './updaterecord?name=' + name_nd + '&id=' + new_ac_id,
+            url: './updaterecord?name=' + name_nd + '&id=' + new_ac_id + '&data=[' + data_nd + ']',
             type: "POST",
             data: form_nd,
             contentType: false,
@@ -1122,8 +1334,8 @@ $(document).on("click","#ViewListAction_nd",function () {
                     setTimeout(function () {
                         layer.closeAll('loading');
                     }, 2000);//关闭加载风格
-                    $('#VIEWList_nd tr').remove(); //移除列表中上传的内容
-                    $("#ViewListAction_nd").addClass('layui-hide'); //隐藏上传按钮
+                    {#$('#VIEWList_nd tr').remove(); //移除列表中上传的内容#}
+                    {#$("#ViewListAction_nd").addClass('layui-hide'); //隐藏上传按钮#}
                     {#files_nd = {};//初始化上传文件和data，避免重复上传#}
                     {#form_nd = new FormData();#}
                 } else if (result.code == 500) {
@@ -1132,6 +1344,13 @@ $(document).on("click","#ViewListAction_nd",function () {
                         layer.closeAll('loading');
                     }, 2000);//关闭加载风格
                 }
+                for (let key in files_nd) {
+                    delete files_nd[key];
+                }
+                for (var key of form_nd.keys()) {
+                    form_nd.delete(key);
+                }
+                init();
             }
         })
     }
@@ -1153,62 +1372,70 @@ $(document).on("click","#ViewListAction_nd",function () {
                '                     <br>\n' +
                '                     <br>\n' +
                '                     <label style="font-size: small;color: grey;float: left">（仅支持doc、docx、pdf、jpg、png和mp4格式的文件）</label>\n' +
-               '                     <button type="button" class="layui-btn layui-hide" id="ViewListAction_kjz" style="float: right;margin-right: 20px">上传</button>\n' +
+               {#'                     <button type="button" class="layui-btn layui-hide" id="ViewListAction_kjz" style="float: right;margin-right: 20px">上传</button>\n' +#}
                '                     <br>\n' +
                '                  </div>\n' +
                '              </div>');
            //多文件选择
-           var VIEWList_kjz = $('#VIEWList_kjz'),
-               upload_kjz_Ins = upload.render({
-                   elem: '#add_file_kjz',
-                   {#url: '',#}
-                   accept: 'file,images,video',
-                   exts: 'doc|docx|pdf|jpg|png|mp4',
-                   multiple: true,
-                   auto: false,
-                   {#bindAction: '#submit',#}
-                   choose: function (obj) {
-                       files_kjz = obj.pushFile(); //选择文件赋给files
-                       var file_kjz_time = fileTime();
-                       //读取本地文件
-                       obj.preview(function (index, file, result) {
-                           var tr = $(['<tr id="upload-' + index + '">'
-                               , '<td>' + file.name + '</td>'
-                               , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
-                               , '<td>' + file_kjz_time + '</td>'
-                               , '<td>'
-                               , '<button class="layui-btn layui-btn-xs layui-btn-danger file_kjz_delete">删除</button>'
-                               , '</td>'
-                               , '</tr>'].join(''));
-                           //将每次选择的文件追加到文件队列
-                           VIEWList_kjz.append(tr);
-                           if ($('#VIEWList_kjz tr').length != 0) {
-                                $("#ViewListAction_kjz").removeClass('layui-hide'); //显示上传
-                            }
-                           //删除文件按钮
-                           tr.find('.file_kjz_delete').on('click', function () {
-                               delete files_kjz[index]; //删除对应的文件
-                               tr.remove();
-                               upload_kjz_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                               {#若文件列表无数据，隐藏上传按钮#}
-                                if ($('#VIEWList_kjz tr').length == 0) {
-                                    $("#ViewListAction_kjz").addClass('layui-hide'); //隐藏上传
-                                }
-                           })
+           var VIEWList_kjz = $('#VIEWList_kjz');
+           upload_kjz_Ins = upload.render({
+               elem: '#add_file_kjz',
+               {#url: '',#}
+               accept: 'file,images,video',
+               exts: 'doc|docx|pdf|jpg|png|mp4',
+               multiple: true,
+               auto: false,
+               {#bindAction: '#submit',#}
+               choose: function (obj) {
+                   files_kjz = obj.pushFile(); //选择文件赋给files
+                   var file_kjz_time = fileTime();
+                   //读取本地文件
+                   obj.preview(function (index, file, result) {
+                       var tr = $(['<tr id="upload-' + index + '">'
+                           , '<td>' + file.name + '</td>'
+                           {#, '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'#}
+                           , '<td>' + file_kjz_time + '</td>'
+                           , '<td>'
+                           , '<button class="layui-btn layui-btn-xs layui-btn-danger file_kjz_delete">删除</button>'
+                           , '</td>'
+                           , '</tr>'].join(''));
+                       //将每次选择的文件追加到文件队列
+                       VIEWList_kjz.append(tr);
+                       {#if ($('#VIEWList_kjz tr').length != 0) {#}
+                       {#     $("#ViewListAction_kjz").removeClass('layui-hide'); //显示上传#}
+                       {# }#}
+                       //删除文件按钮
+                       tr.find('.file_kjz_delete').on('click', function () {
+                           delete files_kjz[index]; //删除对应的文件
+                           tr.remove();
+                           upload_kjz_Ins.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                           {#若文件列表无数据，隐藏上传按钮#}
+                           {# if ($('#VIEWList_kjz tr').length == 0) {#}
+                           {#     $("#ViewListAction_kjz").addClass('layui-hide'); //隐藏上传#}
+                           {# }#}
+                       })
 
-                       });
+                   });
 
-                   }
-               })
+               }
+           })
+
        })
    }
 //文件上传(科技周报告)
 {#文件上传二次确认#}
 $(document).on("click","#ViewListAction_kjz",function () {
+    var data_kjz = [];
+    console.log("data_kjz=",data_kjz)
     var flag = confirm("上传之后不可更改，确定上传吗？");
     if(flag == false){
         return false
     }else {
+        for(let i in filesSub_kjz){
+             if(filesSub_kjz[i].id!=''){
+                 data_kjz[i]=filesSub_kjz[i].id;}
+        }
+        console.log("data_kjz=",data_kjz);
         for (let i in files_kjz) {
             form_kjz.append("files", files_kjz[i]);
         }
@@ -1220,7 +1447,7 @@ $(document).on("click","#ViewListAction_kjz",function () {
         layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
         let name_kjz = $('#name_kjz').val();
         $.ajax({
-            url: './updaterecord?name=' + name_kjz + '&id=' + new_ac_id,
+            url: './updaterecord?name=' + name_kjz + '&id=' + new_ac_id + '&data=[' + data_kjz + ']',
             type: "POST",
             data: form_kjz,
             contentType: false,
@@ -1232,8 +1459,8 @@ $(document).on("click","#ViewListAction_kjz",function () {
                     setTimeout(function () {
                         layer.closeAll('loading');
                     }, 2000);//关闭加载风格
-                    $('#VIEWList_kjz tr').remove(); //移除列表中上传的内容
-                    $("#ViewListAction_kjz").addClass('layui-hide'); //隐藏上传按钮
+                    {#$('#VIEWList_kjz tr').remove(); //移除列表中上传的内容#}
+                    {#$("#ViewListAction_kjz").addClass('layui-hide'); //隐藏上传按钮#}
                     {#files_kjz = {};//初始化上传文件和data，避免重复上传#}
                     {#form_kjz = new FormData();#}
                 } else if (result.code == 500) {
@@ -1242,6 +1469,13 @@ $(document).on("click","#ViewListAction_kjz",function () {
                         layer.closeAll('loading');
                     }, 2000);//关闭加载风格
                 }
+                for (let key in files_kjz) {
+                    delete files_kjz[key];
+                }
+                for (var key of form_kjz.keys()) {
+                    form_kjz.delete(key);
+                }
+                init();
             }
         })
     }
@@ -1278,6 +1512,10 @@ $(document).on("click","#ViewListAction_kjz",function () {
 
    {#实现修改按钮#}
    $(document).on("click",".btn-warning",function () {
+        for (let i in filesSub_nd) {
+            delete filesSub_nd[i];
+        }
+       console.log("filesSub_nd=",filesSub_nd)
        let ac_id = $(this).attr("id")
        let ac_type = acquire_update_type[ac_id]
        {# 获取新传入给后端的id#}
@@ -1286,12 +1524,150 @@ $(document).on("click","#ViewListAction_kjz",function () {
        if(ac_type=='年度'){
            $("#update_ndreport_modal_div").modal('show')
            up_type = '年度'
+           {#filesSub_nd = {}#}
+           {#从后端获取修改界面显示的数据#}
+           $.ajax({
+               type: 'GET',
+               url: './detailuserrecord',
+               data: {'id': new_ac_id},
+               dataType: 'json',
+               async: false,
+               cache: false,
+               contentType: 'application/json',
+               success: function (data) {
+                   $("#VIEWList_nd").empty() //显示前先清空所有
+                   let report_name = data.name;
+                   let str_show = '';
+                   let pdf_str = '';
+                   let word_str = '';
+                   let video_str = '';
+                   let image_str = '';
+                   $("#name_nd").val(report_name) //之前的报告名称直接显示出来
+                   if (data.pdf.length > 0) {
+                       let pdf_time = fileTime();
+                       for (var i = 0; i < data.pdf.length; i++) {
+                           pdf_str = "<a href='" + data.pdf[i].path + "'>" + data.pdf[i].newname + "</a>"
+                           str_show += "<tr><td>" + pdf_str +
+                               '</td><td>' + pdf_time +
+                               "</td><td>" + "<input type='button' data-id='del" + count_nd + "' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_nd' value='删除'>" + "</tr>";
+                           filesSub_nd[count_nd] = data.pdf[i] //将已有的文件放在filesSub_nd中
+                           count_nd++;
+                       }
+                   }
+                   if (data.word.length > 0) {
+                       let word_time = fileTime();
+                       for (var j = 0; j < data.word.length; j++) {
+                           word_str = "<a href='" + data.word[j].path + "'>" + data.word[j].newname + "</a>"
+                           str_show += "<tr><td>" + word_str +
+                               '</td><td>' + word_time +
+                               "</td><td>" + "<input type='button' data-id='del" + count_nd + "' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_nd' value='删除'>" + "</tr>";
+                           filesSub_nd[count_nd] = data.word[j] //将已有的文件放在filesSub_nd中
+                           count_nd++;
+                       }
+                   }
+
+                   if (data.video.length > 0) {
+                       let video_time = fileTime();
+                       for (var k = 0; k < data.video.length; k++) {
+                           video_str = "<a href='" + data.video[k].path + "'>" + data.video[k].newname + "</a>"
+                           str_show += "<tr><td>" + video_str +
+                               '</td><td>' + video_time +
+                               "</td><td>" + "<input type='button' data-id='del" + count_nd + "' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_nd' value='删除'>" + "</tr>";
+                           filesSub_nd[count_nd] = data.video[k] //将已有的文件放在filesSub_nd中
+                           count_nd++;
+                       }
+                   }
+
+                   if (data.image.length > 0) {
+                       let image_time = fileTime();
+                       for (var m = 0; m < data.image.length; m++) {
+                           image_str = "<a href='" + data.image[m].path + "'>" + data.image[m].newname + "</a>"
+                           str_show += "<tr><td>" + image_str +
+                               '</td><td>' + image_time +
+                               "</td><td>" + "<input type='button' data-id='del" + count_nd + "' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_nd' value='删除'>" + "</td></tr>";
+                           filesSub_nd[count_nd] = data.image[m] //将已有的文件放在filesSub_nd中
+                           count_nd++;
+                       }
+
+                   }
+                   $("#VIEWList_nd").append(str_show);
+               }
+           })
            mutifiles_nd()
            return false
         }
        else{
            $("#update_kjzreport_modal_div").modal('show')
            up_type = '科技周'
+           filesSub_kjz = {}
+           {#从后端获取修改界面显示的数据#}
+           $.ajax({
+            type:'GET',
+            url:'./detailuserrecord',
+            data:{'id':new_ac_id},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(data){
+                $("#VIEWList_kjz").empty() //显示前先清空所有
+                let report_name = data.name;
+                let str_show = '';
+                let pdf_str = '';
+                let word_str = '';
+                let video_str = '';
+                let image_str = '';
+                $("#name_kjz").val(report_name) //之前的报告名称直接显示出来
+                if(data.pdf.length > 0){
+                    let pdf_time = fileTime();
+                    for(var i=0;i<data.pdf.length;i++){
+                        pdf_str = "<a href='"+data.pdf[i].path+"'>"+data.pdf[i].newname+"</a>"
+                        str_show += "<tr><td>" + pdf_str +
+                                '</td><td>' + pdf_time +
+                                "</td><td>" + "<input type='button' data-id='del"+ count_kjz+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_kjz' value='删除'>" +"</tr>";
+                        filesSub_kjz[count_kjz] = data.pdf[i] //将已有的文件放在filesSub_nd中
+                        count_kjz++;
+                     }
+                }
+                if (data.word.length > 0){
+                    let word_time = fileTime();
+                    for(var j=0;j<data.word.length;j++){
+                        word_str = "<a href='"+data.word[j].path+"'>"+data.word[j].newname+"</a>"
+                        str_show += "<tr><td>" + word_str +
+                                '</td><td>' + word_time +
+                                "</td><td>" + "<input type='button' data-id='del"+ count_kjz+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_kjz' value='删除'>" +"</tr>";
+                        filesSub_kjz[count_kjz] = data.word[j] //将已有的文件放在filesSub_nd中
+                        count_kjz++;
+                     }
+                }
+
+                if (data.video.length > 0){
+                    let video_time = fileTime();
+                    for(var k=0;k<data.video.length;k++){
+                        video_str = "<a href='"+data.video[k].path+"'>"+data.video[k].newname+"</a>"
+                        str_show += "<tr><td>" + video_str +
+                                '</td><td>' + video_time +
+                                "</td><td>" + "<input type='button' data-id='del"+ count_kjz+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_kjz' value='删除'>" +"</tr>";
+                        filesSub_kjz[count_kjz] = data.video[k] //将已有的文件放在filesSub_nd中
+                        count_kjz++;
+                     }
+                }
+
+                if (data.image.length > 0){
+                    let image_time = fileTime();
+                    for(var m=0;m<data.image.length;m++){
+                        image_str = "<a href='"+data.image[m].path+"'>"+data.image[m].newname+"</a>"
+                        str_show += "<tr><td>" + image_str +
+                                 '</td><td>' + image_time +
+                                "</td><td>" + "<input type='button' data-id='del"+ count_kjz+"' class='layui-btn layui-btn-xs layui-btn-danger demo-delete_kjz' value='删除'>" +"</td></tr>";
+                        filesSub_kjz[count_kjz] = data.image[m] //将已有的文件放在filesSub_nd中
+                        count_kjz++;
+                }
+
+                }
+                $("#VIEWList_kjz").append(str_show);
+            }
+        });
            mutifiles_kjz()
            return false
        }
@@ -1311,6 +1687,23 @@ $(document).on("click","#ViewListAction_kjz",function () {
        return false;
    })
 
+  {#修改悬浮框的已有文件删除操作#}
+    $(document).on("click",".demo-delete_nd",function () {
+        let id_nd = $(this).data("id");
+        id_nd = id_nd.split("del")
+        id_nd = id_nd.pop()
+        {#console.log("id_nd=",id_nd)#}
+        $(this).parent().parent().remove();
+        delete filesSub_nd[id_nd]
+    })
+    $(document).on("click", ".demo-delete_kjz", function () {
+        let id_kjz = $(this).data("id");
+        id_kjz = id_kjz.split("del")
+        id_kjz = id_kjz.pop()
+        {#console.log("id_kjz=",id_kjz)#}
+        $(this).parent().parent().remove();
+        delete filesSub_kjz[id_kjz]
+    })
 
   {#实现删除按钮的模式框打开操作#}
     $(document).on("click",".btn-danger",function () {

@@ -446,6 +446,16 @@ def get_host_ip():
         s.close()
     return ip
 
+#获取本机ip地址
+def get_host_ip():
+    try:
+        s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8',80))
+        ip=s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
+
 #生成二维码
 @main.route('/ewmsysactivity',methods=['GET','POST'])
 def ewmsysactivity():

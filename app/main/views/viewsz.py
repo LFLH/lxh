@@ -266,7 +266,7 @@ def newuser_declare():
         return redirect('/olduser')
     else:
         return render_template('newuser_declare.html',username=user["username"])
-        
+
 #老用户界面
 @main.route('/olduser',methods=['GET','POST'])
 def olduser():
