@@ -82,7 +82,7 @@ def detailactivity():
     data = activity.datas
     filedata = {'video': [], 'music': [], 'image': [], 'pdf': [], 'word': []}
     for datai in data:
-        dataz = {'name': datai.name, 'path': datai.path, 'newname': datai.newname}
+        dataz = {'id':datai.id,'name': datai.name, 'path': datai.path, 'newname': datai.newname}
         filedata[datai.type].append(dataz)
     # 返回活动名、活动类别、活动类型、开始时间、结束时间、活动内容、视频、音频、图片、pdf、word
     da = {'name': activity.name, 'typeuser': activity.typeuser, 'type': activity.type,
@@ -229,6 +229,7 @@ def updateactivity():
     endtime = request.args.get('endtime')
     main = request.args.get('main')
     type = request.args.get('type')
+    data=request.values.getlist('data[]')
     if begintime != None:
         begintime = datetime.datetime.strptime(begintime, '%Y-%m-%d')
     if endtime != None:
@@ -251,11 +252,17 @@ def updateactivity():
         activity.main=main
     activity.status=0
     activity.updatetime = datetime.datetime.now()
-    # 移除活动中的文件
     datas = activity.datas
+    '''
+    # 移除活动中的文件
     length = len(datas)
     for i in range(length):
         activity.datas.remove(datas[length - i - 1])
+    '''
+    #修改文件列表
+    for datasi in datas:
+        if datasi.id not in data:
+            activity.datas.remove(datasi)
     db.session.add(activity)
     db.session.commit()
     # 修改用户操作时间

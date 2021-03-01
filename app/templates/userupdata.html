@@ -47,7 +47,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%;">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
@@ -90,7 +90,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
                                       活动报名
@@ -112,7 +112,7 @@
                               <p style="display: inline" class="indicator" id="indicator2">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.userupdata')}}">
                                       活动提交
@@ -140,7 +140,7 @@
                               <p style="display: inline" class="indicator" id="indicator3">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.useractivity')}}">
                                      已提交活动
@@ -169,7 +169,7 @@
             <h2 class="sub-header">添加新活动</h2>
             <form id="update">
                 <div class="form-group">
-                    <label for="name" class="col-sm-2 control-label" style="margin-top:10px;">活动名称:</label>
+                    <label for="name" class="col-sm-2 control-label"style="margin-top:10px;">活动名称:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
                         <input class="form-control" id="name" placeholder="请输入名称" required>
                     </div>
@@ -260,9 +260,15 @@
 <script type="text/javascript">
     $(document).ready(function(){
         console.log("weclome");
-        // $("#cancel").on("click", function (){
-        //
-        // })
+        $("#cancel").on("click", function (){
+            $('#name').val('');
+            $('#starttime').val('');
+            $('#endtime').val('');
+            $('#content').val('');
+            $('#type').val('');
+            $("#fileList").empty();
+        })
+        var sort=0
         $(function () {
         var formData = new FormData();
         var files={};
@@ -285,8 +291,11 @@
         var $ = layui.jquery,
             upload = layui.upload;
         //多文件列表示例
-        var fileListView = $('#fileList'),
-            uploadListIns = upload.render({
+        var fileListView = $('#fileList');
+            var uploadListIns = {}
+            if (sort == 0){
+                sort=1;
+                uploadListIns = upload.render({
                 elem: '#chooseFile',
                 // url: './addactivitycs',
                 accept: 'file',
@@ -318,15 +327,44 @@
                     });
                 },
             })
+            }else {
+                uploadListIns.reload({
+                elem: '#chooseFile',
+                // url: './addactivitycs',
+                accept: 'file',
+                exts: 'doc|docx|pdf|mp3|mp4|jpg',
+                multiple: true,
+                auto: false,
+                // bindAction: '#updateActivity',
+                choose: function (obj) {
+                    files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                    // formData.append("files", files);//保存每一个文件
+                    var file_time = fileTime();
+                    //读取本地文件
+                    obj.preview(function (index, file, result) {
+                        var tr = $(['<tr id="upload-' + index + '">'
+                            , '<td style="width: 65%">' + file.name + '</td>'
+                            , '<td style="width: 10%">' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                            , '<td style="width: 15%">' + file_time + '</td>'
+                            , '<td style="width: 10%">'
+                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                            , '</td>'
+                            , '</tr>'].join(''));
+                        //删除
+                        tr.find('.demo-delete').on('click', function () {
+                            delete files[index]; //删除对应的文件
+                            tr.remove();
+                            uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                        });
+                        fileListView.append(tr);
+                    });
+                },
+            })
+            }
+
         });
         //提交
         $("#updateActivity").on("click", function () {
-             let name = $('#name').val();
-             let begintime = $('#starttime').val();
-             let endtime = $('#endtime').val();
-             let main = $('#content').val();
-             let type = $('#type').val();
-             s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
              // var formData = new FormData($("#update")[0]);
              for(let k in files){
                 formData.append("files",files[k]);
@@ -341,6 +379,12 @@
              if(len==0){
                  layer.msg("未选择文件！", {icon: 5});
              }else {
+                 let name = $('#name').val();
+                 let begintime = $('#starttime').val();
+                 let endtime = $('#endtime').val();
+                 let main = $('#content').val();
+                 let type = $('#type').val();
+                 s='./addactivitycs?name='+name+'&begintime='+begintime+'&endtime='+endtime+'&main='+main+'&type='+type
                  layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
                  $.ajax({
                      url: s,
@@ -349,19 +393,40 @@
                      contentType: false,
                      processData: false,
                      success: function (result) {
-                         console.log(result.status);
+                         console.log(result.code);
                          if (result.status == true) {
-                             layer.msg("上传成功！", {icon: 6});
+                             layer.msg("提交成功！", {icon: 6});
                              setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
-                         } else {
+                         } else if (result.code == 500) {
                              layer.msg(result.msg, {icon: 5});
                              setTimeout(function(){ layer.closeAll('loading'); }, 2000);//关闭加载风格
                          }
+                         for(let key in files){
+                             delete files[key];
+                         }
+
+                         for (var key of formData.keys()){
+                             formData.delete(key);
+                         };
+                         Flush()
                      }
                  })
              }
         })
+        function Flush(){
+            $('#name').val('');
+            $('#starttime').val('');
+            $('#endtime').val('');
+            $('#content').val('');
+            $('#type').val('');
+            $("#fileList").empty();
+        };
     })
+    $(function(){
+        $(".a").click(function(){
+            $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
+        });
+    });
         /*$("#update").submit(function(){
             let name = $('#name').val();
             let begintime = $('#starttime').val();
@@ -413,11 +478,6 @@
                 setTimeout(function() { document.body.removeChild(m) }, d * 1000);
             });
         };*/
-    });
-    $(function(){
-        $(".a").click(function(){
-            $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-        }).next("ul").hide();
     });
 </script>
 </body>

@@ -104,7 +104,7 @@ def addsysactivity():
     stoptime = datetime.datetime.strptime(stoptime, '%Y-%m-%d')
     userid = user['userid']
     #创建活动及存表
-    activity = Activity(name=name, typeuser='系统',type=type, begintime=begintime, endtime=endtime, stoptime=stoptime, main=main, userid=userid)
+    activity = Activity(name=name, typeuser='系统',type=type, begintime=begintime, endtime=endtime, stoptime=stoptime, main=main, userid=userid,status=2)
     db.session.add(activity)
     db.session.commit()
     user2=User.query.filter(User.id==userid).all()[0]

@@ -13,6 +13,7 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <link href="../static/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../static/layui/css/layui.css" />
     <script type="text/javascript" src="../static/layui/layui.js"></script>
     <style type="text/css">
@@ -38,6 +39,15 @@
         .btn-group-sm>.btn, .btn-sm {
             padding: .25rem 1rem;
         }
+        .fa {
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            padding-right: 5px;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            /*-moz-osx-font-smoothing: grayscale;*/
+        }
         /*.operation button{*/
         /*    background-color: #D3D3D3;*/
         /*    border-radius: 3px;*/
@@ -52,7 +62,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color: #01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎您：{{ username }} </a></li>
@@ -118,7 +128,7 @@
                               <p style="display: inline" class="indicator" id="indicator2">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none;">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.managedeclareuser')}}">
                                       已申报用户
@@ -145,7 +155,7 @@
                               <p style="display: inline" class="indicator" id="indicator3">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none;">
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.manageabilityuser')}}">
                                       已申报用户
@@ -1177,7 +1187,7 @@
                         var videoStr = ''
                         if(data.video.length >0){
                             for(var i=0;i<data.video.length;i++){
-                                videoStr += '<a href="'+data.video[i].path+'">'+data.video[i].name+'</a>'
+                                videoStr += '<a href="'+data.video[i].path+'">'+'<i class="fa fa-video-camera" aria-hidden="true"></i>'+data.video[i].name+'</a>'
                             }
                             $("#showModal").find("#InputFileVedio").html(videoStr)
                         }else {
@@ -1186,7 +1196,7 @@
                         var audioStr = ''
                         if(data.music.length >0){
                             for(var i=0;i<data.music.length;i++){
-                                audioStr += '<a href="'+data.music[i].path+'">'+data.music[i].name+'</a>'
+                                audioStr += '<a href="'+data.music[i].path+'">'+'<i class="fa fa-music" aria-hidden="true" style="color:#08f82f;"></i>'+data.music[i].name+'</a>'
                             }
                             $("#showModal").find("#InputFileAudio").html(audioStr)
                         }else {
@@ -1195,9 +1205,9 @@
                         // $("#showModal").find("#InputFileAudio").text(data.music[0].name)
                         // $("#showModal").find("#InputFileAudio").attr('href',data.music[0].path)
                         var imageStr = ''
-                        if(data.music.length >0){
+                        if(data.image.length >0){
                             for(var i=0;i<data.image.length;i++){
-                                imageStr += '<a href="'+data.image[i].path+'">'+data.image[i].name+'</a>'
+                                imageStr += '<a href="'+data.image[i].path+'">'+'<i class="fa fa-picture-o" aria-hidden="true"></i>'+data.image[i].name+'</a>'
                             }
                             $("#showModal").find("#InputFileImage").html(imageStr)
                         }else {
@@ -1208,7 +1218,7 @@
                         var pdfStr = ''
                         if(data.pdf.length >0){
                             for(var i=0;i<data.pdf.length;i++){
-                                pdfStr += '<a href="'+data.pdf[i].path+'">'+data.pdf[i].name+'</a>'
+                                pdfStr += '<a href="'+data.pdf[i].path+'">'+'<i class="fa fa-file-pdf-o" aria-hidden="true"></i>'+data.pdf[i].name+'</a>'
                             }
                             $("#showModal").find("#InputFilePDF").html(pdfStr)
                         }else {
@@ -1219,7 +1229,7 @@
                         var wordStr = ''
                         if(data.word.length >0){
                             for(var i=0;i<data.pdf.length;i++){
-                                wordStr += '<a href="'+data.word[i].path+'">'+data.word[i].name+'</a>'
+                                wordStr += '<a href="'+data.word[i].path+'">'+'<i class="fa fa-file-word-o" aria-hidden="true"></i>'+data.word[i].name+'</a>'
                             }
                             $("#showModal").find("#InputFileWord").html(wordStr)
                         }else {
@@ -1576,7 +1586,7 @@
     $(function(){
         $(".a").click(function(){
             $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-        }).next("ul").hide();
+        });
     });
 </script>
 </body>

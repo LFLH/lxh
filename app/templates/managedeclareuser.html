@@ -358,6 +358,7 @@ var dpage;
 var pages;
 var status_num;
 var status_show_;
+var status_;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
     let per_page=10;
@@ -382,11 +383,50 @@ $(document).ready(function(){
                 if(select_content == "用户名"){
                 username = input_content
             }
-            if(select_content == "用户提交时间"){
+            if(select_content == "提交时间"){
                 uptime = input_content
             }
             if(select_content == "状态"){
                 status_show = input_content
+                if(status_show == "未通过"){
+                    status_ = 0;
+                 }
+                if(status_show == "已通过"){
+                    status_ = 1;
+                 }
+                if(status_show == "申报被驳回"){
+                   status_ = 2;
+                 }
+                if(status_show == "申报未通过且申报任务过期"){
+                    status_ = 10;
+                 }
+                if(status_show == "申报已通过但申报任务过期"){
+                    status_ = 11;
+                 }
+                if(status_show == "申报被驳回且申报任务过期"){
+                    status_ = 12;
+                 }
+                if(status_show == "用户被删除且申报未通过"){
+                    status_ = 20;
+                 }
+                if(status_show == "申报已通过但用户被删除"){
+                    status_ = 21;
+                 }
+                if(status_show == "申报被驳回且用户被删除"){
+                    status_ = 22;
+                 }
+                if(status_show == "申报未通过且申报任务过期且用户被删除"){
+                    status_ = 30;
+                 }
+                if(status_show == "申报通过且申报任务过期且用户被删除"){
+                    status_ = 31;
+                 }
+                if(status_show == "申报被驳回且申报任务过期且用户被删除"){
+                    status_ = 32;
+                 }
+                if(status_show == "申报未启用"){
+                    status_ = 4;
+                 }
             }
             }
 
@@ -398,11 +438,50 @@ $(document).ready(function(){
                 if(content == "用户名"){
                     username = input_content[i]
                 }
-                if(content == "用户提交时间"){
+                if(content == "提交时间"){
                     uptime = input_content[i]
                 }
                 if(content == "状态"){
                     status_show = input_content[i]
+                    if(status_show == "未通过"){
+                        status_ = 0;
+                     }
+                    if(status_show == "已通过"){
+                        status_ = 1;
+                     }
+                    if(status_show == "申报被驳回"){
+                       status_ = 2;
+                     }
+                    if(status_show == "申报未通过且申报任务过期"){
+                        status_ = 10;
+                     }
+                    if(status_show == "申报已通过但申报任务过期"){
+                        status_ = 11;
+                     }
+                    if(status_show == "申报被驳回且申报任务过期"){
+                        status_ = 12;
+                     }
+                    if(status_show == "用户被删除且申报未通过"){
+                        status_ = 20;
+                     }
+                    if(status_show == "申报已通过但用户被删除"){
+                        status_ = 21;
+                     }
+                    if(status_show == "申报被驳回且用户被删除"){
+                        status_ = 22;
+                     }
+                    if(status_show == "申报未通过且申报任务过期且用户被删除"){
+                        status_ = 30;
+                     }
+                    if(status_show == "申报通过且申报任务过期且用户被删除"){
+                        status_ = 31;
+                     }
+                    if(status_show == "申报被驳回且申报任务过期且用户被删除"){
+                        status_ = 32;
+                     }
+                    if(status_show == "申报未启用"){
+                        status_ = 4;
+                     }
                 }
             }
         }
@@ -431,7 +510,7 @@ $(document).ready(function(){
         $.ajax({
             type: 'GET',
             url: './searchdeclareuser',
-            data: {'page': 1, 'per_page': per_page, 'username': username, 'uptime': uptime},
+            data: {'page': 1, 'per_page': per_page, 'username': username, 'uptime': uptime,'status':status_},
             dataType: 'json',
             async: false,
             cache: false,
@@ -551,7 +630,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchdeclareuser',
-                    data:{'page':dpage-1,'per_page':per_page,'username': username, 'uptime': uptime},
+                    data:{'page':dpage-1,'per_page':per_page,'username': username, 'uptime': uptime,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -666,7 +745,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchdeclareuser',
-                    data:{'page':dpage+1,'per_page':per_page,'username': username, 'uptime': uptime},
+                    data:{'page':dpage+1,'per_page':per_page,'username': username, 'uptime': uptime,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -780,7 +859,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchdeclareuser',
-                    data:{'page':index,'per_page':per_page,'username': username, 'uptime': uptime},
+                    data:{'page':index,'per_page':per_page,'username': username, 'uptime': uptime,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -924,8 +1003,10 @@ $(document).ready(function(){
                 else{
                     for(var i=0;i<data_pdf.length;i++){
                         declare_pdf = data_pdf[i].newname;
-                        $("#declare_pdf").append("<a href='/data/pdf/"+declare_pdf+"'>"+declare_pdf+"</a>");
-                        $("#declare_pdf").append("  ");
+                        console.log("data_pdf[i]=",data_pdf[i])
+                        {#$("#declare_pdf").append("<a href='/data/pdf/"+declare_pdf+"'>"+declare_pdf+"</a>");#}
+                        $("#declare_pdf").append("<a href='"+data_pdf[i].path+"'>"+declare_pdf+"</a>");
+                        $("#declare_pdf").append("<p></p>");
                      }
 
                 }
@@ -935,8 +1016,10 @@ $(document).ready(function(){
                 else{
                    for(var j=0;j<data_word.length;j++){
                         declare_word =  data_word[j].newname;
-                        $("#declare_word").append("<a href='/data/word/"+declare_word+"'>"+declare_word+"</a>");
-                        $("#declare_word").append("  ");
+                        console.log("data_word[j]=",data_word[j])
+                        {#$("#declare_word").append("<a href='/data/word/"+declare_word+"'>"+declare_word+"</a>");#}
+                        $("#declare_word").append("<a href='"+data_word[j].path+"'>"+declare_word+"</a>");
+                        $("#declare_word").append("<p></p>");
                      }
 
                 }

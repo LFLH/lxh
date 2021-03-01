@@ -80,7 +80,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                  <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.useractivityregister')}}">
                                       活动报名
@@ -103,7 +103,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.userupdata')}}">
                                       活动提交
@@ -133,7 +133,7 @@
                               <p style="display: inline" class="indicator" id="indicator1">^</p>
                             </div>
                             </a>
-                            <ul class="ul" style="margin-top: 15px; padding-left: 15px">
+                            <ul class="ul" style="margin-top: 15px; padding-left: 15px;display: none">
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{url_for('main.useractivity')}}">
                                      已提交活动
@@ -175,10 +175,22 @@
 
                 <div class="form-group">
                     <div class="layui-upload">
-                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="exampleInputFilePDF">选择PDF文件、Word文件、图片</button>
+{#                          <button type="button" class="layui-btn layui-btn-normal" style="margin-left: 15px" id="add_file">选择PDF文件、Word文件、图片</button>#}
 {#                          <button id="submit" type="submit" class="layui-btn layui-btn-normal" style="margin-left: 15px">文件上传</button>#}
-                          <br>
-                          <br>
+                       <div>
+                            <div style="display:inline; text-align: center;  padding-right: 400px">
+                                <button type="button" class="btn btn-primary " style="margin-left: 30px" id="add_file">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
+                                      <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"></path>
+                                      <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"></path>
+                                    </svg>添加文件
+                                </button>
+                                <label style="font-size: small;color: grey">（仅支持doc、docx、pdf、jpg和png格式的文件）</label>
+                            </div>
+                            <div style="display:inline; text-align: center;">
+                                 <button type="button" class="layui-btn layui-hide" id="ViewListAction" style="margin-left: 26px;">上传</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="layui-upload-list col-md-12">
                         <table class="layui-table" style="margin: 0 0 0 0; table-layout: fixed;">
@@ -209,7 +221,7 @@
 $(function(){
     $(".a").click(function(){
         $(this).next(".ul").toggle().closest(".nav-item").siblings(".nav-item").children("ul").hide();
-    }).next("ul").hide();
+    })
 });
 
 //获取当前时间
@@ -227,25 +239,26 @@ function fileTime(){
     var res =  year + "-" + getNow(mon) + "-" + getNow(date) + "&nbsp;" + getNow(h) + ":" + getNow(m) + ":" + getNow(s);
     return res
 }
+var form = new FormData();
+var files={};
 {#选择多个文件#}
 layui.use('upload', function () {
         var $ = layui.jquery;
         var upload = layui.upload;
-        let name = $('#name').val();
-        str_url='./addndreport?name='+name;
+        {#str_url='./addndreport?name='+name;#}
         //多文件选择
         var Viewlist = $('#VIEWList'),
         uploadIns = upload.render({
-            elem: '#exampleInputFilePDF',
-            url: 'str_url',
+            elem: '#add_file',
+            {#url: 'str_url',#}
             accept: 'file,images',
             exts: 'doc|docx|pdf|jpg|png',
             multiple: true,
             auto: false,
-            bindAction: '#submit',
+            {#bindAction: '#submit',#}
             choose: function (obj) {
-                var files = obj.pushFile(); //选择文件赋给files
-                var file_time = fileTime();
+                files = obj.pushFile();  //选择文件
+                var file_time = fileTime(); //获取当前时间
                 //读取本地文件
                 obj.preview(function (index, file, result) {
                     var tr = $(['<tr id="upload-' + index + '">'
@@ -254,46 +267,78 @@ layui.use('upload', function () {
                         , '<td>' + file_time + '</td>'
                         , '<td>'
                         , '<button class="layui-btn layui-btn-xs layui-btn-danger file_delete">删除</button>'
-                        , '<button class="layui-btn layui-btn-xs layui-btn-primary file_delete">文件上传</button>'
                         , '</td>'
                         , '</tr>'].join(''));
+                    //将每次选择的文件追加到文件队列
                     Viewlist.append(tr);
+                    if ($('#VIEWList tr').length != 0) {
+                            $("#ViewListAction").removeClass('layui-hide'); //显示上传
+                    }
                     //删除文件按钮
                     tr.find('.file_delete').on('click', function () {
-                        console.log("走到这里了")
                         delete files[index]; //删除对应的文件
                         tr.remove();
                         uploadIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                        {#若文件列表无数据，隐藏上传按钮#}
+                        if ($('#VIEWList tr').length == 0) {
+                               $("#ViewListAction").addClass('layui-hide'); //隐藏上传
+                        }
                     })
 
                 });
-                 {#$("#testListAction").on("click", function () {#}
-                 {#    var formData = new FormData($("#newuser")[0]);#}
-                 {#    $.ajax({#}
-                 {#        url: '',#}
-                 {#        type: "post",#}
-                 {#        dataType: "json",#}
-                 {#        async: false,#}
-                 {#        contentType: 'application/json',#}
-                 {#        processData: false,#}
-                 {#        data: formData,#}
-                 {#        success: function (result) {#}
-                 {#            console.log(result.status);#}
-                 {#            if (result.status == true) {#}
-                 {#                layer.msg("上传成功！", {icon: 6});#}
-                 {#            } else if (result.status == false) {#}
-                 {#                layer.msg(result.msg, {icon: 5});#}
-                 {#            }#}
-                 {#        }#}
-                 {#    })#}
+
 
             },
-            done: function(res, index, upload){
-                console.log("res=",res)
-            }
+            {#done: function(res, index, upload){#}
+            {#    console.log("res=",res)#}
+
         });
         })
-
+//文件上传
+{#文件上传二次确认#}
+$("#ViewListAction").on("click", function () {
+    var flag = confirm("上传之后不可更改，确定上传吗？");
+    if(flag == false){
+        return false
+    }else {
+        for (let i in files) {
+            form.append("files", files[i]);
+        }
+        var len = 0;
+        form.forEach((value, key) => {
+            console.log("key %s: value %s", key, value);
+            len = key.length;
+        });
+        layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        let name = $('#name').val();
+        $.ajax({
+            url: './addndreport?name='+name,
+            type: "POST",
+            data: form,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                console.log(result);
+                if (result.code == 200) {
+                    layer.msg("上传成功！", {icon: 6});
+                    setTimeout(function () {
+                        layer.closeAll('loading');
+                    }, 2000);//关闭加载风格
+                    $('#VIEWList tr').remove(); //移除列表中上传的内容
+                    $("#ViewListAction").addClass('layui-hide'); //隐藏上传按钮
+                    $('#name').val("")//清空输入文件名
+                    {#files = {};//初始化上传文件和data，避免重复上传#}
+                    {#form = new FormData();#}
+                } else if (result.code == 500) {
+                    layer.msg(result.msg, {icon: 5});
+                    setTimeout(function () {
+                        layer.closeAll('loading');
+                    }, 2000);//关闭加载风格
+                }
+            }
+        })
+    }
+});
 
 
 </script>

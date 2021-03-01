@@ -152,7 +152,7 @@ def addkjzreport():
     user = session.get('user')
     userid = user['userid']
     user = User.query.filter(User.id == userid).all()[0]
-    record = Record(userid=userid, name=name, type="科技周报告")
+    record = Record(userid=userid, name=name, type="科技周")
     db.session.add(record)
     db.session.commit()
     # 修改用户操作时间

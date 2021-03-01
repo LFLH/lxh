@@ -71,6 +71,7 @@
                     </thead>
                     <tbody id="demoList"></tbody>
                 </table>
+        </div>
     </form>
 </div>
 
@@ -121,7 +122,7 @@
                  $("#demoList").html(str2);
              }
          });
-        {#    修改按钮二次确认#}
+         {#    修改按钮二次确认#}
          $("#change").on("click", function () {
             var flag = confirm("确定修改吗？");
             if(flag == false){

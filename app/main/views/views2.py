@@ -59,7 +59,7 @@ def manageall():
     activitycount=[]
     for i in range(12):
         #按月查询
-        activity=Activity.query.filter(and_(Activity.updatetime>=month[i],Activity.updatetime<month[i+1],Activity.typeuser=='自主',Activity.status!=3,Activity.status!=2)).count()
+        activity=Activity.query.filter(and_(Activity.updatetime>=month[i],Activity.updatetime<month[i+1],Activity.typeuser=='自主',Activity.status!=3,Activity.status!=1)).count()
         activitycount.append(activity)
     #需要报名人数
     train=Train.query.filter(and_(Train.status==0,Train.endtime>datetime.datetime.now())).order_by(-Train.id).all()

@@ -22,17 +22,29 @@ def tsscore(username,activitycount,onys,twys,thys,page,per_page):
         s1=True
     if onys!=None:
         onys=int(onys)
-        s2=and_(Score.year==year-2,Score.score==onys)
+        user=User.query.join(Score).filter(and_(Score.year==year-2,Score.score==onys)).all()
+        u1=[]
+        for useri in user:
+            u1.append(useri.id)
+        s2=(User.id.in_(u1))
     else:
         s2=True
     if twys!=None:
         twys=int(twys)
-        s3=and_(Score.year==year-1,Score.score==twys)
+        user=User.query.join(Score).filter(and_(Score.year==year-1,Score.score==twys)).all()
+        u2=[]
+        for useri in user:
+            u2.append(useri.id)
+        s3=(User.id.in_(u2))
     else:
         s3=True
     if thys!=None:
         thys=int(thys)
-        s4=and_(Score.year==year,Score.score==thys)
+        user=User.query.join(Score).filter(and_(Score.year==year,Score.score==thys)).all()
+        u3=[]
+        for useri in user:
+            u3.append(useri.id)
+        s4=(User.id.in_(u3))
     else:
         s4=True
     if activitycount is None:
@@ -48,7 +60,7 @@ def tsscore(username,activitycount,onys,twys,thys,page,per_page):
             if ac==activitycount:
                 u.append(items[i].id)
         s5=(User.id.in_(u))
-    user=User.query.join(Score).filter(and_(s1,s2,s3,s4,s5,User.checked == 1,User.type != 'sysadmin')).order_by(-User.updatetime).paginate(page, per_page, error_out=False)
+    user=User.query.filter(and_(s1,s2,s3,s4,s5,User.checked == 1,User.type != 'sysadmin')).order_by(-User.updatetime).paginate(page, per_page, error_out=False)
     return user
 
 # 显示分数
