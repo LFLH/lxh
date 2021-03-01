@@ -1,0 +1,201 @@
+<title>账户信息设置</title>
+{% extends "base_Txx_olduser.html" %}
+
+{% block css %}
+    #img {
+        width: 25px;
+        height: 25px;
+{#        position: absolute;#}
+{#        right: 10px;#}
+{#        margin-top: 12px;#}
+{#        top: 5px;#}
+{#        text-align: center;#}
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="position: center" >
+        <h2 style="padding-top: 20px">账户信息设置</h2>
+        <br>
+
+        <table style="margin: 0 0 0 0; table-layout: fixed; border-collapse:separate; border-spacing:10px 30px;">
+            <tr >
+                <td> <label style="font-size: large; margin-right: 10px;">用户名：</label></td>
+                <td> <input id="username" style="font-size:large;" disabled></td>
+            </tr>
+
+            <tr >
+                <td> <label style="font-size: large; margin-right: 10px;">单位：</label></td>
+                <td> <input id="name" style="font-size:large;" disabled></td>
+            </tr>
+
+            <tr>
+                <td> <label style="font-size: large; margin-right: 10px;">密码：</label></td>
+                <td>
+                    <div style="display: inline">
+{#                        <input type="password" id="password" style="font-size:large; background-image: url(../static/img/eyes.png);background-repeat: no-repeat; background-position: right; background-size: 25px 25px">#}
+                        <input type="password" id="password" style="font-size:large; float: left" required>
+{#                        <img id="img" style="float: left;padding-left: 5px" onclick="document.hideShowPsw()" src="../static/img/eyes.png" alt="显示/隐藏密码">#}
+{#                        <button id="show" class="btn btn-xs"></button>#}
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td> <label style="font-size: large; margin-right: 10px;">确认密码：</label></td>
+                <td>
+                    <div style="display: inline">
+
+{#                        <input type="password" id="password" style="font-size:large; background-image: url(../static/img/eyes.png);background-repeat: no-repeat; background-position: right; background-size: 25px 25px">#}
+                        <input type="password" id="password2" style="font-size:large; float: left" required>
+{#                        <img id="img" style="float: left;padding-left: 5px" onclick="document.hideShowPsw()" src="../static/img/eyes.png" alt="显示/隐藏密码">#}
+{#                        <button id="show" class="btn btn-xs"></button>#}
+
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td> <label style="font-size: large; margin-right: 10px;">电话：</label></td>
+                <td> <input id="phone" style="font-size:large;">{{ phone }}</td>
+            </tr>
+
+            <tr>
+                <td> <label style="font-size: large; margin-right: 10px;">邮箱：</label></td>
+                <td> <input id="email" style="font-size:large;"></td>
+            </tr>
+
+            <tr>
+                <td> <label style="font-size: large; margin-right: 10px;">地址：</label></td>
+                <td> <input id="address" style="font-size:large;"></td>
+            </tr>
+        </table>
+
+        <br>
+
+        <div>
+            <button type="button"  class="btn btn-default" id="cancel" style="display: inline; background-color: lightgrey; margin-right: 50px; margin-left: 50px">重置</button>
+            <button type="button"  class="btn btn-success" id="change" style="display: inline; margin-right: 50px">保存</button>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+      $(function () {
+            $.ajax({
+                type: "GET",
+                url: "/getuser",
+                dataType: 'json',
+                async: false,
+                cache: false,
+                contentType: 'application/json',
+                success:function (users) {
+                      $("#username").val(users.username);
+                      $("#name").val(users.name);
+                      $('#password').val(users.password);
+                      $('#password2').val(users.password);
+                      $('#phone').val(users.phone);
+                      $('#email').val(users.email);
+                      $('#address').val(users.address);
+                }
+            });
+{#          var xmlhttp=new XMLHttpRequest();#}
+{#          var url="/getuser";#}
+{#          var type="POST";//方法#}
+{#          xmlhttp.open(type,url,true);//方法，接口，异步#}
+{#          xmlhttp.send();//发送请求#}
+{#          xmlhttp.onreadystatechange=function(){#}
+{#              if(xmlhttp.status==200&&xmlhttp.readyState==4){#}
+{#                  var users = JSON.parse(xmlhttp.response); //获取到的json数据#}
+{#                  $("#name").val(users.name);#}
+{#                  $('#password').val(users.password);#}
+{#                  $('#phone').val(users.phone);#}
+{#                  $('#email').val(users.email);#}
+{#                  $('#address').val(users.address);#}
+{#              }#}
+{#          };#}
+{#          $("#show").click(function () {#}
+{#              let input = document.getElementById("password");#}
+{#              var btn = document.getElementById("show");#}
+{#              if(input.type=="password"){#}
+{#                  input.type = 'text';#}
+{#                  btn.innerHTML = '隐藏';#}
+{#              }else {#}
+{#                  input.type = 'password';#}
+{#                  btn.innerHTML = '显示';#}
+{#              }#}
+{#          });#}
+{#        添加登录密码明文、密文切换功能#}
+          $("#img").click(function () {
+              let input = document.getElementById("password");
+              var img = document.getElementById("img");
+              if(input.type=="password"){
+                  input.type = 'text';
+                  img.src = "../static/img/eyes1.png"; //闭眼图片
+              }else {
+                  input.type = 'password';
+                  img.src = "../static/img/eyes.png"; //睁眼图片
+              }
+          });
+
+{#          function hideShowPsw() {#}
+{#              if (PWD.type == "password") {#}
+{#                  PWD.type = "text";#}
+{#                  demoImg.src = "../static/img/eyes1.png"; //闭眼图片#}
+{#              } else {#}
+{#                  PWD.type = "password";#}
+{#                  demoImg.src = "../static/img/eyes.png"; // 睁眼图片#}
+{#              }#}
+{#          };#}
+
+          $("#cancel").click(function () {
+              $('#password').val('');
+              $('#password2').val('');
+              $('#phone').val('');
+              $('#email').val('');
+              $('#address').val('');
+{#              window.location.reload();#}
+          });
+            {#    修改按钮二次确认#}
+          $('#change').click(function () {
+{#            var flag = confirm("确定修改吗？");#}
+{#            if(flag == false){#}
+{#                return false#}
+{#            }else #}
+            if ($('#password').val()==''){
+                alert('密码不能为空')
+            }else if ($('#password').val()!=$('#password2').val()){
+                alert('输入密码不一致')
+            }else {
+                  var name = $("#name").val() ;
+                  var password = $('#password').val();
+                  var phone = $('#phone').val();
+                  var email = $('#email').val();
+                  var address = $('#address').val();
+                  $.ajax({
+                  type: "GET",
+                  url: "/setuser",
+                  data: {'name':name, 'password':password, 'phone':phone, 'email':email, 'address':address },
+                  dataType: 'json',
+                  async: false,
+                  cache: false,
+                  contentType: 'application/json',
+                  success:function (re) {
+                      if(re.status==true){
+                          alert("修改成功！")
+                      }
+                      if(re.status==false){
+                          alert("修改失败！")
+                      }
+                  }
+              });
+             }
+          })
+      })
+{% endblock %}
+
+
+
+

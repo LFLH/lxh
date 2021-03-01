@@ -47,7 +47,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" style="height: 50px; background-color:#01AAED">
     <div class="container-fluid" style="">
         <div class="navbar-header" style="width: 100%;">
-            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">林学会**系统</a>
+            <a class="navbar-brand" href="#" style="padding-top: 8px; color: whitesmoke">北京市林学会科普基地管理信息系统</a>
             <div class="dropdown" style="float: right">
                 <ul class="nav navbar-nav navbar-right ml-auto" style="padding: 12px 0;">
                     <li><a href="#" style="color: whitesmoke">欢迎：{{ username }}</a></li>
@@ -177,19 +177,21 @@
                 <div class="form-group">
                     <label for="type" class="col-sm-2 control-label">活动类型:</label>
                     <div class="col-sm-5" style="padding-left: 20px;">
-                        <input class="form-control" id="type" placeholder="请输入类型" required>
+                        <select type="text" class="form-control " name="activityType" id="type" required>
+{#                            <option value="">会议</option>#}
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="starttime" class="col-sm-2 control-label">活动起始时间:</label>
                     <div class="col-md-3" style="padding-left: 20px;">
-                        <input type="date" class="form-control" id="starttime" required>
+                        <input type="datetime-local" class="form-control" id="starttime" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="endtime" class="col-sm-2 control-label">活动结束时间:</label>
                     <div class="col-md-3" style="padding-left: 20px;">
-                        <input type="date" class="form-control" id="endtime" required>
+                        <input type="datetime-local" class="form-control" id="endtime" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -259,7 +261,22 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function(){
-        console.log("weclome");
+        $.ajax({
+            type:'GET',
+            url:'./getactivitytype',
+            data:{},
+            dataType:'json',
+            async: false,
+            cache: false,
+            contentType: 'application/json',
+            success:function(result){
+                console.log(result)
+                for (var i=0;i<result.data.length;i++){
+                    $("#type").append('<option value="">'+ result.data[i].main+'</option>');
+                }
+            }
+        });
+
         $("#cancel").on("click", function (){
             $('#name').val('');
             $('#starttime').val('');
