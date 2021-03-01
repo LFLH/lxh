@@ -84,6 +84,18 @@
         {
             cursor:pointer;
         }
+        .type
+        {
+            background: #93D1FF;
+            width: 50px;
+            height: 50px;
+        }
+        .stat
+        {
+            background: #93D1FF;
+            width: 50px;
+            height: 50px;
+        }
     </style>
 </head>
 
@@ -218,45 +230,34 @@
         <div class="col-md-10 col-md-offset-2 main ml-auto" style="margin-top: 50px">
             <h2 class="sub-header">林学会活动列表</h2>
             <br>
-            {#选择检索平铺#}
-            <div id="display-select-ac" style="margin-left: 80px;display: none;float: left">
-                 <input id="select-show-ac" type="text" class="form-control" style="width: 150px;float:left">
-                 <button id="delete-show-ac" class="input-group-text" style="width: 35px;float: left">x</button>
+            {#检索表格#}
+            <table class="table table-bordered"  style="width: 90%;float: left">
+                <tbody id="sta_table">
+                      <tr>
+                      <td style="width: 120px;font-size: large">活动类型：</td>
+                      <td style="text-align: left">
+                          <a id="ac_type_1" style="color: #005cbf;font-size: large">会议</a>
+                          <a id="ac_type_2" style="color: #005cbf;margin-left: 15px;font-size: large">培训</a>
+                          <a id="ac_type_3" style="color: #005cbf;margin-left: 15px;font-size: large">交流</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 120px;font-size: large">状态：</td>
+                      <td style="text-align: left">
+                          <a id="sta_1" style="color: #005cbf;font-size: large">未报名</a>
+                          <a id="sta_2" style="color: #005cbf;margin-left: 15px;font-size: large">已报名</a>
+                          <a id="sta_3" style="color: #005cbf;margin-left: 15px;font-size: large">已过期</a>
+                      </td>
+                    </tr>
+                    <tr style="width: 120px;font-size: large">
+                      <td>活动名：</td>
+                      <td><input type="text" name="keyword" id="keyword_acname" class="form-control" placeholder="请输入检索信息"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="float: left;margin-left: 20px;margin-top: 120px">
+                <button class="btn btn-dark" id="search_all" type="submit">检索</button>
             </div>
-            <div id="display-select-sta" style="margin-left: 80px;display: none;float: left">
-                 <input id="select-show-sta" type="text" class="form-control" style="width: 150px;float:left">
-                 <button id="delete-show-sta" class="input-group-text" style="width: 35px;float: left">x</button>
-            </div>
-            {#检索平铺#}
-            <div id="filter">
-                <dl>
-                    <dt>活动类型：</dt>
-                    <dd><div><a href="#" id="ac_type_1" style="color: #005cbf">会议</a></div></dd>
-                </dl>
-                <dl>
-                    <dt>状态：</dt>
-                    <dd><div><a href="#" id="sta_1" style="color: #005cbf">未报名</a></div></dd>
-                    <dd><div><a href="#" id="sta_2" style="color: #005cbf">已报名</a></div></dd>
-                    <dd><div><a href="#" id="sta_3" style="color: #005cbf">已过期</a></div></dd>
-                </dl>
-            </div>
-            <br>
-            <br>
-               <div class="form-group">
-                     <div class="input-group col-xs-12">
-                        <div class="input-group-btn">
-                            <select name="type" class="selectpicker form-control" style="width: auto;" id="search_select" multiple="multiple">
-                                <option value="活动名">活动名</option>
-                                <option value="状态">状态</option>
-                            </select>
-                         </div>
-                           <input type="text" name="keyword" id="keyword" class="form-control" placeholder="请输入检索信息(若检索项为多个，按表格列由左向右输入检索项，且用英文逗号相隔)">
-                            <span class="input-group-btn">
-                                <button class="btn btn-dark" id="search_all" type="submit">检索</button>
-                            </span>
-                        </div>
-                   <br>
-                  </div>
 
                 <div class="table-responsive">
                     <form action="/"></form>
@@ -359,7 +360,9 @@ var dpage;
 var pages;
 var status_num;
 var status_show_;
+var status_show;
 var status_;
+var activitytype;
 {#前后端交互：从后端数据库获取列表数据以及分页处理#}
 $(document).ready(function(){
         let per_page=10;
@@ -372,81 +375,98 @@ $(document).ready(function(){
         })
         {#检索平铺操作#}
         $(document).on("click","#ac_type_1",function () {
-            $("#display-select-ac").show();
             let ac_type_1 = $("#ac_type_1").text() //选择平铺内容
-            $("#select-show-ac").val(ac_type_1) //放在input框
-        })
-        $(document).on("click","#sta_1",function () {
-            $("#display-select-sta").show();
-            let status_1 = $("#sta_1").text() //选择平铺内容
-            $("#select-show-sta").val(status_1) //放在input框
-        })
-        $(document).on("click","#sta_2",function () {
-            $("#display-select-sta").show();
-            let status_2 = $("#sta_2").text() //选择平铺内容
-            $("#select-show-sta").val(status_2) //放在input框
-        })
-        $(document).on("click","#sta_3",function () {
-            $("#display-select-sta").show();
-            let status_3 = $("#sta_3").text() //选择平铺内容
-            $("#select-show-sta").val(status_3) //放在input框
-        })
-        $(document).on("click","#delete-show-ac",function () {
-            $("#select-show-ac").val("") //清空input值
-            $("#display-select-ac").css("display","none");
-        })
-        $(document).on("click","#delete-show-sta",function () {
-            $("#select-show-sta").val("") //清空input值
-            $("#display-select-sta").css("display","none");
-        })
-        {#实现检索操作#}
-    $(document).on("click","#search_all",function () {
-        {#获取选择的检索内容#}
-        let select_content = $("#search_select").val()
-        let input_content = $("#keyword").val()
-        if(select_content.length < 2){
-            if(select_content.length == 0){
-                alert("请选择需要检索的列名")
+            $("#ac_type_2").attr("class",'') //先清空其他平铺样式
+            $("#ac_type_3").attr("class",'')
+            $("#ac_type_1").toggleClass("type") //点击增加和删除样式
+            if($("#ac_type_1").attr('class') == 'type'){ //判断平铺选择的内容
+                activitytype = ac_type_1
             }
             else{
-                if(select_content == "活动名"){
-                    activityname = input_content
-                }
-                if(select_content == "状态"){
-                    status = input_content
-                    if(status == "未报名"){
-                        status_ = 0;
-                     }
-                    if(status == "已过期"){
-                        status_ = 1;
-                     }
-                    if(status == "已报名"){
-                        status_ = 2;
-                     }
-                }
+                activitytype = undefined
             }
-        }
-        else{
-            input_content = input_content.split(",")
-            for(let i=0;i<select_content.length;i++){
-                let content = select_content[i]
-                if(content == "活动名"){
-                    activityname = input_content[i]
-                }
-                if(content == "状态"){
-                    status = input_content[i]
-                    if(status == "未报名"){
-                        status_ = 0;
-                     }
-                    if(status == "已过期"){
-                        status_ = 1;
-                     }
-                    if(status == "已报名"){
-                        status_ = 2;
-                     }
-                }
+        })
+        $(document).on("click","#ac_type_2",function () {
+            let ac_type_2 = $("#ac_type_2").text() //选择平铺内容
+            $("#ac_type_1").attr("class",'') //先清空其他平铺样式
+            $("#ac_type_3").attr("class",'')
+            $("#ac_type_2").toggleClass("type") //点击增加和删除样式
+            if($("#ac_type_2").attr('class') == 'type'){ //判断平铺选择的内容
+                activitytype = ac_type_2
             }
+            else{
+                activitytype = undefined
+            }
+        })
+        $(document).on("click","#ac_type_3",function () {
+            let ac_type_3 = $("#ac_type_3").text() //选择平铺内容
+            $("#ac_type_1").attr("class",'') //先清空其他平铺样式
+            $("#ac_type_2").attr("class",'')
+            $("#ac_type_3").toggleClass("type") //点击增加和删除样式
+            if($("#ac_type_3").attr('class') == 'type'){ //判断平铺选择的内容
+                activitytype = ac_type_3
+            }
+            else{
+                activitytype = undefined
+            }
+        })
+        $(document).on("click","#sta_1",function () {
+            let status_1 = $("#sta_1").text() //选择平铺内容
+            $("#sta_2").attr("class",'') //先清空其他平铺样式
+            $("#sta_3").attr("class",'')
+            $("#sta_1").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_1").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_1
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        $(document).on("click","#sta_2",function () {
+            let status_2 = $("#sta_2").text() //选择平铺内容
+            $("#sta_1").attr("class",'') //先清空其他平铺样式
+            $("#sta_3").attr("class",'')
+            $("#sta_2").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_2").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_2
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        $(document).on("click","#sta_3",function () {
+            let status_3 = $("#sta_3").text() //选择平铺内容
+            $("#sta_1").attr("class",'') //先清空其他平铺样式
+            $("#sta_2").attr("class",'')
+            $("#sta_3").toggleClass("stat")//点击增加和删除样式
+            if($("#sta_3").attr('class') == 'stat'){ //判断平铺选择的内容
+                status_show = status_3
+            }
+            else{
+                status_show = undefined
+            }
+        })
+        {#实现检索操作#}
+      $(document).on("click","#search_all",function () {
+        {#获取平铺检索内容#}
+        if(status_show == "未报名"){
+            status_ = 0;
+         }
+        if(status_show == "已过期"){
+            status_ = 1;
+         }
+        if(status_show == "已报名"){
+            status_ = 2;
+         }
+        if(status_show == undefined){
+            status_ = undefined;
         }
+        console.log("actiivitytype=",activitytype)
+        console.log("status_show=",status_show)
+        console.log("status_=",status_)
+        {#获取选择的活动名#}
+        activityname = $("#keyword_acname").val()
+        console.log("activityname=",activityname)
         {#刷新页面#}
         init();
     });
@@ -456,7 +476,7 @@ $(document).ready(function(){
         idz:存储每条数据的id#}
     function init() {
         {#初始化搜索栏#}
-        $(".selectpicker").multiselect({nonSelectedText: '选择搜索列',allSelectedText: '已全选',buttonWidth: '150px'});
+        {#$(".selectpicker").multiselect({nonSelectedText: '选择搜索列',allSelectedText: '已全选',buttonWidth: '150px'});#}
         {#let dpage=1;#}
         {#let pages=1;#}
         let per_page = 10;
@@ -465,7 +485,7 @@ $(document).ready(function(){
         $.ajax({
             type: 'GET',
             url: './searchsysactivity',
-            data: {'page': 1, 'per_page': per_page,'activityname':activityname,'status':status_},
+            data: {'page': 1, 'per_page': per_page,'activityname':activityname,"activitytype":activitytype,'status':status_},
             dataType: 'json',
             async: false,
             cache: false,
@@ -539,7 +559,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchsysactivity',
-                    data:{'page':dpage-1,'per_page':per_page,'activityname':activityname,'status':status_},
+                    data:{'page':dpage-1,'per_page':per_page,'activityname':activityname,"activitytype":activitytype,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -608,7 +628,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchsysactivity',
-                    data:{'page':dpage+1,'per_page':per_page,'activityname':activityname,'status':status_},
+                    data:{'page':dpage+1,'per_page':per_page,'activityname':activityname,"activitytype":activitytype,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,
@@ -676,7 +696,7 @@ $(document).ready(function(){
                 $.ajax({
                     type:'GET',
                     url:'./searchsysactivity',
-                    data:{'page':index,'per_page':per_page,'activityname':activityname,'status':status_},
+                    data:{'page':index,'per_page':per_page,'activityname':activityname,"activitytype":activitytype,'status':status_},
                     dataType:'json',
                     async: false,
                     cache: false,

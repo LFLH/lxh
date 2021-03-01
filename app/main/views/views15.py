@@ -15,11 +15,15 @@ def after_request(response):
     return response
 
 #条件检索
-def tssysactivity(activityname,status,page,per_page,uesrid):
+def tssysactivity(activityname,activitytype,status,page,per_page,uesrid):
     if activityname!=None:
         s1=(Activity.name.contains(activityname))
     else:
         s1=True
+    if activitytype!=None:
+        s3=(Activity.type.contains(activitytype))
+    else:
+        s3=True
     if status is None:
         s2=True
     else:
@@ -38,7 +42,7 @@ def tssysactivity(activityname,status,page,per_page,uesrid):
             for a in au:
                 aid.append(a.id)
             s2 = and_(not_(Activity.id.in_(aid)),Activity.stoptime>datetime.datetime.now())
-    activity=Activity.query.filter(and_(s1,s2,Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
+    activity=Activity.query.filter(and_(s1,s2,s3,Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
     return activity
 
 # 列表查看系统活动
@@ -49,19 +53,21 @@ def searchsysactivity():
         per_page=request.args.get('per_page')#平均页数
         #检索条件
         activityname=request.args.get('activityname')#活动名
+        activitytype = request.args.get('activitytype')  # 活动类型
         status=request.args.get('status')#状态
     else:
         page = request.form.get('page')
         per_page = request.form.get('per_page')
         # 检索条件
         activityname = request.form.get('activityname')  # 活动名
+        activitytype = request.form.get('activitytype')  # 活动类型
         status = request.form.get('status')  # 状态
     page=int(page)
     per_page=int(per_page)
     user=session.get('user')
     userid=user['userid']
     #activity = Activity.query.filter(and_(Activity.typeuser=="系统",Activity.status!=3)).order_by(-Activity.updatetime).paginate(page, per_page, error_out=False)
-    activity=tssysactivity(activityname,status,page,per_page,userid)
+    activity=tssysactivity(activityname,activitytype,status,page,per_page,userid)
     items = activity.items
     item = []
     count = (int(page) - 1) * int(per_page)
